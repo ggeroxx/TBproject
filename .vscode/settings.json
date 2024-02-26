@@ -1,0 +1,10 @@
+{
+    "java.project.sourcePaths": ["src"],
+    "java.project.outputPath": "bin",
+    "java.project.referencedLibraries": [
+        "lib/**/*.jar"
+    ],
+    "code-runner.executorMap": {
+        "java": "cd $dir && javac -cp . -cp ../lib/mysql-connector-j-8.3.0.jar -d ../bin/ $fileName && java -cp . -cp ../lib/mysql-connector-j-8.3.0.jar *",
+    }
+}
