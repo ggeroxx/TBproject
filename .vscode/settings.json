@@ -1,6 +1,6 @@
 {
   "code-runner.executorMap": {
-    "java": "cd $dir && javac -cp .;..\\lib\\mysql-connector-j-8.3.0.jar -d ..\\bin\\ $fileName && java -cp .;..\\lib\\mysql-connector-j-8.3.0.jar;..\\bin Main"
+    "java": "cd $dir && cd ../../.vscode && node executorMap.js && cd $dir && javac -cp .;..\\lib\\mysql-connector-j-8.3.0.jar -d ..\\bin\\ $fileName && java -cp .;..\\lib\\mysql-connector-j-8.3.0.jar;..\\bin Main"
   },
   "java.project.sourcePaths": [
     "src"
