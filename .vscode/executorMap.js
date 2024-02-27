@@ -4,8 +4,8 @@ const isWindows = process.platform === 'win32';
 
 const executorMap = {
         "java": isWindows
-            ? "cd $dir && cd ../.vscode && node executorMap.js && cd $dir && javac -cp .;..\\lib\\mysql-connector-j-8.3.0.jar -d ..\\bin\\ $fileName && java -cp .;..\\lib\\mysql-connector-j-8.3.0.jar;..\\bin Main"
-            : "cd $dir && cd ../.vscode && node executorMap.js && cd $dir && javac -cp .:../lib/mysql-connector-j-8.3.0.jar -d ../bin/ $fileName && java -cp .:../lib/mysql-connector-j-8.3.0.jar:../bin Main"
+            ? "cd $dir && cd ../.vscode && node executorMap.js && cd $dir && javac -cp .;../lib/mysql-connector-j-8.3.0.jar -d ../bin/ $fileName && java -cp .;../lib/mysql-connector-j-8.3.0.jar;../bin/ $fileNameWithoutExt"
+            : "cd $dir && cd ../.vscode && node executorMap.js && cd $dir && javac -cp .:../lib/mysql-connector-j-8.3.0.jar -d ../bin/ $fileName && java -cp .:../lib/mysql-connector-j-8.3.0.jar:../bin/ $fileNameWithoutExt"
 };
 
 const additionalProperties = {
