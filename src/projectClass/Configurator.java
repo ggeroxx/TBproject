@@ -101,6 +101,8 @@ public class Configurator
         parameters.add( username );
 
         Conn.updateRow( query, parameters );
+        this.username = approvedUsername;
+        this.password = newPassword;
     }
 
     public boolean checkPatternUsername ( String usernameToCheck ) 

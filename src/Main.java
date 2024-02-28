@@ -1,5 +1,5 @@
 import java.util.Scanner;
-import org.mindrot.jbcrypt.BCrypt;
+//import org.mindrot.jbcrypt.BCrypt;
 import projectClass.Configurator;
 import util.Conn;
 import java.io.Console;
@@ -8,9 +8,9 @@ public class Main
 {
     public static void main(String[] args) throws Exception 
     {
-        System.out.println( BCrypt.hashpw( "pass1", BCrypt.gensalt() ) );
+        /*System.out.println( BCrypt.hashpw( "pass1", BCrypt.gensalt() ) );
         System.out.println( BCrypt.hashpw( "pass2", BCrypt.gensalt() ) );
-        System.out.println( BCrypt.hashpw( "pass3", BCrypt.gensalt() ) );
+        System.out.println( BCrypt.hashpw( "pass3", BCrypt.gensalt() ) );*/
 
         Scanner scanner = new Scanner( System.in );
         Console console = System.console();
@@ -84,5 +84,6 @@ public class Main
         } while ( !scelta.equals("2") );
         
         Conn.closeConnection();
+        scanner.close();
     }
 }
