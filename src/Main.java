@@ -1,6 +1,6 @@
 import java.util.Scanner;
 //import org.mindrot.jbcrypt.BCrypt;
-import projectClass.Configurator;
+import projectClass.*;
 import util.Conn;
 import java.io.Console;
 
@@ -8,9 +8,9 @@ public class Main
 {
     public static void main(String[] args) throws Exception 
     {
-        /*System.out.println( BCrypt.hashpw( "pass1", BCrypt.gensalt() ) );
-        System.out.println( BCrypt.hashpw( "pass2", BCrypt.gensalt() ) );
-        System.out.println( BCrypt.hashpw( "pass3", BCrypt.gensalt() ) );*/
+        //System.out.println( BCrypt.hashpw( "password1", BCrypt.gensalt() ) );
+        //System.out.println( BCrypt.hashpw( "password2", BCrypt.gensalt() ) );
+        //System.out.println( BCrypt.hashpw( "password3", BCrypt.gensalt() ) );
 
         Scanner scanner = new Scanner( System.in );
         Console console = System.console();
@@ -44,17 +44,17 @@ public class Main
                                             "-----------\n"
                                         );
 
-                        System.out.print("inserisci username: ");
+                        System.out.print("enter username: ");
                         String username = scanner.nextLine();
                         
-                        char[] passwordChars = console.readPassword( "Inserisci password: " );
+                        char[] passwordChars = console.readPassword( "enter password: " );
                         String password = new String( passwordChars );
 
                         Configurator conf = new Configurator( username, password );
 
                         if ( !conf.login() )
                         {   
-                            System.out.println("\n --- ATTENZIONE, username e/o password errati! Riprova! ---");
+                            System.out.println("\n --- ATTENTION, invalid username a/o password! Try again! ---");
                             clearConsole(2500);
                             break;
                         }
@@ -74,25 +74,25 @@ public class Main
 
                             do
                             {
-                                System.out.print("Inserisci un nuovo username (min 3 max 20 caratteri): ");
+                                System.out.print("Enter new username (min 3 max 20 characters): ");
                                 newUsername = scanner.nextLine();
                                 next = conf.attendedUsername( newUsername );
-                                if ( next ) System.out.println("\n --- username NON disponibile ! --- \n");
+                                if ( next ) System.out.println("\n --- username NOT available ! --- \n");
                                 otherNext = conf.checkPatternUsername( newUsername );
-                                if ( !otherNext ) System.out.print( "\n --- ATTENZIONE, parametri non rispettati! Minimo 3 e massimo 20 caratteri --- \n" );
+                                if ( !otherNext ) System.out.print( "\n --- ATTENTION, parameters not respected! min 3 max 20 characters --- \n" );
                             } while ( next || !otherNext );
                             do
                             {   
-                                passwordChars = console.readPassword( "Inserisci una nuova password (alfanumerica, min 8 max 25 caratteri): " );
+                                passwordChars = console.readPassword( "Enter new password (alphanumeric, min 8 max 25 characters): " );
                                 newPassword = new String( passwordChars );
                                 otherNext = conf.checkPatternPassword( newPassword );
-                                if ( !otherNext ) System.out.println( "\n --- ATTENZIONE, parametri non rispettati! Minimo 8 e massimo 25 caratteri, almeno una cifra e un carattere richiesti --- \n" );
+                                if ( !otherNext ) System.out.println( "\n --- ATTENTION, parameters not respected! min 8 max 25 characters, at least one digit and one character required --- \n" );
                             } while ( !otherNext );
                             
                             conf.changeCredentials( newUsername, newPassword );
                         }
                         clearConsole(1000);
-                        configuratorOtions( scanner );
+                        configuratorOptions( scanner, conf );
                     break;
                 case "2":
                         System.out.println("\nBye bye ...\n\n");
@@ -124,7 +124,7 @@ public class Main
         }
     }
 
-    public static void configuratorOtions ( Scanner scanner )
+    public static void configuratorOptions ( Scanner scanner, Configurator conf )
     {
         String choice;
         
@@ -146,6 +146,43 @@ public class Main
             switch ( choice )
             {
                 case "1":
+                        System.out.print("\nenter district name: ");
+                        String districName = scanner.nextLine();
+
+                        District newDistrict = conf.createDistrict( districName );
+                        if ( newDistrict == null )
+                        {
+                            System.out.println( "\n --- District name already present --- \n" );
+                            clearConsole(2000);
+                            break;
+                        } 
+                        newDistrict.setID();
+
+                        String municipalityName, continueInsert = "n";
+                        do
+                        {
+                            System.out.print("\nEnter municipality: ");
+                            municipalityName = scanner.nextLine();
+                            if ( !newDistrict.existMunicipality( municipalityName )) 
+                            {
+                                System.out.println( "\n --- NOT exist ! --- " );
+                                continue;
+                            }
+                            if ( newDistrict.attendedMunicipalityDistrict( municipalityName ) )
+                            {
+                                System.out.println( "\n --- Municipality already present ---" );
+                                continue;
+                            }
+
+                            newDistrict.insertMunicipality( municipalityName );
+                            System.out.println( "\n --- Added succesfull ✓ --- \n" );
+
+                            System.out.print( "end: (y/n) --> " );
+                            continueInsert = scanner.nextLine();
+                        } while ( !continueInsert.equals("y") );
+
+                        System.out.println( "\n --- Operation completed ✓ --- \n" );
+                        clearConsole(2000);
                     break;
                 case "2":
                     break;

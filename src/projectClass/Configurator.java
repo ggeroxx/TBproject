@@ -10,6 +10,7 @@ import org.mindrot.jbcrypt.BCrypt;
 public class Configurator 
 {
     
+    private int ID;
     private String username;
     private String password;
 
@@ -17,6 +18,29 @@ public class Configurator
     {
         this.username = username;
         this.password = password;
+    }
+
+    public int setID ()
+    {
+        String query = "SELECT id FROM configurators WHERE username = ?";
+
+        ArrayList<String> parameters = new ArrayList<String>();
+        parameters.add( this.username );
+
+        ResultSet rs = Conn.exQuery( query, parameters );
+
+        int toReturn = 0;
+        try
+        {
+            rs.next();
+            toReturn = rs.getInt(1);
+        }
+        catch ( SQLException e )
+        {
+            e.printStackTrace();
+        }
+
+        return toReturn;
     }
 
     public boolean login ()
@@ -41,6 +65,7 @@ public class Configurator
         {
             e.printStackTrace();
         }
+        this.ID = this.setID();
 
         return true;
     }
@@ -126,6 +151,23 @@ public class Configurator
             if( Character.isLetter(character) ) contChar++;
 
         return (contDigit == 0 || contChar == 0) ? false : true;
+    }
+
+    public District createDistrict ( String districtName ) 
+    {
+        District newDistrict = new District( districtName );
+
+        if ( newDistrict.attendedDistrict( districtName ) ) return null;
+
+        String query = "INSERT INTO districts (name, IDConfigurator) VALUES (?, ?)";
+
+        ArrayList<String> parameters = new ArrayList<String>();
+        parameters.add( districtName );
+        parameters.add( Integer.toString(this.ID) );
+
+        Conn.updateRow( query, parameters );
+
+        return newDistrict;
     }
 
 }
