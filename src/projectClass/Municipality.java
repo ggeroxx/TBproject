@@ -75,4 +75,12 @@ public class Municipality {
         return rs.next();
     } 
 
+    @Override
+    public String toString() {
+        StringBuffer toReturn = new StringBuffer();
+
+        toReturn.append( "  " + this.CAP + "  " + this.province + "  " + this.name + "\n" );
+
+        return toReturn.toString();
+    }
 }

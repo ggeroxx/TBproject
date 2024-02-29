@@ -15,6 +15,15 @@ public class Conn
         conn = DriverManager.getConnection(url, user, pass);
     }
 
+    public static ResultSet exQuery ( String query ) throws SQLException
+    {
+        Statement stmt = conn.createStatement();
+        
+        ResultSet rs = stmt.executeQuery( query );
+
+        return rs;
+    }
+
     public static ResultSet exQuery ( String query, ArrayList<String> parameters ) throws SQLException
     {
         int i = 1;

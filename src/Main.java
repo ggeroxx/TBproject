@@ -1,8 +1,10 @@
+import java.util.ArrayList;
 import java.util.Scanner;
 //import org.mindrot.jbcrypt.BCrypt;
 import projectClass.*;
 import util.*;
 import java.io.Console;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class Main 
@@ -47,11 +49,11 @@ public class Main
             scanner.close();
         }
         catch ( SQLException e ) {
-            System.out.println("Errore database: ");
+            System.out.println( Costants.SQL_EXCEPTION_MESSAGE );
             e.printStackTrace();
         }
         catch ( Exception e ) {
-            System.out.println( "Errore generico:" );
+            System.out.println( Costants.GENERIC_EXCEPTION_MESSAGE );
             e.printStackTrace();
         }
     }
@@ -133,6 +135,7 @@ public class Main
                     break;
 
                 case "2":
+                        caseTwoConfiguratorMenu( scanner );
                     break;
 
                 case "9":
@@ -189,12 +192,51 @@ public class Main
             newDistrict.addMunicipality( municipalityToAdd );
             System.out.println( Costants.ADDED_SUCCESFULL_MESSAGE );
 
-            System.out.print( Costants.END_ADD_MESSAGE );
-            continueInsert = scanner.nextLine();
+            do
+            {
+                System.out.print( Costants.END_ADD_MESSAGE );
+                continueInsert = scanner.nextLine();
+                if ( !continueInsert.equals("n") && !continueInsert.equals("y") ) System.out.println( Costants.INVALID_OPTION );
+            } while ( !continueInsert.equals("y") && !continueInsert.equals("n") );
+            
         } while ( !continueInsert.equals("y") );
 
         System.out.println( Costants.OPERATION_COMPLETED );
         clearConsole( Costants.TIME_ERROR_MESSAGE );
+    }
+
+    public static void caseTwoConfiguratorMenu ( Scanner scanner ) throws SQLException, Exception
+    {
+        clearConsole( Costants.TIME_SWITCH_MENU );
+        System.out.print( Costants.DISTRICT_LIST );
+        System.out.println( District.printAll() );
+        System.out.print( Costants.ENTER_DISTRICT_ID );
+        String districtID = scanner.nextLine();
+
+        if ( !District.isPresentDistrict( Integer.parseInt( districtID ) ) )
+        {
+            System.out.println( Costants.NOT_EXIST_MESSAGE );
+            clearConsole( Costants.TIME_ERROR_MESSAGE );
+            return;
+        }
+
+        String query = "SELECT name FROM districts where id = ?";
+
+        ArrayList<String> parameters = new ArrayList<String>();
+        parameters.add( districtID );
+
+        ResultSet rs = Conn.exQuery( query, parameters );
+
+        rs.next();
+        District tmp = new District( rs.getString(1) );
+        clearConsole( Costants.TIME_SWITCH_MENU );
+        System.out.println( "\n" + tmp.getName() + ":\n" );
+        System.out.println( tmp.printAllMunicipalities() );
+
+        System.out.print( Costants.ENTER_TO_EXIT );
+        scanner.nextLine();
+        clearConsole( Costants.TIME_SWITCH_MENU );
+        return;
     }
 
 }
