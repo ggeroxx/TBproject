@@ -1,8 +1,6 @@
 package projectClass;
-import util.Conn;
-
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import util.*;
+import java.sql.*;
 import java.util.ArrayList;
 
 import org.mindrot.jbcrypt.BCrypt;
@@ -13,14 +11,17 @@ public class Configurator
     private int ID;
     private String username;
     private String password;
+    private boolean firstAccess;
 
-    public Configurator ( String username, String password ) 
+    public Configurator ( String username, String password ) throws SQLException
     {
         this.username = username;
         this.password = password;
+        this.ID = takeID();
+        this.firstAccess = takeFirstAccess();
     }
 
-    public int setID ()
+    private int takeID () throws SQLException
     {
         String query = "SELECT id FROM configurators WHERE username = ?";
 
@@ -29,93 +30,59 @@ public class Configurator
 
         ResultSet rs = Conn.exQuery( query, parameters );
 
-        int toReturn = 0;
-        try
-        {
-            rs.next();
-            toReturn = rs.getInt(1);
-        }
-        catch ( SQLException e )
-        {
-            e.printStackTrace();
-        }
-
-        return toReturn;
+        rs.next();
+        return rs.getInt( 1 );
     }
 
-    public boolean login ()
+    private boolean takeFirstAccess () throws SQLException
+    {
+        String query = "SELECT firstaccess FROM configurators WHERE username = ?";
+
+        ArrayList<String> parameters = new ArrayList<String>();
+        parameters.add( this.username );
+
+        ResultSet rs = Conn.exQuery( query, parameters );
+
+        rs.next();
+        return rs.getBoolean( 1 );
+    }
+
+    public static boolean login ( String usernameToCheck, String passwordToCheck ) throws SQLException
     {
         String query = "SELECT * FROM configurators WHERE username = ?";
 
         ArrayList<String> parameters = new ArrayList<String>();
-        parameters.add( username );
+        parameters.add( usernameToCheck );
 
         ResultSet rs = Conn.exQuery( query, parameters );
 
-        try
+        if ( !rs.next() ) return false;
+        else
         {
-            if ( !rs.next() ) return false;
-            else
-            {
-                //rs.next();
-                if ( !BCrypt.checkpw( password, rs.getString(3) ) ) return false;
-            }
-        } 
-        catch (SQLException e) 
-        {
-            e.printStackTrace();
+            if ( !BCrypt.checkpw( passwordToCheck, rs.getString(3) ) ) return false;
         }
-        this.ID = this.setID();
 
         return true;
     }
 
-    public boolean firstAccess () 
+    public boolean getFirstAccess()
     {
-        String query = "SELECT firstAccess FROM configurators WHERE username = ?";
-
-        ArrayList<String> parameters = new ArrayList<String>();
-        parameters.add( username );
-
-        ResultSet rs = Conn.exQuery( query, parameters );
-
-        Boolean toReturn = false;
-        try 
-        {
-            rs.next();
-            toReturn = rs.getBoolean(1);
-        } 
-        catch (SQLException e) 
-        {
-            e.printStackTrace();
-        }
-
-        return toReturn;
+        return this.firstAccess;
     }
 
-    public boolean attendedUsername ( String newUsername ) 
+    public static boolean isPresentUsername ( String usernameToCheck ) throws SQLException
     {
         String query = "SELECT username FROM configurators WHERE username = ?";
 
         ArrayList<String> parameters = new ArrayList<String>();
-        parameters.add( newUsername );
+        parameters.add( usernameToCheck );
 
         ResultSet rs = Conn.exQuery( query, parameters );
 
-        boolean toReturn = false;
-        try 
-        {
-            if ( rs.next() ) toReturn = true;
-        } 
-        catch ( SQLException e ) 
-        {
-            e.printStackTrace();
-        }
-
-        return toReturn;
+        return rs.next();
     } 
 
-    public void changeCredentials ( String approvedUsername, String newPassword )
+    public void changeCredentials ( String approvedUsername, String newPassword ) throws SQLException
     {
         String hashedPassword = BCrypt.hashpw( newPassword, BCrypt.gensalt() );
         String query = "UPDATE configurators SET username = ?, password = ?, firstAccess = 0 WHERE username = ?";
@@ -125,12 +92,14 @@ public class Configurator
         parameters.add( hashedPassword );
         parameters.add( username );
 
-        Conn.updateRow( query, parameters );
+        Conn.queryUpdate( query, parameters );
+
         this.username = approvedUsername;
         this.password = newPassword;
+        this.firstAccess = false;
     }
 
-    public boolean checkPatternUsername ( String usernameToCheck ) 
+    public static boolean checkPatternUsername ( String usernameToCheck ) 
     {
         boolean toReturn = true;
 
@@ -139,7 +108,7 @@ public class Configurator
         return toReturn;
     }
 
-    public boolean checkPatternPassword ( String passwordToCheck ) 
+    public static boolean checkPatternPassword ( String passwordToCheck ) 
     {
         int contDigit = 0, contChar = 0;
 
@@ -153,11 +122,9 @@ public class Configurator
         return (contDigit == 0 || contChar == 0) ? false : true;
     }
 
-    public District createDistrict ( String districtName ) 
+    public District createDistrict ( String districtName ) throws SQLException
     {
-        District newDistrict = new District( districtName );
-
-        if ( newDistrict.attendedDistrict( districtName ) ) return null;
+        if ( District.isPresentDistrict( districtName ) ) return null;
 
         String query = "INSERT INTO districts (name, IDConfigurator) VALUES (?, ?)";
 
@@ -165,7 +132,9 @@ public class Configurator
         parameters.add( districtName );
         parameters.add( Integer.toString(this.ID) );
 
-        Conn.updateRow( query, parameters );
+        Conn.queryUpdate( query, parameters );
+
+        District newDistrict = new District( districtName );
 
         return newDistrict;
     }

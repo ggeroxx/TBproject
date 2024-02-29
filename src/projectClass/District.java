@@ -1,42 +1,22 @@
 package projectClass;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import util.*;
+import java.sql.*;
 import java.util.ArrayList;
-import util.Conn;
 
 public class District {
     
     private int ID;
     private String name;
+    private int IDConfigurator;
 
-    public District ( String name )
+    public District ( String name ) throws SQLException
     {
         this.name = name;
+        this.ID = takeID();
+        this.IDConfigurator = takeIDConfigurator();
     }
 
-    public boolean attendedDistrict ( String newDistrict )
-    {
-        String query = "SELECT name FROM districts WHERE name = ?";
-
-        ArrayList<String> parameters = new ArrayList<String>();
-        parameters.add( newDistrict );
-
-        ResultSet rs = Conn.exQuery( query, parameters );
-
-        boolean toReturn = false;
-        try 
-        {
-            if ( rs.next() ) toReturn = true;
-        } 
-        catch ( SQLException e ) 
-        {
-            e.printStackTrace();
-        }
-
-        return toReturn;
-    }
-
-    public int getID () 
+    private int takeID () throws SQLException
     {
         String query = "SELECT id FROM districts WHERE name = ?";
 
@@ -45,103 +25,62 @@ public class District {
 
         ResultSet rs = Conn.exQuery( query, parameters );
 
-        int toReturn = 0;
-        try
-        {
-            rs.next();
-            toReturn = rs.getInt(1);
-        }
-        catch ( SQLException e )
-        {
-            e.printStackTrace();
-        }
-
-        return toReturn;
+        rs.next();
+        return rs.getInt( 1 );
     }
 
-    public void setID ( )
+    private int takeIDConfigurator () throws SQLException
     {
-        this.ID = this.getID();
-    }
-
-    public boolean existMunicipality ( String newMunicipality )
-    {
-        String query = "SELECT municipality FROM municipalities WHERE municipality = ?";
+        String query = "SELECT idconfigurator FROM districts WHERE name = ?";
 
         ArrayList<String> parameters = new ArrayList<String>();
-        parameters.add( newMunicipality );
+        parameters.add( this.name );
 
         ResultSet rs = Conn.exQuery( query, parameters );
 
-        boolean toReturn = false;
-        try 
-        {
-            if ( rs.next() ) toReturn = true;
-        } 
-        catch ( SQLException e ) 
-        {
-            e.printStackTrace();
-        }
-
-        return toReturn;
-    } 
-
-    public boolean attendedMunicipalityDistrict ( String newMunicipality )
-    {
-        boolean toReturn = false;
-
-        try
-        {
-            String query = "SELECT id FROM municipalities WHERE municipality = ?";
-
-            ArrayList<String> parameters = new ArrayList<String>();
-            parameters.add( newMunicipality );
-
-            ResultSet rs = Conn.exQuery( query, parameters );
-
-            String otherQuery = "SELECT * FROM districtToMunicipalities WHERE IDDistrict = ? AND IDMunicipality = ?";
-
-            ArrayList<String> otherParameters = new ArrayList<String>();
-            otherParameters.add( Integer.toString( this.ID ) );
-            rs.next();
-            otherParameters.add( Integer.toString( rs.getInt(1) ) );
-
-            ResultSet otherRs = Conn.exQuery( otherQuery, otherParameters );
-
-            if ( otherRs.next() ) toReturn = true;
-        }
-        catch ( SQLException e )
-        {
-            e.printStackTrace();
-        }
-
-        return toReturn;
+        rs.next();
+        return rs.getInt( 1 );
     }
 
-    public void insertMunicipality ( String newMunicipality )
+    public static boolean isPresentDistrict ( String nameToCheck ) throws SQLException
     {
-        try
-        {
-            String query = "SELECT id FROM municipalities WHERE municipality = ?";
+        String query = "SELECT name FROM districts WHERE name = ?";
 
-            ArrayList<String> parameters = new ArrayList<String>();
-            parameters.add( newMunicipality );
+        ArrayList<String> parameters = new ArrayList<String>();
+        parameters.add( nameToCheck );
 
-            ResultSet rs = Conn.exQuery( query, parameters );
+        ResultSet rs = Conn.exQuery( query, parameters );
 
-            String otherQuery = "INSERT INTO districtToMunicipalities (IDDistrict, IDMunicipality) VALUES (?, ?)";
+        return rs.next();
+    }
 
-            ArrayList<String> otherParameters = new ArrayList<String>();
-            otherParameters.add( Integer.toString( this.ID ) );
-            rs.next();
-            otherParameters.add( Integer.toString( rs.getInt(1) ) );
+    public boolean isPresentMunicipalityInDistrict ( Municipality municipalityToCheck ) throws SQLException
+    {
+        String query = "SELECT * FROM districtToMunicipalities WHERE IDDistrict = ? AND IDMunicipality = ?";
 
-            Conn.updateRow( otherQuery, otherParameters );  
-        }
-        catch ( SQLException e )
-        {
-            e.printStackTrace();
-        }
+        ArrayList<String> parameters = new ArrayList<String>();
+        parameters.add( Integer.toString( this.ID ) );
+        parameters.add( Integer.toString( municipalityToCheck.getID() ) );
+
+        ResultSet rs = Conn.exQuery( query, parameters );
+
+        return rs.next();
+    }
+
+    public void addMunicipality ( Municipality municipalityToAdd ) throws SQLException
+    {
+        String query = "INSERT INTO districtToMunicipalities (IDDistrict, IDMunicipality) VALUES (?, ?)";
+
+        ArrayList<String> parameters = new ArrayList<String>();
+        parameters.add( Integer.toString( this.ID ) );
+        parameters.add( Integer.toString( municipalityToAdd.getID() ) );
+
+        Conn.queryUpdate( query, parameters );  
+    }
+
+    public static boolean checkPatternName ( String nameToCheck ) 
+    {
+        return nameToCheck.length() <= 0 || nameToCheck.length() >= 50;
     }
 
 }

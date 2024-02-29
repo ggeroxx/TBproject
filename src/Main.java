@@ -1,199 +1,200 @@
 import java.util.Scanner;
 //import org.mindrot.jbcrypt.BCrypt;
 import projectClass.*;
-import util.Conn;
+import util.*;
 import java.io.Console;
+import java.sql.SQLException;
 
 public class Main 
 {
-    public static void main(String[] args) throws Exception 
+    public static void main(String[] args) 
     {
         //System.out.println( BCrypt.hashpw( "password1", BCrypt.gensalt() ) );
         //System.out.println( BCrypt.hashpw( "password2", BCrypt.gensalt() ) );
         //System.out.println( BCrypt.hashpw( "password3", BCrypt.gensalt() ) );
-
-        Scanner scanner = new Scanner( System.in );
-        Console console = System.console();
-        String choice;
-
-        Conn.openConnection();
-
-        clearConsole(0);
-        do 
+        try
         {
-            System.out.print(   
-                                "\n" +
-                                "--------------\n" +
-                                "TIME BANK\n" +
-                                "--------------\n" +
-                                " 1.  login\n" +
-                                " 2.  exit\n" +
-                                "--------------\n" +
-                                "Enter yout choice (1/2) --> "
-                            );
-            choice = scanner.nextLine();
+            Scanner scanner = new Scanner( System.in );
+            Console console = System.console();
+            Conn.openConnection();
 
-            switch ( choice ) 
+            clearConsole( Costants.TIME_ZERO );
+
+            String choice;
+            do 
             {
-                case "1":
-                        clearConsole(100);
-                        System.out.print(
-                                            "\n" +
-                                            "-----------\n" +
-                                            "LOGIN\n" +
-                                            "-----------\n"
-                                        );
+                System.out.print( Costants.MAIN_MENU );
+                choice = scanner.nextLine();
 
-                        System.out.print("enter username: ");
-                        String username = scanner.nextLine();
-                        
-                        char[] passwordChars = console.readPassword( "enter password: " );
-                        String password = new String( passwordChars );
+                switch ( choice ) 
+                {
+                    case "1":
+                            caseOneMainMenu( scanner, console );
+                        break;
 
-                        Configurator conf = new Configurator( username, password );
+                    case "2":
+                            System.out.println( Costants.BYE_BYE_MESSAGE );
+                        break;
 
-                        if ( !conf.login() )
-                        {   
-                            System.out.println("\n --- ATTENTION, invalid username a/o password! Try again! ---");
-                            clearConsole(2500);
-                            break;
-                        }
-
-                        if ( conf.firstAccess() )
-                        {
-                            String newUsername, newPassword;
-                            boolean next = false, otherNext = false;
-
-                            clearConsole(200);
-                            System.out.print(
-                                                "\n" +
-                                                "--------------\n" +
-                                                "REGISTRATION\n" +
-                                                "--------------\n"
-                                            );
-
-                            do
-                            {
-                                System.out.print("Enter new username (min 3 max 20 characters): ");
-                                newUsername = scanner.nextLine();
-                                next = conf.attendedUsername( newUsername );
-                                if ( next ) System.out.println("\n --- username NOT available ! --- \n");
-                                otherNext = conf.checkPatternUsername( newUsername );
-                                if ( !otherNext ) System.out.print( "\n --- ATTENTION, parameters not respected! min 3 max 20 characters --- \n" );
-                            } while ( next || !otherNext );
-                            do
-                            {   
-                                passwordChars = console.readPassword( "Enter new password (alphanumeric, min 8 max 25 characters): " );
-                                newPassword = new String( passwordChars );
-                                otherNext = conf.checkPatternPassword( newPassword );
-                                if ( !otherNext ) System.out.println( "\n --- ATTENTION, parameters not respected! min 8 max 25 characters, at least one digit and one character required --- \n" );
-                            } while ( !otherNext );
-                            
-                            conf.changeCredentials( newUsername, newPassword );
-                        }
-                        clearConsole(1000);
-                        configuratorOptions( scanner, conf );
-                    break;
-                case "2":
-                        System.out.println("\nBye bye ...\n\n");
-                    break;
-                default:
-                        System.out.println("\n --- Invalid option ! ---");
-                        clearConsole(2000);
-                    break;
-            }
-        } while ( !choice.equals("2") );
-        
-        Conn.closeConnection();
-        scanner.close();
-    }
-
-    public static void clearConsole ( int millis ) 
-    {
-        try 
-        {
-            Thread.sleep(millis);
-            if ( System.getProperty("os.name").contains("Windows") )
-                new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
-            else
-                new ProcessBuilder("clear").inheritIO().start().waitFor();
-        } 
-        catch (Exception e) 
-        {
+                    default:
+                            System.out.println( Costants.INVALID_OPTION );
+                            clearConsole( Costants.TIME_ERROR_MESSAGE );
+                        break;
+                }
+            } while ( !choice.equals("2") );
+            
+            Conn.closeConnection();
+            scanner.close();
+        }
+        catch ( SQLException e ) {
+            System.out.println("Errore database: ");
+            e.printStackTrace();
+        }
+        catch ( Exception e ) {
+            System.out.println( "Errore generico:" );
             e.printStackTrace();
         }
     }
 
-    public static void configuratorOptions ( Scanner scanner, Configurator conf )
+    public static void clearConsole ( int millis ) throws Exception
+    {
+        Thread.sleep(millis);
+        if ( System.getProperty("os.name").contains("Windows") )
+            new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
+        else
+            new ProcessBuilder("clear").inheritIO().start().waitFor();
+    }
+
+    public static void caseOneMainMenu ( Scanner scanner, Console console ) throws SQLException, Exception
+    {
+        clearConsole( Costants.TIME_SWITCH_MENU );
+        System.out.print( Costants.LOGIN_SCREEN );
+
+        System.out.print( Costants.ENTER_USERNAME );
+        String username = scanner.nextLine();
+        
+        char[] passwordChars = console.readPassword( Costants.ENTER_PASSWORD );
+        String password = new String( passwordChars );
+
+        if ( !Configurator.login( username, password ) )
+        {   
+            System.out.println( Costants.LOGIN_ERROR );
+            clearConsole( Costants.TIME_ERROR_MESSAGE );
+            return;
+        }
+
+        Configurator conf = new Configurator( username, password );
+
+        if ( conf.getFirstAccess() )
+        {
+            clearConsole( Costants.TIME_SWITCH_MENU );
+            System.out.print( Costants.REGISTRATION_SCREEN );
+
+            String newUsername, newPassword;
+            boolean checkUsername1 = false, checkUsername2 = false;
+            do
+            {
+                System.out.print( Costants.ENTER_NEW_USERNAME );
+                newUsername = scanner.nextLine();
+                checkUsername1 = Configurator.isPresentUsername( newUsername );
+                if ( checkUsername1 ) System.out.println( Costants.USERNAME_NOT_AVAILABLE );
+                checkUsername2 = Configurator.checkPatternUsername( newUsername );
+                if ( !checkUsername2 ) System.out.println( Costants.ERROR_PATTERN_USERNAME );
+            } while ( checkUsername1 || !checkUsername2 );
+
+            boolean checkPassword;
+            do
+            {   
+                passwordChars = console.readPassword( Costants.ENTER_NEW_PASSWORD );
+                newPassword = new String( passwordChars );
+                checkPassword = Configurator.checkPatternPassword( newPassword );
+                if ( !checkPassword ) System.out.println( Costants.ERROR_PATTERN_PASSWORD );
+            } while ( !checkPassword );
+            
+            conf.changeCredentials( newUsername, newPassword );
+        }
+        clearConsole( Costants.TIME_SWITCH_MENU );
+        configuratorMenu( scanner, conf );
+    }
+
+    public static void configuratorMenu ( Scanner scanner, Configurator conf ) throws SQLException, Exception
     {
         String choice;
         
         do
         {
-            System.out.print(
-                                "\n" +
-                                "--------------\n" +
-                                "OPTIONS\n" +
-                                "--------------\n" +
-                                " 1.  insert new district\n" +
-                                " 2.  view district\n" + 
-                                " 9.  logout\n" +
-                                "--------------\n" +
-                                "Enter your choice (1/9) --> "
-                            );
+            System.out.print( Costants.CONFIGURATOR_MENU );
             choice = scanner.nextLine();
 
             switch ( choice )
             {
                 case "1":
-                        System.out.print("\nenter district name: ");
-                        String districName = scanner.nextLine();
-
-                        District newDistrict = conf.createDistrict( districName );
-                        if ( newDistrict == null )
-                        {
-                            System.out.println( "\n --- District name already present --- \n" );
-                            clearConsole(2000);
-                            break;
-                        } 
-                        newDistrict.setID();
-
-                        String municipalityName, continueInsert = "n";
-                        do
-                        {
-                            System.out.print("\nEnter municipality: ");
-                            municipalityName = scanner.nextLine();
-                            if ( !newDistrict.existMunicipality( municipalityName )) 
-                            {
-                                System.out.println( "\n --- NOT exist ! --- " );
-                                continue;
-                            }
-                            if ( newDistrict.attendedMunicipalityDistrict( municipalityName ) )
-                            {
-                                System.out.println( "\n --- Municipality already present ---" );
-                                continue;
-                            }
-
-                            newDistrict.insertMunicipality( municipalityName );
-                            System.out.println( "\n --- Added succesfull ✓ --- \n" );
-
-                            System.out.print( "end: (y/n) --> " );
-                            continueInsert = scanner.nextLine();
-                        } while ( !continueInsert.equals("y") );
-
-                        System.out.println( "\n --- Operation completed ✓ --- \n" );
-                        clearConsole(2000);
+                        caseOneConfiguratorMenu( scanner, conf );
                     break;
+
                 case "2":
                     break;
+
                 case "9":
-                        clearConsole(1000);
+                        clearConsole( Costants.TIME_LOGOUT );
                     break;
+
                 default:
-                        System.out.println("\n --- Invalid option ! ---");
-                        clearConsole(2000);
+                        System.out.println( Costants.INVALID_OPTION );
+                        clearConsole( Costants.TIME_ERROR_MESSAGE );
                     break;
             }
         } while ( !choice.equals("9") );
     }
+
+    public static void caseOneConfiguratorMenu ( Scanner scanner, Configurator conf ) throws SQLException, Exception
+    {
+        String districName;
+        do
+        {
+            System.out.print( Costants.ENTER_DISTRICT_NAME );
+            districName = scanner.nextLine();
+            if ( District.checkPatternName( districName ) )
+            {
+                System.out.println( Costants.ERROR_PATTERN_DISTRICT_NAME );
+                clearConsole( Costants.TIME_ERROR_MESSAGE );
+            } 
+        } while ( District.checkPatternName( districName ) );
+        
+        if ( District.isPresentDistrict( districName ) )
+        {
+            System.out.println( Costants.DISTRICT_NAME_ALREADY_PRESENT );
+            clearConsole( Costants.TIME_ERROR_MESSAGE );
+            return;
+        } 
+        District newDistrict = conf.createDistrict( districName );
+
+        String municipalityName, continueInsert = "n";
+        do
+        {
+            System.out.print( Costants.ENTER_MUNICIPALITY );
+            municipalityName = scanner.nextLine();
+            if ( !Municipality.existMunicipality( municipalityName ) ) 
+            {
+                System.out.println( Costants.NOT_EXIST_MESSAGE );
+                continue;
+            }
+            Municipality municipalityToAdd = new Municipality( municipalityName );
+
+            if ( newDistrict.isPresentMunicipalityInDistrict( municipalityToAdd ) )
+            {
+                System.out.println( Costants.MUNICIPALITY_NAME_ALREADY_PRESENT );
+                continue;
+            }
+            newDistrict.addMunicipality( municipalityToAdd );
+            System.out.println( Costants.ADDED_SUCCESFULL_MESSAGE );
+
+            System.out.print( Costants.END_ADD_MESSAGE );
+            continueInsert = scanner.nextLine();
+        } while ( !continueInsert.equals("y") );
+
+        System.out.println( Costants.OPERATION_COMPLETED );
+        clearConsole( Costants.TIME_ERROR_MESSAGE );
+    }
+
 }

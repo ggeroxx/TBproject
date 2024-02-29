@@ -2,7 +2,7 @@ package util;
 import java.sql.*;
 import java.util.ArrayList;
 
-public class Conn 
+public class Conn
 {
     
     private static String url = "jdbc:mysql://localhost/TBDB";
@@ -10,71 +10,42 @@ public class Conn
     private static String pass = "";
     private static Connection conn;
 
-    public static void openConnection () 
+    public static void openConnection () throws SQLException
     {
-        try 
-        {
-            conn = DriverManager.getConnection(url, user, pass);
-        }
-        catch (SQLException e) 
-        {
-            e.printStackTrace();
-        }
+        conn = DriverManager.getConnection(url, user, pass);
     }
 
-    public static ResultSet exQuery ( String query, ArrayList<String> parameters )
+    public static ResultSet exQuery ( String query, ArrayList<String> parameters ) throws SQLException
     {
-        ResultSet rs = null;
         int i = 1;
         
-        try 
+        PreparedStatement stmt = conn.prepareStatement( query );
+        for ( String parameter : parameters ) 
         {
-            PreparedStatement stmt = conn.prepareStatement( query );
-            for ( String parameter : parameters ) 
-            {
-                stmt.setString( i, parameter );
-                i++;    
-            }
-            rs = stmt.executeQuery();
+            stmt.setString( i, parameter );
+            i++;    
         }
-        catch (SQLException e) 
-        {
-            e.printStackTrace();
-        }
+        ResultSet rs = stmt.executeQuery();
 
         return rs;
     }
 
-    public static void updateRow ( String query, ArrayList<String> parameters )
+    public static void queryUpdate ( String query, ArrayList<String> parameters ) throws SQLException
     {
         int i = 1;
         
-        try 
+        PreparedStatement stmt = conn.prepareStatement( query );
+        for ( String parameter : parameters ) 
         {
-            PreparedStatement stmt = conn.prepareStatement( query );
-            for ( String parameter : parameters ) 
-            {
-                stmt.setString( i, parameter );
-                i++;    
-            }
-            stmt.executeUpdate();
+            stmt.setString( i, parameter );
+            i++;    
         }
-        catch (SQLException e) 
-        {
-            e.printStackTrace();
-        }
+        stmt.executeUpdate();
     }
 
-    public static void closeConnection ()
+    public static void closeConnection () throws SQLException
     {
-        try 
-        {
-            conn.close();
-        }
-        catch (SQLException e)
-        {
-            e.printStackTrace();
-        }
+        conn.close();
     }
 
 }
