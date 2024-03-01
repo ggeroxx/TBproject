@@ -44,12 +44,13 @@ public class Constants {
     public static final String ENTER_DISTRICT_NAME = "\nenter district name: ";
     public static final String ENTER_MUNICIPALITY = "\nEnter municipality (' for accent): ";
     public static final String END_ADD_MESSAGE = "end: (y/n) --> ";
-    public static final String ENTER_TO_EXIT = "\nPress enter to exit ↵  ";
-    public static final String ENTER_DISTRICT_ID = "\nEnter district ID --> ";
+    public static final String ENTER_TO_EXIT = "Press enter to exit ↵  ";
+    public static final String ENTER_DISTRICT_ID = "Enter district ID --> ";
 
     public static final String BYE_BYE_MESSAGE = "\nBye bye ...\n\n";
     public static final String ADDED_SUCCESFULL_MESSAGE = "\n --- Added succesfull ✓ --- \n";
     public static final String OPERATION_COMPLETED = "\n --- Operation completed ✓ --- \n";
+    public static final String NOT_SAVED_STRING = "  -->  (not saved)\n";
 
     public static final String LOGIN_ERROR = "\n --- ATTENTION, invalid username a/o password! Try again! ---";
     public static final String USERNAME_NOT_AVAILABLE = "\n --- username NOT available ! --- \n";

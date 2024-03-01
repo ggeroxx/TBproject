@@ -114,9 +114,7 @@ public class District {
 
     public static String printAll () throws SQLException
     {
-        String query = "SELECT name FROM districts " +
-                       "UNION " +
-                       "SELECT name FROM tmp_districts";
+        String query = "SELECT name FROM districts ";
 
         ResultSet rs = Conn.exQuery( query );
 
@@ -125,7 +123,16 @@ public class District {
         while ( rs.next() )
         {
             tmp = new District( rs.getString(1) );
-            toReturn.append( tmp.toString() );
+            toReturn.append( tmp.toString() + "\n");
+        }
+
+        query = "SELECT name FROM tmp_districts";
+        rs = Conn.exQuery( query );
+
+        while ( rs.next() )
+        {
+            tmp = new District( rs.getString(1) );
+            toReturn.append( tmp.toString() + "  -->  (not saved)\n");
         }
 
         return toReturn.toString();
@@ -188,7 +195,7 @@ public class District {
     {
         StringBuffer toReturn = new StringBuffer();
 
-        toReturn.append( " " + this.ID + ". " + this.name + "\n" );
+        toReturn.append( " " + this.ID + ". " + this.name);
 
         return toReturn.toString();
     }
