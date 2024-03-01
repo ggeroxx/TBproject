@@ -23,9 +23,12 @@ public class District {
 
     private int takeID () throws SQLException
     {
-        String query = "SELECT id FROM districts WHERE name = ?";
+        String query = "SELECT id FROM districts WHERE name = ? " +
+                       "UNION " +
+                       "SELECT id FROM tmp_districts WHERE name = ?";
 
         ArrayList<String> parameters = new ArrayList<String>();
+        parameters.add( this.name );
         parameters.add( this.name );
 
         ResultSet rs = Conn.exQuery( query, parameters );
@@ -36,9 +39,12 @@ public class District {
 
     private int takeIDConfigurator () throws SQLException
     {
-        String query = "SELECT idconfigurator FROM districts WHERE name = ?";
+        String query = "SELECT idconfigurator FROM districts WHERE name = ? " +
+                       "UNION " +
+                       "SELECT idconfigurator FROM tmp_districts WHERE name = ?";
 
         ArrayList<String> parameters = new ArrayList<String>();
+        parameters.add( this.name );
         parameters.add( this.name );
 
         ResultSet rs = Conn.exQuery( query, parameters );
@@ -49,9 +55,12 @@ public class District {
 
     public static boolean isPresentDistrict ( int IDToCheck ) throws SQLException
     {
-        String query = "SELECT id FROM districts WHERE id = ?";
+        String query = "SELECT id FROM districts WHERE id = ? " +
+                       "UNION " +
+                       "SELECT id FROM tmp_districts WHERE id = ?";
 
         ArrayList<String> parameters = new ArrayList<String>();
+        parameters.add( Integer.toString( IDToCheck ) );
         parameters.add( Integer.toString( IDToCheck ) );
 
         ResultSet rs = Conn.exQuery( query, parameters );
@@ -61,9 +70,12 @@ public class District {
 
     public static boolean isPresentDistrict ( String nameToCheck ) throws SQLException
     {
-        String query = "SELECT name FROM districts WHERE name = ?";
+        String query = "SELECT name FROM districts WHERE name = ?" +
+                       "UNION " +
+                       "SELECT name FROM tmp_districts WHERE name = ?";
 
         ArrayList<String> parameters = new ArrayList<String>();
+        parameters.add( nameToCheck );
         parameters.add( nameToCheck );
 
         ResultSet rs = Conn.exQuery( query, parameters );
@@ -73,7 +85,7 @@ public class District {
 
     public boolean isPresentMunicipalityInDistrict ( Municipality municipalityToCheck ) throws SQLException
     {
-        String query = "SELECT * FROM districtToMunicipalities WHERE IDDistrict = ? AND IDMunicipality = ?";
+        String query = "SELECT * FROM tmp_districttomunicipalities WHERE iddistrict = ? AND idmunicipality = ?";
 
         ArrayList<String> parameters = new ArrayList<String>();
         parameters.add( Integer.toString( this.ID ) );
@@ -86,7 +98,7 @@ public class District {
 
     public void addMunicipality ( Municipality municipalityToAdd ) throws SQLException
     {
-        String query = "INSERT INTO districtToMunicipalities (IDDistrict, IDMunicipality) VALUES (?, ?)";
+        String query = "INSERT INTO tmp_districttomunicipalities (IDDistrict, IDMunicipality) VALUES (?, ?)";
 
         ArrayList<String> parameters = new ArrayList<String>();
         parameters.add( Integer.toString( this.ID ) );
@@ -102,7 +114,9 @@ public class District {
 
     public static String printAll () throws SQLException
     {
-        String query = "SELECT name FROM districts";
+        String query = "SELECT name FROM districts " +
+                       "UNION " +
+                       "SELECT name FROM tmp_districts";
 
         ResultSet rs = Conn.exQuery( query );
 
@@ -120,11 +134,17 @@ public class District {
     public String printAllMunicipalities () throws SQLException
     {
         String query = "SELECT municipalities.name " +
-                        "FROM districttomunicipalities " +
-                        "JOIN municipalities ON districttomunicipalities.idmunicipality = municipalities.id " + 
-                        "WHERE districttomunicipalities.iddistrict = ?";
+                       "FROM districttomunicipalities " +
+                       "JOIN municipalities ON districttomunicipalities.idmunicipality = municipalities.id " + 
+                       "WHERE districttomunicipalities.iddistrict = ?" +
+                       "UNION " +
+                       "SELECT municipalities.name " +
+                       "FROM tmp_districttomunicipalities " +
+                       "JOIN municipalities ON tmp_districttomunicipalities.idmunicipality = municipalities.id " + 
+                       "WHERE tmp_districttomunicipalities.iddistrict = ?";
 
         ArrayList<String> parameters = new ArrayList<String>();
+        parameters.add( Integer.toString( this.ID ) );
         parameters.add( Integer.toString( this.ID ) );
 
         ResultSet rs = Conn.exQuery( query, parameters );
@@ -138,6 +158,29 @@ public class District {
         }
 
         return toReturn.toString();
+    }
+
+    public static void saveAll () throws SQLException
+    {
+        String query = "INSERT INTO districts (name, idconfigurator) " +
+                       "SELECT name, idconfigurator " +
+                       "FROM tmp_districts";
+        
+        Conn.queryUpdate( query );
+
+        query = "INSERT INTO districttomunicipalities (iddistrict, idmunicipality) " +
+                "SELECT iddistrict, idmunicipality " +
+                "FROM tmp_districttomunicipalities";
+
+        Conn.queryUpdate( query );
+
+        query = "DELETE FROM tmp_districttomunicipalities";
+
+        Conn.queryUpdate(query);
+
+        query = "DELETE FROM tmp_districts";
+
+        Conn.queryUpdate(query);
     }
 
     @Override

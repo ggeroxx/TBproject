@@ -1,6 +1,6 @@
 package util;
 
-public class Costants {
+public class Constants {
     
     public static final String MAIN_MENU = "\n" +
                                             "--------------\n" +
@@ -26,7 +26,8 @@ public class Costants {
                                                    "OPTIONS\n" +
                                                    "--------------\n" +
                                                    " 1.  insert new district\n" +
-                                                   " 2.  view district\n" + 
+                                                   " 5.  save all data\n" +
+                                                   " 6.  view district\n" + 
                                                    " 9.  logout\n" +
                                                    "--------------\n" +
                                                    "Enter your choice (1/9) --> ";
@@ -59,6 +60,7 @@ public class Costants {
     public static final String DISTRICT_NAME_ALREADY_PRESENT = "\n --- District name already present --- \n";
     public static final String MUNICIPALITY_NAME_ALREADY_PRESENT = "\n --- Municipality already present ---";
     public static final String NOT_EXIST_MESSAGE = "\n --- NOT exist ! --- ";
+    public static final String SAVE_COMPLETED = "\n --- saved COMPLETED ✓ ---\n";
 
     public static final String SQL_EXCEPTION_MESSAGE = "Errore database: ";
     public static final String GENERIC_EXCEPTION_MESSAGE = "Errore generico:";
@@ -66,6 +68,7 @@ public class Costants {
     public static final int TIME_ZERO = 0;
     public static final int TIME_SWITCH_MENU = 100;
     public static final int TIME_ERROR_MESSAGE = 2000;
+    public static final int TIME_MESSAGE = 1500;
     public static final int TIME_LOGOUT = 1000;
 
 }

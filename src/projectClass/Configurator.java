@@ -126,7 +126,7 @@ public class Configurator
     {
         if ( District.isPresentDistrict( districtName ) ) return null;
 
-        String query = "INSERT INTO districts (name, IDConfigurator) VALUES (?, ?)";
+        String query = "INSERT INTO tmp_districts (name, idconfigurator) VALUES (?, ?)";
 
         ArrayList<String> parameters = new ArrayList<String>();
         parameters.add( districtName );
@@ -137,6 +137,11 @@ public class Configurator
         District newDistrict = new District( districtName );
 
         return newDistrict;
+    }
+
+    public void saveAll () throws SQLException
+    {
+        District.saveAll();
     }
 
 }
