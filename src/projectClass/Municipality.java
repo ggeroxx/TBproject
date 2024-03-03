@@ -76,7 +76,8 @@ public class Municipality {
     } 
 
     @Override
-    public String toString() {
+    public String toString() 
+    {
         StringBuffer toReturn = new StringBuffer();
 
         toReturn.append( "  " + this.CAP + "  " + this.province + "  " + this.name + "\n" );
