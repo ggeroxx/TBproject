@@ -222,6 +222,7 @@ public class Main
     public static void caseTwoConfiguratorMenu ( Scanner scanner, Configurator conf ) throws SQLException, Exception
     {
         clearConsole( Constants.TIME_SWITCH_MENU );
+        System.out.print( Constants.HIERARCHY_SCREEN );
 
         boolean isRoot = true;
         Integer hierarchyID = null;
@@ -233,7 +234,7 @@ public class Main
             String categoryName = scanner.nextLine();
             if ( Category.isPresentRootCategory( categoryName ) )
             {
-                System.out.println( Constants.ROOT_CATEGORY_ALREADY_PRESENT );
+                System.out.print( Constants.ROOT_CATEGORY_ALREADY_PRESENT );
                 continue;
             }
 
@@ -249,9 +250,9 @@ public class Main
             String description = null;
             if ( leafCategory.equals( "n" ) )
             {
-                System.out.println( Constants.ENTER_FIELD );
+                System.out.print( Constants.ENTER_FIELD );
                 field = scanner.nextLine();
-                System.out.println( Constants.ENTER_DESCRIPTION );
+                System.out.print( Constants.ENTER_DESCRIPTION );
                 description = scanner.nextLine();
             }
 

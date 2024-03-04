@@ -31,12 +31,17 @@ public class Constants {
                                                    " 6.  view district\n" + 
                                                    " 9.  logout\n" +
                                                    "--------------\n" +
-                                                   "Enter your choice (1/9) --> ";
+                                                   "Enter your choice [1-9] --> ";
 
     public static final String DISTRICT_LIST = "\n" +
                                                "---------------\n" + 
                                                "DISTRICT LIST\n" + 
                                                "---------------\n";
+
+    public static final String HIERARCHY_SCREEN = "\n" +
+                                                   "--------------------\n" +
+                                                   "HIERARCHY INSERTION\n" +
+                                                   "--------------------\n";
 
     public static final String ENTER_USERNAME = "enter username: ";
     public static final String ENTER_NEW_USERNAME = "Enter new username (min 3 max 20 characters): ";
@@ -47,7 +52,7 @@ public class Constants {
     public static final String END_ADD_MESSAGE = "end: (y/n) --> ";
     public static final String ENTER_TO_EXIT = "Press enter to exit ↵  ";
     public static final String ENTER_DISTRICT_ID = "Enter district ID --> ";
-    public static final String ENTER_CATEGORY_NAME = "enter category name: ";
+    public static final String ENTER_CATEGORY_NAME = "\nenter category name: ";
     public static final String ENTER_FIELD = "enter field: ";
     public static final String ENTER_DESCRIPTION = "enter description: ";
     public static final String LEAF_CATEGORY_MESSAGE = "leaf category? (y/n) --> ";

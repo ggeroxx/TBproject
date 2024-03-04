@@ -100,9 +100,9 @@ public class Category {
     {
         StringBuffer toReturn = new StringBuffer();
 
-        String query = "SELECT id, name FROM categories WHERE hierarchyID = ? LIMIT (SELECT COUNT(*) - 1 FROM categories) " +
+        String query = "SELECT id, name FROM categories WHERE hierarchyID = ? LIMIT (SELECT COUNT(*) FROM categories) " +
                        "UNION " +
-                       "SELECT id, name FROM tmp_categories WHERE hierarchyID = ? LIMIT (SELECT COUNT(*) - 1 FROM tmp_categories)";
+                       "SELECT id, name FROM tmp_categories WHERE hierarchyID = ? LIMIT (SELECT COUNT(*) FROM tmp_categories)";
 
         ArrayList<String> parameters = new ArrayList<String>();
         parameters.add( Integer.toString( hierarchyID ) );
