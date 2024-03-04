@@ -139,6 +139,40 @@ public class Configurator
         return newDistrict;
     }
 
+    public Category createCategory ( String name, String field, String description, boolean isRoot, Integer hierarchyID ) throws SQLException
+    {
+        String query;
+        if ( isRoot )
+        {
+            query = "SELECT MAX(id) AS max_id FROM ( " +
+                    "SELECT id FROM categories " +
+                    "UNION " +
+                    "SELECT id FROM tmp_categories " +
+                    ") AS combinedTables";
+
+            ResultSet rs = Conn.exQuery( query );
+            rs.next();
+
+            hierarchyID = rs.getInt( 1 ) + 1;
+        }
+
+        query = "INSERT INTO tmp_categories (name, field, description, root, hierarchyid, idconfigurator) VALUES (?, ?, ?, ?, ?, ?)";
+
+        ArrayList<String> parameters = new ArrayList<String>();
+        parameters.add( name );
+        parameters.add( field );
+        parameters.add( description );
+        parameters.add( String.valueOf( isRoot ? 1 : 0 ) );
+        parameters.add( Integer.toString( hierarchyID ) );
+        parameters.add( Integer.toString( this.ID ) );
+
+        Conn.queryUpdate( query, parameters );
+
+        Category newCategory = new Category( name, field, description, isRoot, hierarchyID, this.ID );
+
+        return newCategory;
+    }
+
     public void saveAll () throws SQLException
     {
         District.saveAll();

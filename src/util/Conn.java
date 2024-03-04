@@ -13,8 +13,15 @@ public class Conn
     public static void openConnection () throws SQLException
     {
         conn = DriverManager.getConnection(url, user, pass);
+        creationTmpTable();
+    }
 
-        String query = "CREATE TABLE tmp_districts (" +
+    public static void creationTmpTable () throws SQLException
+    {
+        String query;
+        ResultSet rs;
+
+        query = "CREATE TABLE tmp_districts (" +
                             "ID int NOT NULL AUTO_INCREMENT," +
                             "name varchar(50) NOT NULL," +
                             "IDConfigurator int DEFAULT NULL," +
@@ -22,7 +29,6 @@ public class Conn
                             "KEY IDConfigurator (IDConfigurator)," +
                             "CONSTRAINT fk_tmp_districts FOREIGN KEY (IDConfigurator) REFERENCES configurators (ID)" + 
                        ")";
-
         Conn.queryUpdate( query );
 
         query = "CREATE TABLE tmp_districtToMunicipalities (" +
@@ -35,16 +41,51 @@ public class Conn
                     "CONSTRAINT fk1_tmp_districttomunicipalities FOREIGN KEY (IDDistrict) REFERENCES tmp_districts (ID)," +
                     "CONSTRAINT fk2_tmp_districttomunicipalities FOREIGN KEY (IDMunicipality) REFERENCES municipalities (ID)" +
                 ")";
-
         Conn.queryUpdate( query );
 
         query = "SELECT MAX(id) + 1 AS max_id FROM districts";
-
-        ResultSet rs = Conn.exQuery( query );
+        rs = Conn.exQuery( query );
         rs.next();
-
         query = "ALTER TABLE tmp_districts AUTO_INCREMENT = " + Integer.toString( rs.getInt(1) );
+        Conn.queryUpdate( query );
 
+        query = "CREATE TABLE tmp_categories(" +
+                    "ID int NOT NULL PRIMARY KEY AUTO_INCREMENT," +
+                    "name VARCHAR(50) NOT NULL," +
+                    "field VARCHAR(25)," +
+                    "description VARCHAR(100)," +
+                    "root BOOLEAN NOT NULL," +
+                    "hierarchyID int NOT NULL," +
+                    "IDConfigurator int NOT NULL," +
+                    "CONSTRAINT fk_tmp_categories FOREIGN KEY (IDConfigurator) REFERENCES configurators(ID)" +
+                ")"; 
+        Conn.queryUpdate( query );
+
+        query = "SELECT MAX(id) + 1 AS max_id FROM categories";
+        rs = Conn.exQuery( query );
+        rs.next();
+        query = "ALTER TABLE tmp_categories AUTO_INCREMENT = " + Integer.toString( rs.getInt(1) );
+        Conn.queryUpdate( query );
+
+        query = "CREATE TABLE tmp_relationshipsBetweenCategories(" +  
+                    "parentID int NOT NULL," +
+                    "childID int NOT NULL," +
+                    "fieldType VARCHAR(25) NOT NULL," +
+                    "PRIMARY KEY (parentID, childID)," +
+                    "CONSTRAINT fk1_tmp_relationshipsBetweenCategories FOREIGN KEY (parentID) REFERENCES tmp_categories(ID)," +
+                    "CONSTRAINT fk2_tmp_relationshipsBetweenCategories FOREIGN KEY (childID) REFERENCES tmp_categories(ID)" + 
+                ")";
+        Conn.queryUpdate( query );
+    }
+
+    public static void eliminationTmpTable () throws SQLException
+    {
+        String query;
+
+        query = "DROP TABLE tmp_districtToMunicipalities, tmp_districts";
+        Conn.queryUpdate( query );
+
+        query = "DROP TABLE tmp_relationshipsBetweenCategories, tmp_categories";
         Conn.queryUpdate( query );
     }
 
@@ -94,9 +135,7 @@ public class Conn
 
     public static void closeConnection () throws SQLException
     {
-        String query = "DROP TABLE tmp_districtToMunicipalities, tmp_districts";
-        Conn.queryUpdate( query );
-        
+        eliminationTmpTable();   
         conn.close();
     }
 

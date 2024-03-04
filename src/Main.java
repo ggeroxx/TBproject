@@ -140,6 +140,10 @@ public class Main
                         caseOneConfiguratorMenu( scanner, conf );
                     break;
 
+                case "2":
+                        caseTwoConfiguratorMenu(scanner, conf);
+                    break;
+
                 case "5":
                         caseFiveConfiguratorMenu( conf );
                     break;
@@ -213,6 +217,72 @@ public class Main
 
         System.out.println( Constants.OPERATION_COMPLETED );
         clearConsole( Constants.TIME_MESSAGE );
+    }
+
+    public static void caseTwoConfiguratorMenu ( Scanner scanner, Configurator conf ) throws SQLException, Exception
+    {
+        clearConsole( Constants.TIME_SWITCH_MENU );
+
+        boolean isRoot = true;
+        Integer hierarchyID = null;
+        String insertContinue = "n";
+
+        do
+        {
+            System.out.print( Constants.ENTER_CATEGORY_NAME );
+            String categoryName = scanner.nextLine();
+            if ( Category.isPresentRootCategory( categoryName ) )
+            {
+                System.out.println( Constants.ROOT_CATEGORY_ALREADY_PRESENT );
+                continue;
+            }
+
+            String leafCategory;
+            do
+            {
+                System.out.print( Constants.LEAF_CATEGORY_MESSAGE );
+                leafCategory = scanner.nextLine();
+                if ( !leafCategory.equals("n") && !leafCategory.equals("y") ) System.out.println( Constants.INVALID_OPTION );
+            } while ( !leafCategory.equals("y") && !leafCategory.equals("n") );
+            
+            String field = null;
+            String description = null;
+            if ( leafCategory.equals( "n" ) )
+            {
+                System.out.println( Constants.ENTER_FIELD );
+                field = scanner.nextLine();
+                System.out.println( Constants.ENTER_DESCRIPTION );
+                description = scanner.nextLine();
+            }
+
+            Category newCategory = conf.createCategory( categoryName, field, description, isRoot, hierarchyID);
+
+            if ( isRoot ) 
+            {
+                isRoot = false;
+                hierarchyID = newCategory.getHierarchyID();
+                continue;
+            }
+
+            System.out.print( Category.printCategoriesList( hierarchyID ) );
+            System.out.print( Constants.ENTER_DAD_MESSAGE );
+            int parentID = Integer.parseInt( scanner.nextLine() );
+
+            System.out.print( Constants.ENTER_FIELD_TYPE );
+            String fieldType = scanner.nextLine();
+
+            newCategory.createRelationship( parentID, fieldType );
+
+            if ( leafCategory.equals( "n" ) ) continue;
+
+            do
+            {
+                System.out.print( Constants.END_ADD_MESSAGE );
+                insertContinue = scanner.nextLine();
+                if ( !insertContinue.equals("n") && !insertContinue.equals("y") ) System.out.println( Constants.INVALID_OPTION );
+            } while ( !insertContinue.equals("y") && !insertContinue.equals("n") );
+
+        } while( insertContinue.equals( "n" ) );
     }
 
     public static void caseFiveConfiguratorMenu ( Configurator conf ) throws SQLException, Exception

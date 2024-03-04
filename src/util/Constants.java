@@ -26,6 +26,7 @@ public class Constants {
                                                    "OPTIONS\n" +
                                                    "--------------\n" +
                                                    " 1.  insert new district\n" +
+                                                   " 2.  insert new hierarchy\n" +
                                                    " 5.  save all data\n" +
                                                    " 6.  view district\n" + 
                                                    " 9.  logout\n" +
@@ -46,11 +47,18 @@ public class Constants {
     public static final String END_ADD_MESSAGE = "end: (y/n) --> ";
     public static final String ENTER_TO_EXIT = "Press enter to exit ↵  ";
     public static final String ENTER_DISTRICT_ID = "Enter district ID --> ";
+    public static final String ENTER_CATEGORY_NAME = "enter category name: ";
+    public static final String ENTER_FIELD = "enter field: ";
+    public static final String ENTER_DESCRIPTION = "enter description: ";
+    public static final String LEAF_CATEGORY_MESSAGE = "leaf category? (y/n) --> ";
+    public static final String ENTER_DAD_MESSAGE = "enter dad --> ";
+    public static final String ENTER_FIELD_TYPE = "enter field type: ";
 
     public static final String BYE_BYE_MESSAGE = "\nBye bye ...\n\n";
     public static final String ADDED_SUCCESFULL_MESSAGE = "\n --- Added succesfull ✓ --- \n";
     public static final String OPERATION_COMPLETED = "\n --- Operation completed ✓ --- \n";
     public static final String NOT_SAVED_STRING = "  -->  (not saved)\n";
+    public static final String SAVE_COMPLETED = "\n --- saved COMPLETED ✓ ---\n";
 
     public static final String LOGIN_ERROR = "\n --- ATTENTION, invalid username a/o password! Try again! ---";
     public static final String USERNAME_NOT_AVAILABLE = "\n --- username NOT available ! --- \n";
@@ -61,7 +69,7 @@ public class Constants {
     public static final String DISTRICT_NAME_ALREADY_PRESENT = "\n --- District name already present --- \n";
     public static final String MUNICIPALITY_NAME_ALREADY_PRESENT = "\n --- Municipality already present ---";
     public static final String NOT_EXIST_MESSAGE = "\n --- NOT exist ! --- ";
-    public static final String SAVE_COMPLETED = "\n --- saved COMPLETED ✓ ---\n";
+    public static final String ROOT_CATEGORY_ALREADY_PRESENT = "\n --- Root category already present --- \n";
 
     public static final String SQL_EXCEPTION_MESSAGE = "Errore database: ";
     public static final String GENERIC_EXCEPTION_MESSAGE = "Errore generico:";
