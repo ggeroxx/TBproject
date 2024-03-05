@@ -176,6 +176,7 @@ public class Configurator
     public void saveAll () throws SQLException
     {
         District.saveAll();
+        Category.saveAll();
     }
 
 }

@@ -12,23 +12,35 @@ public class Conn
 
     public static void openConnection () throws SQLException
     {
-        conn = DriverManager.getConnection(url, user, pass);
-        creationTmpTable();
+        conn = DriverManager.getConnection( url, user, pass );
+        creationTmpDistrictTable();
+        creationTmpCategoryTable();
     }
 
-    public static void creationTmpTable () throws SQLException
+    public static void creationTmpDistrictTable () throws SQLException
     {
         String query;
         ResultSet rs;
 
         query = "CREATE TABLE tmp_districts (" +
-                            "ID int NOT NULL AUTO_INCREMENT," +
-                            "name varchar(50) NOT NULL," +
-                            "IDConfigurator int DEFAULT NULL," +
-                            "PRIMARY KEY (ID)," +
-                            "KEY IDConfigurator (IDConfigurator)," +
-                            "CONSTRAINT fk_tmp_districts FOREIGN KEY (IDConfigurator) REFERENCES configurators (ID)" + 
-                       ")";
+                    "ID int NOT NULL AUTO_INCREMENT," +
+                    "name varchar(50) NOT NULL," +
+                    "IDConfigurator int DEFAULT NULL," +
+                    "PRIMARY KEY (ID)," +
+                    "KEY IDConfigurator (IDConfigurator)," +
+                    "CONSTRAINT fk_tmp_districts FOREIGN KEY (IDConfigurator) REFERENCES configurators (ID)" + 
+                ")";
+        Conn.queryUpdate( query );
+
+        query = "SELECT MAX(id) + 1 AS max_id FROM districts";
+        rs = Conn.exQuery( query );
+        rs.next();
+        if( rs.getString( 1 ) == null )
+        {
+            query = "ALTER TABLE districts AUTO_INCREMENT = " + Integer.toString( rs.getInt(1) );
+            Conn.queryUpdate( query );
+        }
+        query = "ALTER TABLE tmp_districts AUTO_INCREMENT = " + Integer.toString( rs.getInt(1) );
         Conn.queryUpdate( query );
 
         query = "CREATE TABLE tmp_districtToMunicipalities (" +
@@ -42,13 +54,13 @@ public class Conn
                     "CONSTRAINT fk2_tmp_districttomunicipalities FOREIGN KEY (IDMunicipality) REFERENCES municipalities (ID)" +
                 ")";
         Conn.queryUpdate( query );
+    }
 
-        query = "SELECT MAX(id) + 1 AS max_id FROM districts";
-        rs = Conn.exQuery( query );
-        rs.next();
-        query = "ALTER TABLE tmp_districts AUTO_INCREMENT = " + Integer.toString( rs.getInt(1) );
-        Conn.queryUpdate( query );
-
+    public static void creationTmpCategoryTable () throws SQLException
+    {
+        String query;
+        ResultSet rs;
+        
         query = "CREATE TABLE tmp_categories(" +
                     "ID int NOT NULL PRIMARY KEY AUTO_INCREMENT," +
                     "name VARCHAR(50) NOT NULL," +
@@ -64,6 +76,11 @@ public class Conn
         query = "SELECT MAX(id) + 1 AS max_id FROM categories";
         rs = Conn.exQuery( query );
         rs.next();
+        if(rs.getString(1) == null)
+        {
+            query = "ALTER TABLE categories AUTO_INCREMENT = " + Integer.toString( rs.getInt(1) );
+            Conn.queryUpdate( query );
+        }
         query = "ALTER TABLE tmp_categories AUTO_INCREMENT = " + Integer.toString( rs.getInt(1) );
         Conn.queryUpdate( query );
 

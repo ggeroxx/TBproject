@@ -29,6 +29,7 @@ public class Constants {
                                                    " 2.  insert new hierarchy\n" +
                                                    " 5.  save all data\n" +
                                                    " 6.  view district\n" + 
+                                                   " 7.  view hierarchy\n" +
                                                    " 9.  logout\n" +
                                                    "--------------\n" +
                                                    "Enter your choice [1-9] --> ";
@@ -37,6 +38,11 @@ public class Constants {
                                                "---------------\n" + 
                                                "DISTRICT LIST\n" + 
                                                "---------------\n";
+
+    public static final String HIERARCHY_LIST = "\n" +
+                                                "---------------\n" + 
+                                                "HIERARCHY LIST\n" + 
+                                                "---------------\n";
 
     public static final String HIERARCHY_SCREEN = "\n" +
                                                    "--------------------\n" +
@@ -52,9 +58,10 @@ public class Constants {
     public static final String END_ADD_MESSAGE = "end: (y/n) --> ";
     public static final String ENTER_TO_EXIT = "Press enter to exit ↵  ";
     public static final String ENTER_DISTRICT_ID = "Enter district ID --> ";
+    public static final String ENTER_HIERARCHY_ID = "Enter hierarchy ID --> ";
     public static final String ENTER_CATEGORY_NAME = "\nenter category name: ";
     public static final String ENTER_FIELD = "enter field: ";
-    public static final String ENTER_DESCRIPTION = "enter description: ";
+    public static final String ENTER_DESCRIPTION = "enter description (enter to skip): ";
     public static final String LEAF_CATEGORY_MESSAGE = "leaf category? (y/n) --> ";
     public static final String ENTER_DAD_MESSAGE = "enter dad --> ";
     public static final String ENTER_FIELD_TYPE = "enter field type: ";

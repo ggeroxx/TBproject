@@ -152,6 +152,10 @@ public class Main
                         caseSixConfiguratorMenu( scanner );
                     break;
 
+                case "7":
+                        caseSevenConfiguratorMenu( scanner );
+                    break;
+
                 case "9":
                         clearConsole( Constants.TIME_LOGOUT );
                     break;
@@ -330,4 +334,26 @@ public class Main
         return;
     }
 
+    public static void caseSevenConfiguratorMenu ( Scanner scanner ) throws SQLException, Exception
+    {
+        clearConsole( Constants.TIME_SWITCH_MENU );
+        System.out.print( Constants.HIERARCHY_LIST );
+        System.out.println( Category.printAllRoot() );
+        System.out.print( Constants.ENTER_HIERARCHY_ID );
+        String hierarchyID = scanner.nextLine();
+
+        if ( !Category.isPresentRootCategory( Integer.parseInt( hierarchyID ) ) )
+        {
+            System.out.println( Constants.NOT_EXIST_MESSAGE );
+            clearConsole( Constants.TIME_ERROR_MESSAGE );
+            return;
+        }
+
+        System.out.println( Category.printHierarchy( Integer.parseInt( hierarchyID ) ) );
+
+        System.out.print( Constants.ENTER_TO_EXIT );
+        scanner.nextLine();
+        clearConsole( Constants.TIME_SWITCH_MENU );
+        return;
+    }
 }
