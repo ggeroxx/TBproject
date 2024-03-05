@@ -178,7 +178,7 @@ public class Main
             districName = scanner.nextLine();
             if ( District.checkPatternName( districName ) )
             {
-                System.out.println( Constants.ERROR_PATTERN_DISTRICT_NAME );
+                System.out.println( Constants.ERROR_PATTERN_NAME );
                 clearConsole( Constants.TIME_ERROR_MESSAGE );
             } 
         } while ( District.checkPatternName( districName ) );
@@ -242,8 +242,14 @@ public class Main
                 System.out.println( Constants.LINE );
             } 
 
-            System.out.print( Constants.ENTER_CATEGORY_NAME );
-            String categoryName = scanner.nextLine();
+            String categoryName;
+            do
+            {
+                System.out.print( Constants.ENTER_CATEGORY_NAME );
+                categoryName = scanner.nextLine();
+                if ( Category.checkPatternName( categoryName ) ) System.out.print( Constants.ERROR_PATTERN_NAME );
+            } while ( Category.checkPatternName( categoryName ) );
+
             if ( !firstIteration && Category.isPresentRootCategory( categoryName ) )
             {
                 System.out.print( Constants.ROOT_CATEGORY_ALREADY_PRESENT );
@@ -273,10 +279,18 @@ public class Main
             String description = null;
             if ( leafCategory.equals( "n" ) )
             {
-                System.out.print( Constants.ENTER_FIELD );
-                field = scanner.nextLine();
-                System.out.print( Constants.ENTER_DESCRIPTION );
-                description = scanner.nextLine();
+                do
+                {
+                    System.out.print( Constants.ENTER_FIELD );
+                    field = scanner.nextLine();
+                    if ( Category.checkPatternField( field ) ) System.out.println( Constants.ERROR_PATTERN_FIELD );
+                } while ( Category.checkPatternField( field ) );
+                do
+                {
+                    System.out.print( Constants.ENTER_DESCRIPTION );
+                    description = scanner.nextLine();
+                    if ( Category.checkPatternDescription( description ) ) System.out.println( Constants.ERROR_PATTERN_DESCRIPTION );
+                } while ( Category.checkPatternDescription( description ) );
             }
 
             Category newCategory = conf.createCategory( categoryName, field, description, isRoot, hierarchyID);
@@ -288,12 +302,23 @@ public class Main
                 continue;
             }
 
-            System.out.print( Constants.CATEGORY_LIST + Category.printCategoriesList( hierarchyID ) );
-            System.out.print( Constants.ENTER_DAD_MESSAGE );
-            int parentID = Integer.parseInt( scanner.nextLine() );
-
-            System.out.print( Constants.ENTER_FIELD_TYPE );
-            String fieldType = scanner.nextLine();
+            int parentID;
+            do 
+            {
+                System.out.print( Constants.CATEGORY_LIST + Category.printCategoriesList( hierarchyID ) );
+                System.out.print( Constants.ENTER_DAD_MESSAGE );
+                parentID = Integer.parseInt( scanner.nextLine() );
+                if ( !Category.isPresentInternalCategory( parentID, hierarchyID ) ) System.out.println( Constants.NOT_EXIST_MESSAGE + "\n" );
+            } while ( !Category.isPresentInternalCategory( parentID, hierarchyID ) );
+            
+            String fieldType;
+            do
+            {
+                System.out.print( Constants.ENTER_FIELD_TYPE );
+                fieldType = scanner.nextLine();
+                if ( Category.checkPatternField( fieldType ) ) System.out.println( Constants.ERROR_PATTERN_FIELD );
+            } while ( Category.checkPatternField( fieldType ) );
+            
 
             newCategory.createRelationship( parentID, fieldType );
 

@@ -79,7 +79,9 @@ public class Constants {
     public static final String USERNAME_NOT_AVAILABLE = "\n --- username NOT available ! --- \n";
     public static final String ERROR_PATTERN_USERNAME = "\n --- ATTENTION, parameters not respected! min 3 max 20 characters --- \n";
     public static final String ERROR_PATTERN_PASSWORD = "\n --- ATTENTION, parameters not respected! min 8 max 25 characters, at least one digit and one character required --- \n";
-    public static final String ERROR_PATTERN_DISTRICT_NAME = "\n --- ATTENTION, parameters not respected! min 1 max 50 characters --- \n";
+    public static final String ERROR_PATTERN_NAME = "\n --- ATTENTION, parameters not respected! min 1 max 50 characters --- \n";
+    public static final String ERROR_PATTERN_FIELD = "\n --- ATTENTION, parameters not respected! min 1 max 25 characters --- \n";
+    public static final String ERROR_PATTERN_DESCRIPTION = "\n --- ATTENTION, parameters not respected! min 1 max 100 characters --- \n";
     public static final String INVALID_OPTION = "\n --- Invalid option ! --- \n";
     public static final String DISTRICT_NAME_ALREADY_PRESENT = "\n --- District name already present --- \n";
     public static final String MUNICIPALITY_NAME_ALREADY_PRESENT = "\n --- Municipality already present ---";

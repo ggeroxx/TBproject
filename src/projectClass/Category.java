@@ -50,6 +50,21 @@ public class Category {
         return rs.getInt( 1 );
     }
 
+    public static boolean checkPatternName ( String nameToCheck ) 
+    {
+        return nameToCheck.length() <= 0 || nameToCheck.length() >= 50;
+    }
+
+    public static boolean checkPatternField ( String fieldToCheck ) 
+    {
+        return fieldToCheck.length() <= 0 || fieldToCheck.length() >= 25;
+    }
+
+    public static boolean checkPatternDescription ( String descriptionToCheck ) 
+    {
+        return descriptionToCheck.length() < 0 || descriptionToCheck.length() >= 100;
+    }
+
     public void createRelationship ( int parentID, String fieldType ) throws SQLException
     {
         String query = "INSERT INTO tmp_relationshipsBetweenCategories (parentid, childid, fieldtype) VALUES (?, ?, ?)";
@@ -106,6 +121,23 @@ public class Category {
         parameters.add( nameToCheck );
         parameters.add( Integer.toString( hierarchyID ) );
         parameters.add( nameToCheck );
+        parameters.add( Integer.toString( hierarchyID ) );
+
+        ResultSet rs = Conn.exQuery( query, parameters );
+
+        return rs.next();
+    }
+
+    public static boolean isPresentInternalCategory ( int IDToCheck, int hierarchyID ) throws SQLException
+    {
+        String query = "SELECT name FROM categories WHERE id = ? AND hierarchyID = ? " +
+                       "UNION " +
+                       "SELECT name FROM tmp_categories WHERE id = ? AND hierarchyID = ?";
+
+        ArrayList<String> parameters = new ArrayList<String>();
+        parameters.add( Integer.toString( IDToCheck ) );
+        parameters.add( Integer.toString( hierarchyID ) );
+        parameters.add( Integer.toString( IDToCheck ) );
         parameters.add( Integer.toString( hierarchyID ) );
 
         ResultSet rs = Conn.exQuery( query, parameters );
