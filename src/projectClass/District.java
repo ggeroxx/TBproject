@@ -114,12 +114,13 @@ public class District {
 
     public static String printAll () throws SQLException
     {
-        String query = "SELECT name FROM districts ";
-
-        ResultSet rs = Conn.exQuery( query );
-
+        String query;
+        ResultSet rs;
         District tmp;
         StringBuffer toReturn = new StringBuffer();
+
+        query = "SELECT name FROM districts ";
+        rs = Conn.exQuery( query );
         while ( rs.next() )
         {
             tmp = new District( rs.getString(1) );
@@ -128,7 +129,6 @@ public class District {
 
         query = "SELECT name FROM tmp_districts";
         rs = Conn.exQuery( query );
-
         while ( rs.next() )
         {
             tmp = new District( rs.getString(1) );

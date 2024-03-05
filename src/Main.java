@@ -157,6 +157,7 @@ public class Main
                     break;
 
                 case "9":
+                        System.out.println( Constants.LOG_OUT );
                         clearConsole( Constants.TIME_LOGOUT );
                     break;
 
@@ -228,28 +229,46 @@ public class Main
         clearConsole( Constants.TIME_SWITCH_MENU );
         System.out.print( Constants.HIERARCHY_SCREEN );
 
-        boolean isRoot = true;
+        boolean isRoot = true, firstIteration = false;
         Integer hierarchyID = null;
         String insertContinue = "n";
 
         do
         {
+            if ( firstIteration )
+            {
+                clearConsole( Constants.TIME_SWITCH_MENU );
+                System.out.println( "\n" + Category.printHierarchy( hierarchyID ) );
+                System.out.println( Constants.LINE );
+            } 
+
             System.out.print( Constants.ENTER_CATEGORY_NAME );
             String categoryName = scanner.nextLine();
-            if ( Category.isPresentRootCategory( categoryName ) )
+            if ( !firstIteration && Category.isPresentRootCategory( categoryName ) )
             {
                 System.out.print( Constants.ROOT_CATEGORY_ALREADY_PRESENT );
+                clearConsole( Constants.TIME_ERROR_MESSAGE );
+                return;
+            }
+            if ( firstIteration && Category.isPresentInternalCategory( categoryName, hierarchyID ) )
+            {
+                System.out.print( Constants.INTERNAL_CATEGORY_ALREADY_PRESENT );
+                clearConsole( Constants.TIME_ERROR_MESSAGE );
                 continue;
             }
 
-            String leafCategory;
-            do
+            String leafCategory = "n";
+            if ( firstIteration )
             {
-                System.out.print( Constants.LEAF_CATEGORY_MESSAGE );
-                leafCategory = scanner.nextLine();
-                if ( !leafCategory.equals("n") && !leafCategory.equals("y") ) System.out.println( Constants.INVALID_OPTION );
-            } while ( !leafCategory.equals("y") && !leafCategory.equals("n") );
-            
+                do
+                {
+                    System.out.print( Constants.LEAF_CATEGORY_MESSAGE );
+                    leafCategory = scanner.nextLine();
+                    if ( !leafCategory.equals("n") && !leafCategory.equals("y") ) System.out.println( Constants.INVALID_OPTION );
+                } while ( !leafCategory.equals("y") && !leafCategory.equals("n") );
+            }
+            firstIteration = true;
+
             String field = null;
             String description = null;
             if ( leafCategory.equals( "n" ) )
@@ -269,7 +288,7 @@ public class Main
                 continue;
             }
 
-            System.out.print( Category.printCategoriesList( hierarchyID ) );
+            System.out.print( Constants.CATEGORY_LIST + Category.printCategoriesList( hierarchyID ) );
             System.out.print( Constants.ENTER_DAD_MESSAGE );
             int parentID = Integer.parseInt( scanner.nextLine() );
 
@@ -282,12 +301,15 @@ public class Main
 
             do
             {
-                System.out.print( Constants.END_ADD_MESSAGE );
+                System.out.print( "\n" + Constants.END_ADD_MESSAGE );
                 insertContinue = scanner.nextLine();
                 if ( !insertContinue.equals("n") && !insertContinue.equals("y") ) System.out.println( Constants.INVALID_OPTION );
             } while ( !insertContinue.equals("y") && !insertContinue.equals("n") );
 
         } while( insertContinue.equals( "n" ) );
+
+        System.out.println( Constants.OPERATION_COMPLETED );
+        clearConsole( Constants.TIME_MESSAGE );
     }
 
     public static void caseFiveConfiguratorMenu ( Configurator conf ) throws SQLException, Exception
@@ -349,11 +371,13 @@ public class Main
             return;
         }
 
-        System.out.println( Category.printHierarchy( Integer.parseInt( hierarchyID ) ) );
+        clearConsole( Constants.TIME_SWITCH_MENU );
+        System.out.println( "\n" + Category.printHierarchy( Integer.parseInt( hierarchyID ) ) );
 
-        System.out.print( Constants.ENTER_TO_EXIT );
+        System.out.print( "\n" + Constants.ENTER_TO_EXIT );
         scanner.nextLine();
         clearConsole( Constants.TIME_SWITCH_MENU );
         return;
     }
+
 }

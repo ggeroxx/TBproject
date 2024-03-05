@@ -127,36 +127,41 @@ public class Category {
 
         ResultSet rs = Conn.exQuery( query, parameters );
 
-        while ( rs.next() )
-        {
-            toReturn.append( "  " + rs.getInt( 1 ) + ". " + rs.getString( 2 ) + "\n" );
-        }
+        while ( rs.next() ) toReturn.append( "  " + rs.getInt( 1 ) + ". " + rs.getString( 2 ) + "\n" );
 
         return toReturn.toString();
     }
 
     public static String printAllRoot () throws SQLException
     {
-        String query = "SELECT name, hierarchyid FROM categories WHERE root = ?" +
-                       "UNION " +
-                       "SELECT name, hierarchyid FROM tmp_categories WHERE root = ?";
-
-        ArrayList<String> parameters = new ArrayList<String>();
-        parameters.add( String.valueOf( 1 ) );
-        parameters.add( String.valueOf( 1 ) );
-
-        ResultSet rs = Conn.exQuery( query, parameters );
-
+        String query;
+        ResultSet rs;
+        ArrayList<String> parameters;
         StringBuffer toReturn = new StringBuffer();
+
+        query = "SELECT name, hierarchyid FROM categories WHERE root = ?";
+        parameters = new ArrayList<String>();
+        parameters.add( String.valueOf( 1 ) );
+        rs = Conn.exQuery( query, parameters );
+
         while ( rs.next() ) toReturn.append( " " + rs.getString( 2 ) + ". " + rs.getString( 1 ) + "\n" );
+
+        query = "SELECT name, hierarchyid FROM tmp_categories WHERE root = ?";
+        parameters = new ArrayList<String>();
+        parameters.add( String.valueOf( 1 ) );
+        rs = Conn.exQuery( query, parameters );
+
+        while ( rs.next() ) toReturn.append( " " + rs.getString( 2 ) + ". " + rs.getString( 1 ) + "  -->  (not saved)\n" );
 
         return toReturn.toString();
     }
 
-    static StringBuffer toReturn = new StringBuffer();
-    static StringBuffer spaces = new StringBuffer();
-
     public static String printHierarchy ( int IDToPrint ) throws SQLException
+    {
+        return printHierarchy( IDToPrint, new StringBuffer(), new StringBuffer() );
+    }
+
+    public static String printHierarchy ( int IDToPrint, StringBuffer toReturn, StringBuffer spaces ) throws SQLException
     {
         String query;
         ResultSet rs;
@@ -172,8 +177,8 @@ public class Category {
 
         rs = Conn.exQuery( query, parameters );
         rs.next();
-        if ( rs.getBoolean( 2 ) ) toReturn.append( rs.getString( 1 ) + "\n" );
-        else toReturn.append( spaces.toString() + "└──" + rs.getString( 1 ) + "\n" );
+        if ( rs.getBoolean( 2 ) ) toReturn.append( rs.getString( 1 ) + "\n\n" );
+        else toReturn.append( spaces.toString() + "└──── " + rs.getString( 1 ) + "\n\n" );
 
         query = "SELECT childid FROM relationshipsBetweenCategories WHERE parentid = ? " +
                 "UNION " +
@@ -186,10 +191,11 @@ public class Category {
         rs = Conn.exQuery( query, parameters );
         
         while ( rs.next() ) {
-            spaces.append("   ");
-            printHierarchy( rs.getInt( 1 ) );
+            spaces.append("\t");
+            printHierarchy( rs.getInt( 1 ), toReturn, spaces );
         }
-        spaces = new StringBuffer();
+        if ( spaces.length() > 1 ) spaces.setLength( spaces.length() - 1 );
+        else spaces.setLength( 0 );
 
         return toReturn.toString();
     } 

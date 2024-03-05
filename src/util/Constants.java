@@ -22,16 +22,16 @@ public class Constants {
                                                      "--------------\n";
 
     public static final String CONFIGURATOR_MENU = "\n" +
-                                                   "--------------\n" +
-                                                   "OPTIONS\n" +
-                                                   "--------------\n" +
+                                                   "----------------------\n" +
+                                                   "\tOPTIONS\n" +
+                                                   "----------------------\n" +
                                                    " 1.  insert new district\n" +
                                                    " 2.  insert new hierarchy\n" +
                                                    " 5.  save all data\n" +
                                                    " 6.  view district\n" + 
                                                    " 7.  view hierarchy\n" +
                                                    " 9.  logout\n" +
-                                                   "--------------\n" +
+                                                   "----------------------\n" +
                                                    "Enter your choice [1-9] --> ";
 
     public static final String DISTRICT_LIST = "\n" +
@@ -63,7 +63,7 @@ public class Constants {
     public static final String ENTER_FIELD = "enter field: ";
     public static final String ENTER_DESCRIPTION = "enter description (enter to skip): ";
     public static final String LEAF_CATEGORY_MESSAGE = "leaf category? (y/n) --> ";
-    public static final String ENTER_DAD_MESSAGE = "enter dad --> ";
+    public static final String ENTER_DAD_MESSAGE = " - enter dad --> ";
     public static final String ENTER_FIELD_TYPE = "enter field type: ";
 
     public static final String BYE_BYE_MESSAGE = "\nBye bye ...\n\n";
@@ -71,6 +71,9 @@ public class Constants {
     public static final String OPERATION_COMPLETED = "\n --- Operation completed ✓ --- \n";
     public static final String NOT_SAVED_STRING = "  -->  (not saved)\n";
     public static final String SAVE_COMPLETED = "\n --- saved COMPLETED ✓ ---\n";
+    public static final String LOG_OUT = "\nLog out ...\n\n";
+    public static final String CATEGORY_LIST = " - categories:\n";
+    public static final String LINE = "--------------------";
 
     public static final String LOGIN_ERROR = "\n --- ATTENTION, invalid username a/o password! Try again! ---";
     public static final String USERNAME_NOT_AVAILABLE = "\n --- username NOT available ! --- \n";
@@ -82,6 +85,7 @@ public class Constants {
     public static final String MUNICIPALITY_NAME_ALREADY_PRESENT = "\n --- Municipality already present ---";
     public static final String NOT_EXIST_MESSAGE = "\n --- NOT exist ! --- ";
     public static final String ROOT_CATEGORY_ALREADY_PRESENT = "\n --- Root category already present --- \n";
+    public static final String INTERNAL_CATEGORY_ALREADY_PRESENT = "\n --- Category already present --- \n";
 
     public static final String SQL_EXCEPTION_MESSAGE = "Errore database: ";
     public static final String GENERIC_EXCEPTION_MESSAGE = "Errore generico:";
