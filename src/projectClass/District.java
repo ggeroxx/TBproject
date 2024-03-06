@@ -172,21 +172,17 @@ public class District {
         String query = "INSERT INTO districts (name, idconfigurator) " +
                        "SELECT name, idconfigurator " +
                        "FROM tmp_districts";
-        
         Conn.queryUpdate( query );
 
         query = "INSERT INTO districttomunicipalities (iddistrict, idmunicipality) " +
                 "SELECT iddistrict, idmunicipality " +
                 "FROM tmp_districttomunicipalities";
-
         Conn.queryUpdate( query );
 
         query = "DELETE FROM tmp_districttomunicipalities";
-
         Conn.queryUpdate(query);
 
         query = "DELETE FROM tmp_districts";
-
         Conn.queryUpdate(query);
     }
 

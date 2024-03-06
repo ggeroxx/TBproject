@@ -66,7 +66,7 @@ public class Main
 
     public static void clearConsole ( int millis ) throws Exception
     {
-        Thread.sleep(millis);
+        Thread.sleep( millis );
         if ( System.getProperty("os.name").contains("Windows") )
             new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
         else
@@ -348,6 +348,14 @@ public class Main
     {
         clearConsole( Constants.TIME_SWITCH_MENU );
         System.out.print( Constants.DISTRICT_LIST );
+
+        if ( District.printAll() == "" )
+        {
+            System.out.println( Constants.NOT_EXIST_MESSAGE );
+            clearConsole( Constants.TIME_ERROR_MESSAGE );
+            return;
+        }
+
         System.out.println( District.printAll() );
         System.out.print( Constants.ENTER_DISTRICT_ID );
         String districtID = scanner.nextLine();
@@ -385,6 +393,14 @@ public class Main
     {
         clearConsole( Constants.TIME_SWITCH_MENU );
         System.out.print( Constants.HIERARCHY_LIST );
+
+        if ( Category.printAllRoot() == "" )
+        {
+            System.out.println( Constants.NOT_EXIST_MESSAGE );
+            clearConsole( Constants.TIME_ERROR_MESSAGE );
+            return;
+        }
+
         System.out.println( Category.printAllRoot() );
         System.out.print( Constants.ENTER_HIERARCHY_ID );
         String hierarchyID = scanner.nextLine();

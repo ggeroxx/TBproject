@@ -89,8 +89,8 @@ public class Constants {
     public static final String ROOT_CATEGORY_ALREADY_PRESENT = "\n --- Root category already present --- \n";
     public static final String INTERNAL_CATEGORY_ALREADY_PRESENT = "\n --- Category already present --- \n";
 
-    public static final String SQL_EXCEPTION_MESSAGE = "Errore database: ";
-    public static final String GENERIC_EXCEPTION_MESSAGE = "Errore generico:";
+    public static final String SQL_EXCEPTION_MESSAGE = "Database error: ";
+    public static final String GENERIC_EXCEPTION_MESSAGE = "Generic error:";
 
     public static final int TIME_ZERO = 0;
     public static final int TIME_SWITCH_MENU = 100;
