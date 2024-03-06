@@ -302,14 +302,14 @@ public class Main
                 continue;
             }
 
-            int parentID;
+            String parentID;
             do 
             {
                 System.out.print( Constants.CATEGORY_LIST + Category.printCategoriesList( hierarchyID ) );
                 System.out.print( Constants.ENTER_DAD_MESSAGE );
-                parentID = Integer.parseInt( scanner.nextLine() );
-                if ( !Category.isPresentInternalCategory( parentID, hierarchyID ) ) System.out.println( Constants.NOT_EXIST_MESSAGE + "\n" );
-            } while ( !Category.isPresentInternalCategory( parentID, hierarchyID ) );
+                parentID = scanner.nextLine();
+                if ( !Category.isPresentInternalCategory( Integer.parseInt( parentID ), hierarchyID ) ) System.out.println( Constants.NOT_EXIST_MESSAGE + "\n" );
+            } while ( !Category.isPresentInternalCategory( Integer.parseInt( parentID ), hierarchyID ) && !parentID.equals( "" ) );
             
             String fieldType;
             do
@@ -320,7 +320,7 @@ public class Main
             } while ( Category.checkPatternField( fieldType ) );
             
 
-            newCategory.createRelationship( parentID, fieldType );
+            newCategory.createRelationship( Integer.parseInt( parentID ), fieldType );
 
             if ( leafCategory.equals( "n" ) ) continue;
 
@@ -349,7 +349,7 @@ public class Main
         clearConsole( Constants.TIME_SWITCH_MENU );
         System.out.print( Constants.DISTRICT_LIST );
 
-        if ( District.printAll() == "" )
+        if ( District.printAll().equals( "" ) )
         {
             System.out.println( Constants.NOT_EXIST_MESSAGE );
             clearConsole( Constants.TIME_ERROR_MESSAGE );
@@ -360,7 +360,7 @@ public class Main
         System.out.print( Constants.ENTER_DISTRICT_ID );
         String districtID = scanner.nextLine();
 
-        if ( !District.isPresentDistrict( Integer.parseInt( districtID ) ) )
+        if ( !District.isPresentDistrict( Integer.parseInt( districtID ) ) || districtID.equals( "" ) )
         {
             System.out.println( Constants.NOT_EXIST_MESSAGE );
             clearConsole( Constants.TIME_ERROR_MESSAGE );
@@ -394,7 +394,7 @@ public class Main
         clearConsole( Constants.TIME_SWITCH_MENU );
         System.out.print( Constants.HIERARCHY_LIST );
 
-        if ( Category.printAllRoot() == "" )
+        if ( Category.printAllRoot().equals( "" ) )
         {
             System.out.println( Constants.NOT_EXIST_MESSAGE );
             clearConsole( Constants.TIME_ERROR_MESSAGE );
@@ -405,7 +405,7 @@ public class Main
         System.out.print( Constants.ENTER_HIERARCHY_ID );
         String hierarchyID = scanner.nextLine();
 
-        if ( !Category.isPresentRootCategory( Integer.parseInt( hierarchyID ) ) )
+        if ( !Category.isPresentRootCategory( Integer.parseInt( hierarchyID ) ) || hierarchyID.equals( "" ) )
         {
             System.out.println( Constants.NOT_EXIST_MESSAGE );
             clearConsole( Constants.TIME_ERROR_MESSAGE );
