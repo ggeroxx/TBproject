@@ -33,6 +33,12 @@ public class Main
                             System.out.println( Constants.BYE_BYE_MESSAGE );
                         break;
 
+                    case "":
+                            Configurator conf = new Configurator( "user1", "password1" );
+                            clearConsole( Constants.TIME_SWITCH_MENU );
+                            configuratorMenu( scanner, conf );
+                        break;
+
                     default:
                             System.out.println( Constants.INVALID_OPTION );
                             clearConsole( Constants.TIME_ERROR_MESSAGE );
@@ -302,14 +308,14 @@ public class Main
                 continue;
             }
 
-            String parentID;
+            int parentID;
             do 
             {
                 System.out.print( Constants.CATEGORY_LIST + Category.printCategoriesList( hierarchyID ) );
                 System.out.print( Constants.ENTER_DAD_MESSAGE );
-                parentID = scanner.nextLine();
-                if ( !Category.isPresentInternalCategory( Integer.parseInt( parentID ), hierarchyID ) ) System.out.println( Constants.NOT_EXIST_MESSAGE + "\n" );
-            } while ( !Category.isPresentInternalCategory( Integer.parseInt( parentID ), hierarchyID ) && !parentID.equals( "" ) );
+                parentID = Integer.parseInt( scanner.nextLine() );
+                if ( !Category.isPresentInternalCategory( parentID, hierarchyID ) ) System.out.println( Constants.NOT_EXIST_MESSAGE + "\n" );
+            } while ( !Category.isPresentInternalCategory( parentID, hierarchyID ) );
             
             String fieldType;
             do
@@ -317,10 +323,9 @@ public class Main
                 System.out.print( Constants.ENTER_FIELD_TYPE );
                 fieldType = scanner.nextLine();
                 if ( Category.checkPatternField( fieldType ) ) System.out.println( Constants.ERROR_PATTERN_FIELD );
-            } while ( Category.checkPatternField( fieldType ) );
-            
+            } while ( Category.checkPatternField( fieldType ) );            
 
-            newCategory.createRelationship( Integer.parseInt( parentID ), fieldType );
+            newCategory.createRelationship( parentID, fieldType );
 
             if ( leafCategory.equals( "n" ) ) continue;
 
@@ -351,7 +356,7 @@ public class Main
 
         if ( District.printAll().equals( "" ) )
         {
-            System.out.println( Constants.NOT_EXIST_MESSAGE );
+            System.out.println( Constants.NOT_EXIST_MESSAGE + "\n" );
             clearConsole( Constants.TIME_ERROR_MESSAGE );
             return;
         }
@@ -396,7 +401,7 @@ public class Main
 
         if ( Category.printAllRoot().equals( "" ) )
         {
-            System.out.println( Constants.NOT_EXIST_MESSAGE );
+            System.out.println( Constants.NOT_EXIST_MESSAGE + "\n" );
             clearConsole( Constants.TIME_ERROR_MESSAGE );
             return;
         }
