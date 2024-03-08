@@ -3,7 +3,6 @@ package projectClass;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-
 import util.Conn;
 
 public class Category {
@@ -111,7 +110,7 @@ public class Category {
         return rs.next();
     }
 
-    public static boolean isPresentInternalCategory ( String nameToCheck, int hierarchyID ) throws SQLException
+    public boolean isPresentInternalCategory ( String nameToCheck ) throws SQLException
     {
         String query = "SELECT name FROM categories WHERE name = ? AND hierarchyID = ? " +
                        "UNION " +
@@ -119,26 +118,26 @@ public class Category {
 
         ArrayList<String> parameters = new ArrayList<String>();
         parameters.add( nameToCheck );
-        parameters.add( Integer.toString( hierarchyID ) );
+        parameters.add( Integer.toString( this.hierarchyID ) );
         parameters.add( nameToCheck );
-        parameters.add( Integer.toString( hierarchyID ) );
+        parameters.add( Integer.toString( this.hierarchyID ) );
 
         ResultSet rs = Conn.exQuery( query, parameters );
 
         return rs.next();
     }
 
-    public static boolean isPresentInternalCategory ( int IDToCheck, int hierarchyID ) throws SQLException
+    public boolean isValidParentID ( int IDToCheck ) throws SQLException
     {
-        String query = "SELECT name FROM categories WHERE id = ? AND hierarchyID = ? " +
+        String query = "SELECT name FROM categories WHERE id = ? AND hierarchyID = ? AND field IS NOT NULL AND id != LAST_INSERT_ID() " +
                        "UNION " +
-                       "SELECT name FROM tmp_categories WHERE id = ? AND hierarchyID = ?";
+                       "SELECT name FROM tmp_categories WHERE id = ? AND hierarchyID = ? AND field IS NOT NULL AND id != LAST_INSERT_ID()";
 
         ArrayList<String> parameters = new ArrayList<String>();
         parameters.add( Integer.toString( IDToCheck ) );
-        parameters.add( Integer.toString( hierarchyID ) );
+        parameters.add( Integer.toString( this.hierarchyID ) );
         parameters.add( Integer.toString( IDToCheck ) );
-        parameters.add( Integer.toString( hierarchyID ) );
+        parameters.add( Integer.toString( this.hierarchyID ) );
 
         ResultSet rs = Conn.exQuery( query, parameters );
 
@@ -222,7 +221,8 @@ public class Category {
 
         rs = Conn.exQuery( query, parameters );
         
-        while ( rs.next() ) {
+        while ( rs.next() ) 
+        {
             spaces.append("\t");
             printHierarchy( rs.getInt( 1 ), toReturn, spaces );
         }
@@ -234,7 +234,9 @@ public class Category {
 
     public static void saveAll () throws SQLException
     {
-        String query = "INSERT INTO categories (id, name, field, description,hierarchyid, idconfigurator,root) " +
+        String query;
+
+        query = "INSERT INTO categories (id, name, field, description,hierarchyid, idconfigurator,root) " +
                        "SELECT id, name, field, description, hierarchyid,idconfigurator,root " +
                        "FROM tmp_categories";
         Conn.queryUpdate( query );

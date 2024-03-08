@@ -53,21 +53,6 @@ public class District {
         return rs.getInt( 1 );
     }
 
-    public static boolean isPresentDistrict ( int IDToCheck ) throws SQLException
-    {
-        String query = "SELECT id FROM districts WHERE id = ? " +
-                       "UNION " +
-                       "SELECT id FROM tmp_districts WHERE id = ?";
-
-        ArrayList<String> parameters = new ArrayList<String>();
-        parameters.add( Integer.toString( IDToCheck ) );
-        parameters.add( Integer.toString( IDToCheck ) );
-
-        ResultSet rs = Conn.exQuery( query, parameters );
-
-        return rs.next();
-    }
-
     public static boolean isPresentDistrict ( String nameToCheck ) throws SQLException
     {
         String query = "SELECT name FROM districts WHERE name = ?" +
