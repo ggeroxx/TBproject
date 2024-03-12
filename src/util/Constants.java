@@ -69,7 +69,7 @@ public class Constants {
     public static final String ENTER_PASSWORD = "enter password: ";
     public static final String ENTER_NEW_PASSWORD = "Enter new password (alphanumeric, min 8 max 25 characters): ";
     public static final String ENTER_DISTRICT_NAME = "\nenter district name: ";
-    public static final String ENTER_MUNICIPALITY = "\nEnter municipality (' for accent): ";
+    public static final String ENTER_MUNICIPALITY = "\nEnter municipality: ";
     public static final String END_ADD_MESSAGE = "end: (y/n) --> ";
     public static final String ENTER_TO_EXIT = "Press enter to exit ↵  ";
     public static final String ENTER_DISTRICT_TO_VIEW = "Enter district name --> ";
@@ -96,7 +96,7 @@ public class Constants {
     public static final String ERROR_PATTERN_PASSWORD = RED + "\n --- " + BOLD + "ATTENTION" + RESET + RED + ", parameters not respected! min 8 max 25 characters, at least one digit and one character required --- \n" + RESET;
     public static final String ERROR_PATTERN_NAME = RED + "\n --- " + BOLD + "ATTENTION" + RESET + RED + ", parameters not respected! min 1 max 50 characters --- \n" + RESET;
     public static final String ERROR_PATTERN_FIELD = RED + "\n --- " + BOLD + "ATTENTION" + RESET + RED + ", parameters not respected! min 1 max 25 characters --- \n" + RESET;
-    public static final String ERROR_PATTERN_DESCRIPTION = RED + "\n --- " + BOLD + "ATTENTION" + RESET + RED + ", parameters not respected! min 1 max 100 characters --- \n" + RESET;
+    public static final String ERROR_PATTERN_DESCRIPTION = RED + "\n --- " + BOLD + "ATTENTION" + RESET + RED + ", parameters not respected! min 0 max 100 characters --- \n" + RESET;
     public static final String INVALID_OPTION = RED + "\n --- Invalid option ! --- \n" + RESET;
     public static final String DISTRICT_NAME_ALREADY_PRESENT = RED + "\n --- District name already present --- \n" + RESET;
     public static final String MUNICIPALITY_NAME_ALREADY_PRESENT = RED + "\n --- Municipality already present ---" + RESET;
