@@ -53,21 +53,6 @@ public class District {
         return rs.getInt( 1 );
     }
 
-    public static boolean isPresentDistrict ( String nameToCheck ) throws SQLException
-    {
-        String query = "SELECT name FROM districts WHERE name = ?" +
-                       "UNION " +
-                       "SELECT name FROM tmp_districts WHERE name = ?";
-
-        ArrayList<String> parameters = new ArrayList<String>();
-        parameters.add( nameToCheck );
-        parameters.add( nameToCheck );
-
-        ResultSet rs = Conn.exQuery( query, parameters );
-
-        return rs.next();
-    }
-
     public boolean isPresentMunicipalityInDistrict ( Municipality municipalityToCheck ) throws SQLException
     {
         String query = "SELECT * FROM tmp_districttomunicipalities WHERE iddistrict = ? AND idmunicipality = ?";
@@ -90,37 +75,6 @@ public class District {
         parameters.add( Integer.toString( municipalityToAdd.getID() ) );
 
         Conn.queryUpdate( query, parameters );  
-    }
-
-    public static boolean checkPatternName ( String nameToCheck ) 
-    {
-        return nameToCheck.length() <= 0 || nameToCheck.length() >= 50;
-    }
-
-    public static String printAll () throws SQLException
-    {
-        String query;
-        ResultSet rs;
-        District tmp;
-        StringBuffer toReturn = new StringBuffer();
-
-        query = "SELECT name FROM districts ";
-        rs = Conn.exQuery( query );
-        while ( rs.next() )
-        {
-            tmp = new District( rs.getString(1) );
-            toReturn.append( tmp.toString() + "\n");
-        }
-
-        query = "SELECT name FROM tmp_districts";
-        rs = Conn.exQuery( query );
-        while ( rs.next() )
-        {
-            tmp = new District( rs.getString(1) );
-            toReturn.append( tmp.toString() + "  -->  (not saved)\n");
-        }
-
-        return toReturn.toString();
     }
 
     public String printAllMunicipalities () throws SQLException
@@ -150,25 +104,6 @@ public class District {
         }
 
         return toReturn.toString();
-    }
-
-    public static void saveAll () throws SQLException
-    {
-        String query = "INSERT INTO districts (name, idconfigurator) " +
-                       "SELECT name, idconfigurator " +
-                       "FROM tmp_districts";
-        Conn.queryUpdate( query );
-
-        query = "INSERT INTO districttomunicipalities (iddistrict, idmunicipality) " +
-                "SELECT iddistrict, idmunicipality " +
-                "FROM tmp_districttomunicipalities";
-        Conn.queryUpdate( query );
-
-        query = "DELETE FROM tmp_districttomunicipalities";
-        Conn.queryUpdate(query);
-
-        query = "DELETE FROM tmp_districts";
-        Conn.queryUpdate(query);
     }
 
     @Override

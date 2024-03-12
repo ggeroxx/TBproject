@@ -10,6 +10,7 @@ public class Main
     {
         Scanner scanner = new Scanner( System.in );
         Console console = System.console();
+        Session session = new Session();
 
         try
         {
@@ -26,7 +27,7 @@ public class Main
                 switch ( choice ) 
                 {
                     case "1":
-                            caseOneMainMenu( scanner, console );
+                            caseOneMainMenu( scanner, console, session );
                         break;
 
                     case "2":
@@ -36,7 +37,7 @@ public class Main
                     case "":
                             Configurator conf = new Configurator( "user1", "password1" );
                             Util.clearConsole( Constants.TIME_SWITCH_MENU );
-                            ConfiguratorMenu.menu( scanner, conf );
+                            ConfiguratorMenu.menu( scanner, conf, session );
                         break;
 
                     default:
@@ -69,7 +70,7 @@ public class Main
         }
     }
 
-    public static void caseOneMainMenu ( Scanner scanner, Console console ) throws SQLException, Exception
+    public static void caseOneMainMenu ( Scanner scanner, Console console, Session session ) throws SQLException, Exception
     {
         Util.clearConsole( Constants.TIME_SWITCH_MENU );
         System.out.print( Constants.LOGIN_SCREEN );
@@ -80,7 +81,8 @@ public class Main
         char[] passwordChars = console.readPassword( Constants.ENTER_PASSWORD );
         String password = new String( passwordChars );
 
-        if ( !Configurator.login( username, password ) )
+        session.login( username, password );
+        if ( !session.getStatus() ) 
         {   
             System.out.println( Constants.LOGIN_ERROR );
             Util.clearConsole( Constants.TIME_ERROR_MESSAGE );
@@ -100,9 +102,9 @@ public class Main
             {
                 System.out.print( Constants.ENTER_NEW_USERNAME );
                 newUsername = scanner.nextLine();
-                checkUsername1 = Configurator.isPresentUsername( newUsername );
+                checkUsername1 = Controls.isPresentUsername( newUsername );
                 if ( checkUsername1 ) System.out.println( Constants.USERNAME_NOT_AVAILABLE );
-                checkUsername2 = Configurator.checkPatternUsername( newUsername );
+                checkUsername2 = Controls.checkPattern( newUsername, 2, 21 );
                 if ( !checkUsername2 ) System.out.println( Constants.ERROR_PATTERN_USERNAME );
             } while ( checkUsername1 || !checkUsername2 );
 
@@ -111,14 +113,14 @@ public class Main
             {   
                 passwordChars = console.readPassword( Constants.ENTER_NEW_PASSWORD );
                 newPassword = new String( passwordChars );
-                checkPassword = Configurator.checkPatternPassword( newPassword );
+                checkPassword = Controls.checkPatternPassword( newPassword, 7, 26 );
                 if ( !checkPassword ) System.out.println( Constants.ERROR_PATTERN_PASSWORD );
             } while ( !checkPassword );
             
             conf.changeCredentials( newUsername, newPassword );
         }
         Util.clearConsole( Constants.TIME_SWITCH_MENU );
-        ConfiguratorMenu.menu( scanner, conf );
+        ConfiguratorMenu.menu( scanner, conf, session );
     }
 
 }

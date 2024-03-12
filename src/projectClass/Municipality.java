@@ -63,18 +63,6 @@ public class Municipality {
         return this.ID;
     }
 
-    public static boolean existMunicipality ( String nameToCheck ) throws SQLException
-    {
-        String query = "SELECT name FROM municipalities WHERE name = ?";
-
-        ArrayList<String> parameters = new ArrayList<String>();
-        parameters.add( nameToCheck );
-
-        ResultSet rs = Conn.exQuery( query, parameters );
-
-        return rs.next();
-    } 
-
     @Override
     public String toString() 
     {
