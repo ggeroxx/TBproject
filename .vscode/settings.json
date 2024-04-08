@@ -8,5 +8,15 @@
   "java.project.outputPath": "bin",
   "java.project.referencedLibraries": [
     "lib/**/*.jar"
-  ]
+  ],
+  "terminal.integrated.fontFamily": "Menlo, Monaco, 'Courier New', monospace",
+  "terminal.integrated.fontSize": 12,
+  "terminal.integrated.profiles.windows": {
+    "PowerShell": {
+        "source": "PowerShell",
+        "icon": "terminal-powershell",
+        "args": ["-NoExit", "-Command", "chcp 65001 ; $null"]
+    }
+},
+"terminal.integrated.defaultProfile.windows": "PowerShell"
 }
