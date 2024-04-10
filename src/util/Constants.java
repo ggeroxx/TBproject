@@ -42,12 +42,13 @@ public class Constants {
                                                    "───────────────────────\n" +
                                                    " 1.  insert new district\n" +
                                                    " 2.  insert new hierarchy\n" +
-                                                   " 5.  save all data\n" +
-                                                   " 6.  view district\n" + 
-                                                   " 7.  view hierarchy\n" +
-                                                   " 9.  logout\n" +
+                                                   " 3.  insert conversion factors\n" +
+                                                   " 4.  save all data\n" +
+                                                   " 5.  view district\n" + 
+                                                   " 6.  view hierarchy\n" +
+                                                   " 8.  logout\n" +
                                                    "───────────────────────\n" +
-                                                   "Enter your choice [1-9] --> ";
+                                                   "Enter your choice [1-8] --> ";
 
     public static final String DISTRICT_LIST = "\n" +
                                                "───────────────\n" + 
@@ -80,6 +81,8 @@ public class Constants {
     public static final String LEAF_CATEGORY_MESSAGE = "leaf category? (y/n) --> ";
     public static final String ENTER_DAD_MESSAGE = " - enter parent ID --> ";
     public static final String ENTER_FIELD_TYPE = "enter field type: ";
+    public static final String ENTER_CHOICE_PAIR = "Enter your choice: ";
+    public static final String ENTER_VALUE_CONVERSION_FACTOR = "Enter value of conversion factor: ";
 
     public static final String BYE_BYE_MESSAGE = YELLOW + "\nBye bye ...\n\n" + RESET;
     public static final String ADDED_SUCCESFULL_MESSAGE = GREEN + "\n --- Added succesfull ✓ --- \n" + RESET;
@@ -103,6 +106,7 @@ public class Constants {
     public static final String NOT_EXIST_MESSAGE = RED + "\n --- NOT exist ! --- " + RESET;
     public static final String ROOT_CATEGORY_ALREADY_PRESENT = RED + "\n --- Root category already present --- \n" + RESET;
     public static final String INTERNAL_CATEGORY_ALREADY_PRESENT = RED + "\n --- Category already present --- \n" + RESET;
+    public static final String OUT_OF_RANGE_ERROR = RED + "\n --- Out of range !!! [0.5-2.0] --- \n" + RESET;
 
     public static final String SQL_EXCEPTION_MESSAGE = "Database error: ";
     public static final String GENERIC_EXCEPTION_MESSAGE = "Generic error:";

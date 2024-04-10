@@ -2,7 +2,8 @@ package util;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
+import java.util.*;
+import projectClass.*;
 
 public class Controls {
     

@@ -29,4 +29,13 @@ public class Util {
         return toReturn;
     }
 
+    public static String padRight( String str, int maxLenght )
+    {
+        String toReturn = "";
+
+        for ( int i = str.length(); i < maxLenght; i++) toReturn += " ";
+
+        return toReturn;
+    }
+
 }

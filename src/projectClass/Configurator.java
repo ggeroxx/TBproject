@@ -1,11 +1,11 @@
 package projectClass;
+
 import util.*;
 import java.sql.*;
 import java.util.ArrayList;
 import org.mindrot.jbcrypt.BCrypt;
 
-public class Configurator 
-{
+public class Configurator {
     
     private int ID;
     private String username;

@@ -1,7 +1,7 @@
 package util;
 
 import java.sql.*;
-import java.util.ArrayList;
+import java.util.*;
 import projectClass.*;
 
 public class Printer {
