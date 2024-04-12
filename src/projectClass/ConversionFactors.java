@@ -5,7 +5,7 @@ import java.util.Map.Entry;
 import java.sql.*;
 import util.*;
 
-public class ConversionFactors {
+public class ConversionFactors implements Cloneable {
     
     private Integer index;
     private HashMap<Integer, ConversionFactor> list;
@@ -73,15 +73,59 @@ public class ConversionFactors {
 
     public void calculate ( int index, Double value ) throws SQLException
     {
-        for ( Entry<Integer, ConversionFactor> toControl : this.list.entrySet() )
-            if ( toControl.getValue().getID_leaf_1() == this.list.get( index ).getID_leaf_1() && toControl.getValue().getValue() != null )
-            {
-                this.list.get( index ).setValue( value );
-                calculate( getKeyByValue( new ConversionFactor( this.list.get( index ).getID_leaf_1(), toControl.getValue().getID_leaf_2(), null ) ), toControl.getValue().getValue() * this.list.get( index ).getValue() );
-            }
+        this.list.get( index ).setValue( Math.round( value * 100.0 ) / 100.0 );
+        int c1 = this.list.get( index ).getID_leaf_1();
+        int c2 = this.list.get( index ).getID_leaf_2();
 
-        calculate( getKeyByValue( new ConversionFactor( this.list.get( index ).getID_leaf_2(), this.list.get( index ).getID_leaf_1(), null ) ), 1 / value);
+        for ( Entry<Integer, ConversionFactor> toControl : this.list.entrySet() )
+        {
+            if ( c2 == toControl.getValue().getID_leaf_1() && toControl.getValue().getValue() != null && c1 != toControl.getValue().getID_leaf_2() )
+            {
+                int c3 = toControl.getValue().getID_leaf_2();
+                if (this.list.get( getKeyByValue( new ConversionFactor( c1, c3, null ) ) ).getValue() == null )
+                {
+                    Double val = toControl.getValue().getValue();
+                    int newIndex = getKeyByValue( new ConversionFactor( c1, c3, null ) );
+                    calculate( newIndex, value * val );
+                }
+            }
+        }
+
+        int contraryIndex = getKeyByValue( new ConversionFactor( c2, c1, null ) );
+        if ( this.list.get( contraryIndex ).getValue() == null ) calculate( contraryIndex, 1 / value);
+        
         return;
+    }
+
+    public boolean inRange ()
+    {
+        for ( Entry<Integer, ConversionFactor> entry : this.list.entrySet() )
+            if ( entry.getValue().getValue() != null )
+                if ( entry.getValue().getValue() < 0.5 || entry.getValue().getValue() > 2.0 ) return false;
+
+        return true;
+    }
+
+    public boolean isComplete ()
+    {
+        for ( Entry<Integer, ConversionFactor> entry : this.list.entrySet() )
+            if ( entry.getValue().getValue() == null ) return false;
+
+        return true;
+    }
+
+    // public void copy ( ConversionFactors toCopy )
+    // {
+    //     this.index = toCopy.index;
+    //     this.list = new HashMap<Integer, ConversionFactor>( toCopy.getList() );
+    // }
+
+    public void copy ( ConversionFactors toCopy )
+    {
+        this.index = toCopy.index;
+        this.list = new HashMap<Integer, ConversionFactor>();
+        for ( Entry<Integer, ConversionFactor> entry : toCopy.getList().entrySet() )
+            this.list.put( entry.getKey(), entry.getValue() );
     }
 
     @Override

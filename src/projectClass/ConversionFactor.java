@@ -89,7 +89,9 @@ public class ConversionFactor {
     {
         StringBuffer toReturn = new StringBuffer();
 
-        toReturn.append( this.name_leaf_1 + Util.padRight( this.name_leaf_1, 50 ) + "-->\t\t" + this.name_leaf_2 + Util.padRight( this.name_leaf_2, 50 ) + ": " + this.value );
+        String COLOR = this.value == null ? Constants.RED : Constants.BOLD + Constants.GREEN;
+
+        toReturn.append( this.name_leaf_1 + Util.padRight( this.name_leaf_1, 50 ) + "-->\t\t" + this.name_leaf_2 + Util.padRight( this.name_leaf_2, 50 ) + ": " + COLOR + this.value + Constants.RESET );
 
         return toReturn.toString();
     }

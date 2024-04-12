@@ -119,9 +119,9 @@ public class Configurator {
         return newCategory;
     }
 
-    public void saveAll () throws SQLException
+    public void saveAll ( ConversionFactors toSave ) throws SQLException
     {
-        Save.saveAll();
+        Save.saveAll( toSave );
     }
 
 }

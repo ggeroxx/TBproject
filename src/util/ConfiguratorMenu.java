@@ -1,9 +1,7 @@
 package util;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.*;
-
 import projectClass.*;
 
 public class ConfiguratorMenu {
@@ -11,7 +9,8 @@ public class ConfiguratorMenu {
     public static void menu ( Scanner scanner, Configurator conf, Session session ) throws SQLException, Exception
     {
         String choice;
-        
+        ConversionFactors conversionFactors = new ConversionFactors();
+
         do
         {
             System.out.print( Constants.CONFIGURATOR_MENU );
@@ -28,11 +27,11 @@ public class ConfiguratorMenu {
                     break;
 
                 case "3":
-                        caseThree( scanner, conf );
+                        caseThree( scanner, conversionFactors );
                     break;
 
                 case "4":
-                        caseFour( conf );
+                        caseFour( conf, conversionFactors );
                     break;
 
                 case "5":
@@ -43,7 +42,11 @@ public class ConfiguratorMenu {
                         caseSix( scanner );
                     break;
 
-                case "8":
+                case "7":
+                        caseSeven( scanner, conversionFactors );
+                    break;
+
+                case "9":
                         session.logout();
                         System.out.println( Constants.LOG_OUT );
                         Util.clearConsole( Constants.TIME_LOGOUT );
@@ -54,7 +57,7 @@ public class ConfiguratorMenu {
                         Util.clearConsole( Constants.TIME_ERROR_MESSAGE);
                     break;
             }
-        } while ( !choice.equals("8") );
+        } while ( !choice.equals("9") );
     }
 
     public static void caseOne ( Scanner scanner, Configurator conf ) throws SQLException, Exception
@@ -177,24 +180,67 @@ public class ConfiguratorMenu {
         Util.clearConsole( Constants.TIME_MESSAGE );
     }
 
-    public static void caseThree ( Scanner scanner, Configurator conf ) throws SQLException, Exception
+    public static void caseThree ( Scanner scanner, ConversionFactors conversionFactors ) throws SQLException, Exception
     {
-        Util.clearConsole( Constants.TIME_SWITCH_MENU );
-
-        ConversionFactors conversionFactors = new ConversionFactors();
+        ConversionFactors tmp_conversionFactors = new ConversionFactors();
+        ConversionFactors toTest = new ConversionFactors();
+        ConversionFactors backup = new ConversionFactors();
 
         conversionFactors.populate();
+        tmp_conversionFactors.copy( conversionFactors );
+        backup.copy( conversionFactors );
+        toTest.copy( conversionFactors );
 
-        System.out.println( "\n" + conversionFactors.toString() + "\n" );
-        int index = Integer.parseInt( Util.insertWithCheck( Constants.ENTER_CHOICE_PAIR, Constants.INVALID_OPTION, ( input ) -> !( ( conversionFactors.getList().containsKey( Integer.parseInt( input ) ) && conversionFactors.getList().get( Integer.parseInt( input ) ).getValue() == null ) ), scanner ) );
-        Double value = Double.parseDouble( Util.insertWithCheck( Constants.ENTER_VALUE_CONVERSION_FACTOR, Constants.OUT_OF_RANGE_ERROR, ( input ) -> ( ( Double.parseDouble( input ) < 0.5 ) || ( Double.parseDouble( input ) > 2.0 ) ), scanner) );
-        
-        conversionFactors.calculate( index , value );
+        if ( conversionFactors.isComplete() )
+        {
+            caseSeven( scanner, conversionFactors );
+            return;
+        }
+
+        do
+        {
+            Util.clearConsole( Constants.TIME_SWITCH_MENU );
+            System.out.println( "\n" + conversionFactors.toString() + "\n" );
+            int index = Integer.parseInt( Util.insertWithCheck( Constants.ENTER_CHOICE_PAIR, Constants.INVALID_OPTION, ( input ) -> !( ( conversionFactors.getList().containsKey( Integer.parseInt( input ) ) && conversionFactors.getList().get( Integer.parseInt( input ) ).getValue() == null ) ), scanner ) );
+            Double value = Double.parseDouble( Util.insertWithCheck( Constants.ENTER_VALUE_CONVERSION_FACTOR, Constants.OUT_OF_RANGE_ERROR, ( input ) -> ( ( Double.parseDouble( input ) < 0.5 ) || ( Double.parseDouble( input ) > 2.0 ) ), scanner) );
+
+            tmp_conversionFactors.calculate( index, value );
+
+            if ( tmp_conversionFactors.inRange() ) conversionFactors.copy( tmp_conversionFactors );
+            else 
+            {
+                toTest.copy( tmp_conversionFactors );
+                toTest.calculate( index, 0.5 );
+                if ( !toTest.inRange() )
+                {
+                    toTest.copy( tmp_conversionFactors );
+                    toTest.calculate( index, 2.0 );
+                    if ( !toTest.inRange() ) {
+                        conversionFactors.copy( backup );
+                        System.out.println( Constants.IMPOSSIBLE_CALCULATE_CF );
+                        Util.clearConsole( Constants.TIME_ERROR_MESSAGE );
+                        return;
+                    }
+                }
+                System.out.println( Constants.OUT_OF_RANGE_VALUE );
+                Util.clearConsole( Constants.TIME_ERROR_MESSAGE );
+            }
+        } while ( !conversionFactors.isComplete() );
+
+        Util.clearConsole( Constants.TIME_SWITCH_MENU );
+        System.out.println( Constants.OPERATION_COMPLETED );
+        Util.clearConsole( Constants.TIME_MESSAGE );
     } 
 
-    public static void caseFour ( Configurator conf ) throws SQLException, Exception
+    public static void caseFour ( Configurator conf, ConversionFactors toSave ) throws SQLException, Exception
     {
-        conf.saveAll();
+        if ( !toSave.isComplete() )
+        {
+            System.out.println( Constants.IMPOSSIBLE_SAVE_CF );
+            Util.clearConsole( Constants.TIME_ERROR_MESSAGE );
+            return;
+        }
+        conf.saveAll( toSave );
         System.out.println( Constants.SAVE_COMPLETED );
         Util.clearConsole( Constants.TIME_MESSAGE );
     }
@@ -213,16 +259,16 @@ public class ConfiguratorMenu {
 
         System.out.println( Printer.printAllDistricts() );
         System.out.print( Constants.ENTER_DISTRICT_TO_VIEW );
-        String districtName = scanner.nextLine();
+        Integer districtID = Integer.parseInt( scanner.nextLine() );
 
-        if ( !Controls.isPresentDistrict( districtName ) || districtName.equals( "" ) )
+        if ( !Controls.isPresentDistrict( districtID ) || districtID == null )
         {
             System.out.println( Constants.NOT_EXIST_MESSAGE );
             Util.clearConsole( Constants.TIME_ERROR_MESSAGE );
             return;
         }
 
-        District tmp = new District( districtName );
+        District tmp = new District( districtID );
         Util.clearConsole( Constants.TIME_SWITCH_MENU );
         System.out.println( "\n" + tmp.getName() + ":\n" );
         System.out.println( tmp.printAllMunicipalities() );
@@ -260,6 +306,19 @@ public class ConfiguratorMenu {
         System.out.println( "\n" + Printer.printHierarchy( Integer.parseInt( hierarchyID ) ) );
 
         System.out.print( "\n" + Constants.ENTER_TO_EXIT );
+        scanner.nextLine();
+        Util.clearConsole( Constants.TIME_SWITCH_MENU );
+        return;
+    }
+
+    public static void caseSeven ( Scanner scanner, ConversionFactors conversionFactors ) throws Exception
+    {
+        conversionFactors.populate();
+        Util.clearConsole( Constants.TIME_SWITCH_MENU );
+
+        System.out.print( "\n" + conversionFactors.toString() + "\n" );
+
+        System.out.print( Constants.ENTER_TO_EXIT );
         scanner.nextLine();
         Util.clearConsole( Constants.TIME_SWITCH_MENU );
         return;

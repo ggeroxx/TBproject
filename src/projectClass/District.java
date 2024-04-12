@@ -16,6 +16,13 @@ public class District {
         this.IDConfigurator = takeIDConfigurator();
     }
 
+    public District ( int ID ) throws SQLException
+    {
+        this.ID = ID;
+        this.name = takeName();
+        this.IDConfigurator = takeIDConfigurator();
+    }
+
     public String getName() 
     {
         return name;
@@ -35,6 +42,22 @@ public class District {
 
         rs.next();
         return rs.getInt( 1 );
+    }
+
+    private String takeName() throws SQLException
+    {
+        String query = "SELECT name FROM districts WHERE id = ? " +
+                       "UNION " +
+                       "SELECT name FROM tmp_districts WHERE id = ?";
+
+        ArrayList<String> parameters = new ArrayList<String>();
+        parameters.add( Integer.toString( this.ID ) );
+        parameters.add( Integer.toString( this.ID ) );
+
+        ResultSet rs = Conn.exQuery( query, parameters );
+
+        rs.next();
+        return rs.getString( 1 );
     }
 
     private int takeIDConfigurator () throws SQLException

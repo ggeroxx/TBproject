@@ -3,7 +3,6 @@ package util;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
-import projectClass.*;
 
 public class Controls {
     
@@ -50,15 +49,21 @@ public class Controls {
         return rs.next();
     } 
 
-    public static boolean isPresentDistrict ( String nameToCheck ) throws SQLException
+    public static <T> boolean isPresentDistrict ( T toCheck ) throws SQLException
     {
-        String query = "SELECT name FROM districts WHERE name = ?" +
-                       "UNION " +
-                       "SELECT name FROM tmp_districts WHERE name = ?";
+        String query = null;
+
+        if ( toCheck instanceof Integer ) query = "SELECT id FROM districts WHERE id = ?" +
+                                                  "UNION " +
+                                                  "SELECT id FROM tmp_districts WHERE id = ?";
+
+        if ( toCheck instanceof String ) query = "SELECT name FROM districts WHERE name = ?" +
+                                                 "UNION " +
+                                                 "SELECT name FROM tmp_districts WHERE name = ?";
 
         ArrayList<String> parameters = new ArrayList<String>();
-        parameters.add( nameToCheck );
-        parameters.add( nameToCheck );
+        parameters.add( toCheck.toString() );
+        parameters.add( toCheck.toString() );
 
         ResultSet rs = Conn.exQuery( query, parameters );
 

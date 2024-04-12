@@ -37,18 +37,19 @@ public class Constants {
                                                      "──────────────\n";
 
     public static final String CONFIGURATOR_MENU = "\n" +
-                                                   "───────────────────────\n" +
-                                                   BLUE + BOLD + "\tOPTIONS\n" + RESET +
-                                                   "───────────────────────\n" +
+                                                   "──────────────────────────────────\n" +
+                                                   BLUE + BOLD + "\t     OPTIONS\n" + RESET +
+                                                   "──────────────────────────────────\n" +
                                                    " 1.  insert new district\n" +
                                                    " 2.  insert new hierarchy\n" +
                                                    " 3.  insert conversion factors\n" +
                                                    " 4.  save all data\n" +
                                                    " 5.  view district\n" + 
                                                    " 6.  view hierarchy\n" +
-                                                   " 8.  logout\n" +
-                                                   "───────────────────────\n" +
-                                                   "Enter your choice [1-8] --> ";
+                                                   " 7.  view all conversion factors\n" +
+                                                   " 9.  logout\n" +
+                                                   "──────────────────────────────────\n" +
+                                                   "Enter your choice [1-9] --> ";
 
     public static final String DISTRICT_LIST = "\n" +
                                                "───────────────\n" + 
@@ -107,6 +108,9 @@ public class Constants {
     public static final String ROOT_CATEGORY_ALREADY_PRESENT = RED + "\n --- Root category already present --- \n" + RESET;
     public static final String INTERNAL_CATEGORY_ALREADY_PRESENT = RED + "\n --- Category already present --- \n" + RESET;
     public static final String OUT_OF_RANGE_ERROR = RED + "\n --- Out of range !!! [0.5-2.0] --- \n" + RESET;
+    public static final String OUT_OF_RANGE_VALUE = RED + "\n ---  A value out of range was calculated, reinsert it --- \n" + RESET;
+    public static final String IMPOSSIBLE_SAVE_CF = RED + "\n --- " + BOLD + "ATTENTION" + BOLD + ", not all conversion factors have been set !!! " + RESET;
+    public static final String IMPOSSIBLE_CALCULATE_CF = RED + "\n --- impossible to calculate the conversion factors in the range --- \n" + RESET;
 
     public static final String SQL_EXCEPTION_MESSAGE = "Database error: ";
     public static final String GENERIC_EXCEPTION_MESSAGE = "Generic error:";

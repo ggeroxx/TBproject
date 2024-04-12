@@ -1,6 +1,9 @@
 package util;
 
-import java.sql.SQLException;
+import java.sql.*;
+import java.util.*;
+import java.util.Map.*;
+import projectClass.*;
 
 public class Save {
     
@@ -46,10 +49,30 @@ public class Save {
         Conn.queryUpdate(query);
     }
 
-    public static void saveAll () throws SQLException
+    public static void saveConversionFactors ( ConversionFactors toSave ) throws SQLException
+    {
+        for ( Entry<Integer, ConversionFactor> entry : toSave.getList().entrySet() )
+        {
+            int leaf1 = entry.getValue().getID_leaf_1();
+            int leaf2 = entry.getValue().getID_leaf_2();
+            Double value = entry.getValue().getValue();
+
+            String query = "INSERT IGNORE INTO conversionFactors (ID_leaf_1, ID_leaf_2, value) VALUES (?, ? ,?)";
+
+            ArrayList<String> parameters = new ArrayList<String>();
+            parameters.add( Integer.toString( leaf1 ) );
+            parameters.add( Integer.toString( leaf2 ) );
+            parameters.add( Double.toString( value ) );
+
+            Conn.queryUpdate( query, parameters );
+        }
+    }
+
+    public static void saveAll ( ConversionFactors toSave ) throws SQLException
     {
         saveDistricts();
         saveCategories();
+        saveConversionFactors( toSave );
     }
 
 }
