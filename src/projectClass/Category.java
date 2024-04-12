@@ -2,8 +2,8 @@ package projectClass;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import util.Conn;
+import java.util.*;
+import util.*;
 
 public class Category {
     
@@ -24,6 +24,26 @@ public class Category {
         this.hierarchyID = hierarchyID;
         this.IDConfigurator = IDConfigurator;
         this.ID = takeID();
+    }
+
+    public int getID() 
+    {
+        return ID;
+    }
+
+    public String getName() 
+    {
+        return name;
+    }
+
+    public String getField() 
+    {
+        return field;
+    }
+
+    public String getDescription() 
+    {
+        return description;
     }
 
     public int getHierarchyID() 

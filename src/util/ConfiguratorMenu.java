@@ -183,13 +183,7 @@ public class ConfiguratorMenu {
     public static void caseThree ( Scanner scanner, ConversionFactors conversionFactors ) throws SQLException, Exception
     {
         ConversionFactors tmp_conversionFactors = new ConversionFactors();
-        ConversionFactors toTest = new ConversionFactors();
-        ConversionFactors backup = new ConversionFactors();
-
         conversionFactors.populate();
-        tmp_conversionFactors.copy( conversionFactors );
-        backup.copy( conversionFactors );
-        toTest.copy( conversionFactors );
 
         if ( conversionFactors.isComplete() )
         {
@@ -199,6 +193,7 @@ public class ConfiguratorMenu {
 
         do
         {
+            tmp_conversionFactors.copy( conversionFactors );
             Util.clearConsole( Constants.TIME_SWITCH_MENU );
             System.out.println( "\n" + conversionFactors.toString() + "\n" );
             int index = Integer.parseInt( Util.insertWithCheck( Constants.ENTER_CHOICE_PAIR, Constants.INVALID_OPTION, ( input ) -> !( ( conversionFactors.getList().containsKey( Integer.parseInt( input ) ) && conversionFactors.getList().get( Integer.parseInt( input ) ).getValue() == null ) ), scanner ) );
@@ -209,25 +204,13 @@ public class ConfiguratorMenu {
             if ( tmp_conversionFactors.inRange() ) conversionFactors.copy( tmp_conversionFactors );
             else 
             {
-                toTest.copy( tmp_conversionFactors );
-                toTest.calculate( index, 0.5 );
-                if ( !toTest.inRange() )
-                {
-                    toTest.copy( tmp_conversionFactors );
-                    toTest.calculate( index, 2.0 );
-                    if ( !toTest.inRange() ) {
-                        conversionFactors.copy( backup );
-                        System.out.println( Constants.IMPOSSIBLE_CALCULATE_CF );
-                        Util.clearConsole( Constants.TIME_ERROR_MESSAGE );
-                        return;
-                    }
-                }
                 System.out.println( Constants.OUT_OF_RANGE_VALUE );
                 Util.clearConsole( Constants.TIME_ERROR_MESSAGE );
             }
         } while ( !conversionFactors.isComplete() );
 
         Util.clearConsole( Constants.TIME_SWITCH_MENU );
+        System.out.println( "\n" + conversionFactors.toString() + "\n" );
         System.out.println( Constants.OPERATION_COMPLETED );
         Util.clearConsole( Constants.TIME_MESSAGE );
     } 

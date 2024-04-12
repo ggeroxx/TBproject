@@ -114,18 +114,12 @@ public class ConversionFactors implements Cloneable {
         return true;
     }
 
-    // public void copy ( ConversionFactors toCopy )
-    // {
-    //     this.index = toCopy.index;
-    //     this.list = new HashMap<Integer, ConversionFactor>( toCopy.getList() );
-    // }
-
-    public void copy ( ConversionFactors toCopy )
+    public void copy ( ConversionFactors toCopy ) throws SQLException
     {
         this.index = toCopy.index;
         this.list = new HashMap<Integer, ConversionFactor>();
         for ( Entry<Integer, ConversionFactor> entry : toCopy.getList().entrySet() )
-            this.list.put( entry.getKey(), entry.getValue() );
+            this.list.put( entry.getKey(), new ConversionFactor( entry.getValue().getID_leaf_1(), entry.getValue().getID_leaf_2(), entry.getValue().getValue() ) );
     }
 
     @Override

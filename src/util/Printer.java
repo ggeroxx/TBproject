@@ -86,9 +86,9 @@ public class Printer {
         ResultSet rs;
         ArrayList<String> parameters;
 
-        query = "SELECT name, root FROM categories WHERE id = ? " +
+        query = "SELECT id, name, root FROM categories WHERE id = ? " +
                 "UNION " +
-                "SELECT name, root FROM tmp_categories WHERE id = ?";
+                "SELECT id, name, root FROM tmp_categories WHERE id = ?";
 
         parameters = new ArrayList<String>();
         parameters.add( Integer.toString( IDToPrint ) );
@@ -96,8 +96,8 @@ public class Printer {
 
         rs = Conn.exQuery( query, parameters );
         rs.next();
-        if ( rs.getBoolean( 2 ) ) toReturn.append( rs.getString( 1 ) + "\n\n" );
-        else toReturn.append( spaces.toString() + "└──── " + rs.getString( 1 ) + "\n\n" );
+        if ( rs.getBoolean( 3 ) ) toReturn.append( rs.getInt( 1 ) + ". " + rs.getString( 2 ) + "\n\n" );
+        else toReturn.append( spaces.toString() + "└──── " + rs.getInt( 1 ) + ". " + rs.getString( 2 ) + "\n\n" );
 
         query = "SELECT childid FROM relationshipsBetweenCategories WHERE parentid = ? " +
                 "UNION " +
@@ -119,5 +119,31 @@ public class Printer {
 
         return toReturn.toString();
     } 
+
+    public static String printInfoCategory( Category toPrint ) throws SQLException
+    {
+        StringBuffer toReturn = new StringBuffer();    
+
+        String query;
+        ResultSet rs = null;
+        ArrayList<String> parameters = new ArrayList<String>();
+
+        if ( toPrint.getField() != null )
+        {
+            
+        }
+        else
+        {
+            query = "SELECT value FROM relationshipsbetweeencategories WHERE childid = ?";
+            parameters.add( Integer.toString( toPrint.getID() ) );
+            rs.next();
+
+            toReturn.append( "name:" + Util.padRight( "name:", 17 ) + Constants.BOLD + toPrint.getName() + Constants.RESET + "\n" );
+            toReturn.append( "description:" + Util.padRight( "description:", 17 ) + toPrint.getDescription() + "\n" );
+            toReturn.append( "value of domain:" + Util.padRight( "value of domain:", 17 ) + rs.getInt( 1 ) + "\n" );
+        }
+
+        return toReturn.toString();
+    }
 
 }

@@ -110,7 +110,6 @@ public class Constants {
     public static final String OUT_OF_RANGE_ERROR = RED + "\n --- Out of range !!! [0.5-2.0] --- \n" + RESET;
     public static final String OUT_OF_RANGE_VALUE = RED + "\n ---  A value out of range was calculated, reinsert it --- \n" + RESET;
     public static final String IMPOSSIBLE_SAVE_CF = RED + "\n --- " + BOLD + "ATTENTION" + BOLD + ", not all conversion factors have been set !!! " + RESET;
-    public static final String IMPOSSIBLE_CALCULATE_CF = RED + "\n --- impossible to calculate the conversion factors in the range --- \n" + RESET;
 
     public static final String SQL_EXCEPTION_MESSAGE = "Database error: ";
     public static final String GENERIC_EXCEPTION_MESSAGE = "Generic error:";
