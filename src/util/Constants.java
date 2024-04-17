@@ -47,6 +47,7 @@ public class Constants {
                                                    " 5.  view district\n" + 
                                                    " 6.  view hierarchy\n" +
                                                    " 7.  view all conversion factors\n" +
+                                                   " 8.  view conversion factors of a category\n" + 
                                                    " 9.  logout\n" +
                                                    "──────────────────────────────────\n" +
                                                    "Enter your choice [1-9] --> ";
@@ -60,6 +61,11 @@ public class Constants {
                                                 "───────────────\n" + 
                                                 PURPLE + BOLD + "HIERARCHY LIST\n" + RESET +
                                                 "───────────────\n";
+
+    public static final String LEAF_CATEGORY_LIST = "\n" +
+                                                "────────────────────\n" + 
+                                                PURPLE + BOLD + "LEAF CATEGORY LIST\n" + RESET +
+                                                "────────────────────\n";
 
     public static final String HIERARCHY_SCREEN = "\n" +
                                                    "─────────────────────\n" +
@@ -76,6 +82,7 @@ public class Constants {
     public static final String ENTER_TO_EXIT = "Press enter to exit ↵  ";
     public static final String ENTER_DISTRICT_TO_VIEW = "Enter district name --> ";
     public static final String ENTER_HIERARCHY_ID = "Enter hierarchy ID --> ";
+    public static final String ENTER_CATEGORY_ID = "Enter category ID --> ";
     public static final String ENTER_CATEGORY_NAME = "enter category name: ";
     public static final String ENTER_FIELD = "enter field: ";
     public static final String ENTER_DESCRIPTION = "enter description (enter to skip): ";
@@ -107,7 +114,7 @@ public class Constants {
     public static final String NOT_EXIST_MESSAGE = RED + "\n --- NOT exist ! --- " + RESET;
     public static final String ROOT_CATEGORY_ALREADY_PRESENT = RED + "\n --- Root category already present --- \n" + RESET;
     public static final String INTERNAL_CATEGORY_ALREADY_PRESENT = RED + "\n --- Category already present --- \n" + RESET;
-    public static final String OUT_OF_RANGE_ERROR = RED + "\n --- Out of range !!! [0.5-2.0] --- \n" + RESET;
+    public static final String OUT_OF_RANGE_ERROR = RED + "\n --- Invalid or out of range !!! [0.5-2.0] --- \n" + RESET;
     public static final String OUT_OF_RANGE_VALUE = RED + "\n ---  A value out of range was calculated, reinsert it --- \n" + RESET;
     public static final String IMPOSSIBLE_SAVE_CF = RED + "\n --- " + BOLD + "ATTENTION" + BOLD + ", not all conversion factors have been set !!! " + RESET;
 

@@ -2,6 +2,7 @@ package util;
 
 import java.sql.*;
 import java.util.*;
+import java.util.Map.Entry;
 import projectClass.*;
 
 public class Printer {
@@ -45,6 +46,25 @@ public class Printer {
         rs = Conn.exQuery( query, parameters );
 
         while ( rs.next() ) toReturn.append( " " + rs.getString( 2 ) + ". " + rs.getString( 1 ) + "  -->  (not saved)\n" );
+
+        return toReturn.toString();
+    }
+
+    public static String printAllLeafCategory () throws SQLException
+    {
+        String query;
+        ResultSet rs;
+        StringBuffer toReturn = new StringBuffer();
+
+        query = "SELECT id, name FROM categories WHERE field IS NULL";
+        rs = Conn.exQuery( query );
+
+        while ( rs.next() ) toReturn.append( " " + rs.getInt( 1 ) + ". " + rs.getString( 2 ) + "\n" );
+
+        query = "SELECT id, name FROM tmp_categories WHERE field IS NULL";
+        rs = Conn.exQuery( query );
+
+        while ( rs.next() ) toReturn.append( " " + rs.getInt( 1 ) + ". " + rs.getString( 2 ) + "  -->  (not saved)\n" );
 
         return toReturn.toString();
     }
@@ -120,7 +140,7 @@ public class Printer {
         return toReturn.toString();
     } 
 
-    public static String printInfoCategory( Category toPrint ) throws SQLException
+    public static String printInfoCategory( int IDCategoryToPrint ) throws SQLException
     {
         StringBuffer toReturn = new StringBuffer();    
 
@@ -128,22 +148,51 @@ public class Printer {
         ResultSet rs = null;
         ArrayList<String> parameters = new ArrayList<String>();
 
+        query = "SELECT * FROM categories WHERE id = ?";
+        parameters.add( Integer.toString( IDCategoryToPrint ) );
+        rs = Conn.exQuery( query, parameters );
+        rs.next();
+
+        Category toPrint = new Category( rs.getString( 2 ), rs.getString( 3 ), rs.getString( 4 ), rs.getBoolean( 5 ), rs.getInt( 6 ), rs.getInt( 7 ) );
+
         if ( toPrint.getField() != null )
         {
-            
+            query = "SELECT fieldtype FROM relationshipsbetweencategories WHERE parentid = ?";
+            parameters = new ArrayList<String>();
+            parameters.add( Integer.toString( toPrint.getID() ) );
+            rs = Conn.exQuery( query, parameters );
+
+            toReturn.append( "name:" + Util.padRight( "name:", 20 ) + Constants.BOLD + toPrint.getName() + Constants.RESET + "\n" );
+            toReturn.append( "description:" + Util.padRight( "description:", 20 ) + toPrint.getDescription() + "\n" );
+            toReturn.append( "field:" + Util.padRight( "field:", 20 ) + toPrint.getField() + " = { " );
+            while ( rs.next() ) toReturn.append( rs.getString( 1 ) + ", " );
+            toReturn.deleteCharAt( toReturn.length() - 2 );
+            toReturn.append( "}\n" );
         }
         else
         {
-            query = "SELECT value FROM relationshipsbetweeencategories WHERE childid = ?";
+            query = "SELECT fieldtype FROM relationshipsbetweencategories WHERE childid = ?";
+            parameters = new ArrayList<String>();
             parameters.add( Integer.toString( toPrint.getID() ) );
+            rs = Conn.exQuery( query, parameters );
             rs.next();
 
-            toReturn.append( "name:" + Util.padRight( "name:", 17 ) + Constants.BOLD + toPrint.getName() + Constants.RESET + "\n" );
-            toReturn.append( "description:" + Util.padRight( "description:", 17 ) + toPrint.getDescription() + "\n" );
-            toReturn.append( "value of domain:" + Util.padRight( "value of domain:", 17 ) + rs.getInt( 1 ) + "\n" );
+            toReturn.append( "name:" + Util.padRight( "name:", 20 ) + Constants.BOLD + toPrint.getName() + Constants.RESET + "\n" );
+            toReturn.append( "description:" + Util.padRight( "description:", 20 ) + toPrint.getDescription() + "\n" );
+            toReturn.append( "value of domain:" + Util.padRight( "value of domain:", 20 ) + rs.getString( 1 ) + "\n" );
         }
 
         return toReturn.toString();
     }
 
+    public static String printConversionFactorsByLeaf ( int IDLeafCategory, ConversionFactors conversionFactors )
+    {
+        StringBuffer toReturn = new StringBuffer();
+
+        for ( Entry<Integer, ConversionFactor> entry : conversionFactors.getList().entrySet() )
+            if ( entry.getValue().getID_leaf_1() == IDLeafCategory || entry.getValue().getID_leaf_2() == IDLeafCategory )
+                toReturn.append( "  " + entry.getValue().toString() + "\n" );
+        
+        return toReturn.toString();
+    } 
 }

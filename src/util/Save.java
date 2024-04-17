@@ -66,6 +66,8 @@ public class Save {
 
             Conn.queryUpdate( query, parameters );
         }
+
+        toSave = new ConversionFactors();
     }
 
     public static void saveAll ( ConversionFactors toSave ) throws SQLException
