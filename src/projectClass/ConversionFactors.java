@@ -5,7 +5,7 @@ import java.util.Map.Entry;
 import java.sql.*;
 import util.*;
 
-public class ConversionFactors implements Cloneable {
+public class ConversionFactors {
     
     private Integer index;
     private HashMap<Integer, ConversionFactor> list;
