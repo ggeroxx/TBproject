@@ -2,7 +2,6 @@ package util;
 
 import java.sql.*;
 import java.util.*;
-
 import projectClass.*;
 
 public class ConfiguratorMenu {
@@ -142,13 +141,15 @@ public class ConfiguratorMenu {
 
             String leafCategory = "n";
             if ( notFirstIteration ) leafCategory = Util.insertWithCheck( Constants.LEAF_CATEGORY_MESSAGE, Constants.INVALID_OPTION, ( input ) -> !input.equals("n") && !input.equals("y"), scanner );
-            notFirstIteration = true;
 
             String field = null;
+            String description = null;
             if ( leafCategory.equals( "n" ) )
                 field = Util.insertWithCheck( Constants.ENTER_FIELD, Constants.ERROR_PATTERN_FIELD , ( input ) -> Controls.checkPattern( input, 0, 25 ), scanner );
-            String description = Util.insertWithCheck( Constants.ENTER_DESCRIPTION, Constants.ERROR_PATTERN_DESCRIPTION, ( input ) -> Controls.checkPattern( input, -1, 100 ), scanner );
+            if ( notFirstIteration ) description = Util.insertWithCheck( Constants.ENTER_DESCRIPTION, Constants.ERROR_PATTERN_DESCRIPTION, ( input ) -> Controls.checkPattern( input, -1, 100 ), scanner );
             Category newCategory = isRoot ? ( conf.createCategory( categoryName, field, description, isRoot, null ) ) : ( conf.createCategory( categoryName, field, description, isRoot, root.getHierarchyID() ) );
+
+            notFirstIteration = true;
 
             if ( isRoot ) 
             {
@@ -160,7 +161,7 @@ public class ConfiguratorMenu {
             String parentID;
             do 
             {
-                System.out.print( Constants.CATEGORY_LIST + Printer.printCategoriesList( root.getHierarchyID() ) );
+                System.out.print( "\n" + Constants.CATEGORY_LIST + Printer.printCategoriesList( root.getHierarchyID() ) );
                 System.out.print( Constants.ENTER_DAD_MESSAGE );
                 parentID = scanner.nextLine();
                 if ( parentID.isEmpty() || !Controls.isInt( parentID ) || !root.isValidParentID( Integer.parseInt( parentID ) ) ) System.out.println( Constants.NOT_EXIST_MESSAGE + "\n" );
@@ -219,6 +220,7 @@ public class ConfiguratorMenu {
 
     public static void caseFour ( Configurator conf, ConversionFactors toSave ) throws SQLException, Exception
     {
+        toSave.populate();
         if ( !toSave.isComplete() )
         {
             System.out.println( Constants.IMPOSSIBLE_SAVE_CF );

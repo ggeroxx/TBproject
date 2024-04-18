@@ -95,8 +95,10 @@ public class Controls {
 
     public static boolean isPresentCategoryInHierarchy ( Integer categoryID, Integer hierarchyID ) throws SQLException
     {
-        String query = "SELECT * FROM categories WHERE id = ? AND hierarchyid = ?";
+        String query = "SELECT * FROM categories WHERE id = ? AND hierarchyid = ? UNION SELECT * FROM tmp_categories WHERE id = ? AND hierarchyid = ?";
         ArrayList<String> parameters = new ArrayList<String>();
+        parameters.add( Integer.toString( categoryID ) );
+        parameters.add( Integer.toString( hierarchyID ) );
         parameters.add( Integer.toString( categoryID ) );
         parameters.add( Integer.toString( hierarchyID ) );
         ResultSet rs = Conn.exQuery( query, parameters );

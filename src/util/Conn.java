@@ -13,8 +13,6 @@ public class Conn
     public static void openConnection () throws SQLException
     {
         conn = DriverManager.getConnection( url, user, pass );
-        creationTmpDistrictTable();
-        creationTmpCategoryTable();
     }
 
     public static void creationTmpDistrictTable () throws SQLException
@@ -152,7 +150,6 @@ public class Conn
 
     public static void closeConnection () throws SQLException
     {
-        eliminationTmpTable();   
         conn.close();
     }
 

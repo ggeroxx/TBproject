@@ -34,12 +34,6 @@ public class Main
                             System.out.println( Constants.BYE_BYE_MESSAGE );
                         break;
 
-                    case "":
-                            Configurator conf = new Configurator( "user1", "password1" );
-                            Util.clearConsole( Constants.TIME_SWITCH_MENU );
-                            ConfiguratorMenu.menu( scanner, conf, session );
-                        break;
-
                     default:
                             System.out.println( Constants.INVALID_OPTION );
                             Util.clearConsole( Constants.TIME_ERROR_MESSAGE );

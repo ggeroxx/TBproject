@@ -11,9 +11,9 @@ public class Printer {
     {
         StringBuffer toReturn = new StringBuffer();
 
-        String query = "SELECT id, name FROM categories WHERE hierarchyID = ? AND field IS NOT NULL AND description IS NOT NULL AND id NOT IN (SELECT MAX(id) FROM categories) " +
+        String query = "SELECT id, name FROM categories WHERE hierarchyID = ? AND field IS NOT NULL AND id NOT IN (SELECT MAX(id) FROM categories) " +
                        "UNION " +
-                       "SELECT id, name FROM tmp_categories WHERE hierarchyID = ? AND field IS NOT NULL AND description IS NOT NULL AND id NOT IN (SELECT MAX(id) FROM tmp_categories)";
+                       "SELECT id, name FROM tmp_categories WHERE hierarchyID = ? AND field IS NOT NULL AND id NOT IN (SELECT MAX(id) FROM tmp_categories)";
 
         ArrayList<String> parameters = new ArrayList<String>();
         parameters.add( Integer.toString( hierarchyID ) );
@@ -21,7 +21,7 @@ public class Printer {
 
         ResultSet rs = Conn.exQuery( query, parameters );
 
-        while ( rs.next() ) toReturn.append( "  " + rs.getInt( 1 ) + ". " + rs.getString( 2 ) + "\n" );
+        while ( rs.next() ) toReturn.append( "  " + Constants.YELLOW + rs.getInt( 1 ) + ". " + Constants.RESET + rs.getString( 2 ) + "\n" );
 
         return toReturn.toString();
     }
@@ -148,7 +148,8 @@ public class Printer {
         ResultSet rs = null;
         ArrayList<String> parameters = new ArrayList<String>();
 
-        query = "SELECT * FROM categories WHERE id = ?";
+        query = "SELECT * FROM categories WHERE id = ? UNION SELECT * FROM tmp_categories WHERE id = ?";
+        parameters.add( Integer.toString( IDCategoryToPrint ) );
         parameters.add( Integer.toString( IDCategoryToPrint ) );
         rs = Conn.exQuery( query, parameters );
         rs.next();
@@ -157,8 +158,9 @@ public class Printer {
 
         if ( toPrint.getField() != null )
         {
-            query = "SELECT fieldtype FROM relationshipsbetweencategories WHERE parentid = ?";
+            query = "SELECT fieldtype FROM relationshipsbetweencategories WHERE parentid = ? UNION SELECT fieldtype FROM tmp_relationshipsbetweencategories WHERE parentid = ?";
             parameters = new ArrayList<String>();
+            parameters.add( Integer.toString( toPrint.getID() ) );
             parameters.add( Integer.toString( toPrint.getID() ) );
             rs = Conn.exQuery( query, parameters );
 
@@ -171,8 +173,9 @@ public class Printer {
         }
         else
         {
-            query = "SELECT fieldtype FROM relationshipsbetweencategories WHERE childid = ?";
+            query = "SELECT fieldtype FROM relationshipsbetweencategories WHERE childid = ? UNION SELECT fieldtype FROM tmp_relationshipsbetweencategories WHERE childid = ?";
             parameters = new ArrayList<String>();
+            parameters.add( Integer.toString( toPrint.getID() ) );
             parameters.add( Integer.toString( toPrint.getID() ) );
             rs = Conn.exQuery( query, parameters );
             rs.next();

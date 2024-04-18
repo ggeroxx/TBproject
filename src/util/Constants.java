@@ -80,15 +80,15 @@ public class Constants {
     public static final String ENTER_MUNICIPALITY = "\nEnter municipality: ";
     public static final String END_ADD_MESSAGE = "end: (y/n) --> ";
     public static final String ENTER_TO_EXIT = "Press enter to exit ↵  ";
-    public static final String ENTER_DISTRICT_TO_VIEW = "Enter district name --> ";
+    public static final String ENTER_DISTRICT_TO_VIEW = "Enter district ID --> ";
     public static final String ENTER_HIERARCHY_ID = "Enter hierarchy ID --> ";
     public static final String ENTER_CATEGORY_ID = "Enter category ID --> ";
     public static final String ENTER_CATEGORY_NAME = "enter category name: ";
-    public static final String ENTER_FIELD = "enter field: ";
-    public static final String ENTER_DESCRIPTION = "enter description (enter to skip): ";
-    public static final String LEAF_CATEGORY_MESSAGE = "leaf category? (y/n) --> ";
-    public static final String ENTER_DAD_MESSAGE = " - enter parent ID --> ";
-    public static final String ENTER_FIELD_TYPE = "enter field type: ";
+    public static final String ENTER_FIELD = "\nenter field: ";
+    public static final String ENTER_DESCRIPTION = "\nenter description (enter to skip): ";
+    public static final String LEAF_CATEGORY_MESSAGE = "\nleaf category? (y/n) --> ";
+    public static final String ENTER_DAD_MESSAGE = "\n enter parent ID --> ";
+    public static final String ENTER_FIELD_TYPE = "\nenter field type: ";
     public static final String ENTER_CHOICE_PAIR = "Enter your choice: ";
     public static final String ENTER_VALUE_CONVERSION_FACTOR = "Enter value of conversion factor: ";
 
@@ -98,7 +98,7 @@ public class Constants {
     public static final String NOT_SAVED_STRING = "  -->  (not saved)\n";
     public static final String SAVE_COMPLETED = GREEN + "\n --- saved COMPLETED ✓ ---\n" + RESET;
     public static final String LOG_OUT = BLUE + "\nLog out ...\n\n" + RESET;
-    public static final String CATEGORY_LIST = " - categories:\n";
+    public static final String CATEGORY_LIST = " categories:\n\n";
     public static final String LINE = GREY + "────────────────────\n" + RESET;
 
     public static final String LOGIN_ERROR = RED + "\n --- " + BOLD + "ATTENTION" + RESET + RED + ", invalid username a/o password! Try again! ---" + RESET;

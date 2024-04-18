@@ -24,18 +24,29 @@ public class Session {
 
         ResultSet rs = Conn.exQuery( query, parameters );
 
-        if ( !rs.next() ) this.status = false;
+        if ( !rs.next() )
+        {
+            this.status = false;
+            return;
+        }
         else
         {
-            if ( !BCrypt.checkpw( passwordToCheck, rs.getString(3) ) ) this.status = false;
+            if ( !BCrypt.checkpw( passwordToCheck, rs.getString(3) ) )
+            {
+                this.status = false;
+                return;
+            }
         }
 
         this.status = true;
+        Conn.creationTmpDistrictTable();
+        Conn.creationTmpCategoryTable();
     }
 
-    public void logout () 
+    public void logout () throws SQLException
     {
         this.status = false;
+        Conn.eliminationTmpTable();
     }
 
 }
