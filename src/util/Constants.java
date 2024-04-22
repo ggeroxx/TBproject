@@ -18,28 +18,32 @@ public class Constants {
     public static final String RESET = "\u001B[0m";
     
     public static final String MAIN_MENU = "\n" +
-                                            "──────────────\n" + 
-                                            YELLOW + BOLD + "TIME BANK\n" + RESET +
-                                            "──────────────\n" +
-                                            " 1.  login\n" +
+                                            "─────────────────────────────\n" + 
+                                            YELLOW + BOLD + "\t  TIME BANK\n" + RESET +
+                                            "─────────────────────────────\n" +
+                                            " 1.  login\n\n" +
                                             " 2.  exit\n" +
-                                            "──────────────\n" +
+                                            "─────────────────────────────\n" +
                                             "Enter yout choice (1/2) --> ";
 
     public static final String LOGIN_SCREEN = "\n" +
-                                              "───────────\n" +
+                                              //"───────────\n" +
+                                              "\n" +
                                               RED + BOLD + "LOGIN\n" + RESET + 
-                                              "───────────\n";
+                                              //"───────────\n";
+                                              "\n";
 
     public static final String REGISTRATION_SCREEN = "\n" +
-                                                     "──────────────\n" +
+                                                     //"──────────────\n" +
+                                                     "\n" +
                                                      RED + BOLD + "REGISTRATION\n" + RESET + 
-                                                     "──────────────\n";
+                                                     //"──────────────\n";
+                                                     "\n";
 
     public static final String CONFIGURATOR_MENU = "\n" +
-                                                   "──────────────────────────────────\n" +
-                                                   BLUE + BOLD + "\t     OPTIONS\n" + RESET +
-                                                   "──────────────────────────────────\n" +
+                                                   "───────────────────────────────────────────\n" +
+                                                   BLUE + BOLD + "\t\t  OPTIONS\n" + RESET +
+                                                   "───────────────────────────────────────────\n" +
                                                    " 1.  insert new district\n" +
                                                    " 2.  insert new hierarchy\n" +
                                                    " 3.  insert conversion factors\n" +
@@ -47,30 +51,38 @@ public class Constants {
                                                    " 5.  view district\n" + 
                                                    " 6.  view hierarchy\n" +
                                                    " 7.  view all conversion factors\n" +
-                                                   " 8.  view conversion factors of a category\n" + 
+                                                   " 8.  view conversion factors of a category\n\n" + 
                                                    " 9.  logout\n" +
-                                                   "──────────────────────────────────\n" +
+                                                   "───────────────────────────────────────────\n" +
                                                    "Enter your choice [1-9] --> ";
 
     public static final String DISTRICT_LIST = "\n" +
-                                               "───────────────\n" + 
+                                               //"───────────────\n" + 
+                                               "\n" +
                                                PURPLE + BOLD + "DISTRICT LIST\n" + RESET +
-                                               "───────────────\n";
+                                               //"───────────────\n";
+                                               "\n";
 
     public static final String HIERARCHY_LIST = "\n" +
-                                                "───────────────\n" + 
+                                                //"───────────────\n" + 
+                                                "\n" +
                                                 PURPLE + BOLD + "HIERARCHY LIST\n" + RESET +
-                                                "───────────────\n";
+                                                //"───────────────\n";
+                                                "\n";
 
     public static final String LEAF_CATEGORY_LIST = "\n" +
-                                                "────────────────────\n" + 
+                                                //"────────────────────\n" + 
+                                                "\n" + 
                                                 PURPLE + BOLD + "LEAF CATEGORY LIST\n" + RESET +
-                                                "────────────────────\n";
+                                                //"────────────────────\n";
+                                                "\n";
 
     public static final String HIERARCHY_SCREEN = "\n" +
-                                                   "─────────────────────\n" +
-                                                   CYAN + BOLD + "HIERARCHY INSERTION\n" + RESET + 
-                                                   "─────────────────────\n\n";
+                                                   //"─────────────────────\n" +
+                                                   "\n" + 
+                                                   CYAN + BOLD + "HIERARCHY INSERTION\n" + RESET +
+                                                   //"─────────────────────\n\n";
+                                                   "\n";
 
     public static final String ENTER_USERNAME = "enter username: ";
     public static final String ENTER_NEW_USERNAME = "Enter new username (min 3 max 20 characters): ";

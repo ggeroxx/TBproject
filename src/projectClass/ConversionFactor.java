@@ -2,96 +2,44 @@ package projectClass;
 
 import util.*;
 import java.sql.*;
-import java.util.*;
 
 public class ConversionFactor {
 
-    private int ID_leaf_1;
-    private String name_leaf_1;
-    private int ID_leaf_2;
-    private String name_leaf_2;
+    private Category leaf_1;
+    private Category leaf_2;
     private Double value;
 
-    public ConversionFactor ( int ID_leaf_1, int ID_leaf_2, Double value ) throws SQLException
+    public ConversionFactor ( Category leaf_1, Category leaf_2, Double value ) throws SQLException
     {
-        this.ID_leaf_1 = ID_leaf_1;
-        this.ID_leaf_2 = ID_leaf_2;
-        this.name_leaf_1 = this.getNameFromIDs().get( 0 );
-        this.name_leaf_2 = this.getNameFromIDs().get( 1 );
+        this.leaf_1 = leaf_1;
+        this.leaf_2 = leaf_2;
         this.value = value;
     }
 
-    public int getID_leaf_1 ()
+    public Category getLeaf_1() 
     {
-        return ID_leaf_1;
+        return this.leaf_1;
     }
 
-    public String getName_leaf_1() 
+    public Category getLeaf_2() 
     {
-        return name_leaf_1;
-    }
-
-    public int getID_leaf_2 ()
-    {
-        return ID_leaf_2;
-    }
-
-    public String getName_leaf_2() 
-    {
-        return name_leaf_2;
+        return this.leaf_2;
     }
 
     public Double getValue ()
     {
-        return value;
+        return this.value;
     }
 
-    public void setValue (Double value) 
+    public void setValue ( Double value ) 
     {
         this.value = value;
-    }
-
-    public List<String> getNameFromIDs() throws SQLException
-    {
-        List<String> toReturn = new ArrayList<>();
-
-        String query;
-        ResultSet rs;
-        ArrayList<String> parameters;
-
-        query = "SELECT name FROM categories WHERE id = ?" + 
-                "UNION " +
-                "SELECT name FROM tmp_categories WHERE id = ?";
-
-        parameters = new ArrayList<String>();
-        parameters.add( Integer.toString( this.ID_leaf_1 ) );
-        parameters.add( Integer.toString( this.ID_leaf_1 ) );
-
-        rs = Conn.exQuery( query, parameters );
-
-        rs.next();
-        toReturn.add( rs.getString( 1 ) );
-
-        query = "SELECT name FROM categories WHERE id = ?" + 
-                "UNION " +
-                "SELECT name FROM tmp_categories WHERE id = ?";
-
-        parameters = new ArrayList<String>();
-        parameters.add( Integer.toString( this.ID_leaf_2 ) );
-        parameters.add( Integer.toString( this.ID_leaf_2 ) );
-
-        rs = Conn.exQuery( query, parameters );
-
-        rs.next();
-        toReturn.add( rs.getString( 1 ) );
-
-        return toReturn;
     }
 
     @Override
     public boolean equals( Object obj ) 
     {
-        return ( this.ID_leaf_1 == ((ConversionFactor)obj).ID_leaf_1 ) && ( this.ID_leaf_2 == ((ConversionFactor)obj).ID_leaf_2 );
+        return this.leaf_1.equals( ((ConversionFactor)obj).leaf_1 ) && this.leaf_2.equals( ((ConversionFactor)obj).leaf_2 );
     }
 
     @Override
@@ -101,7 +49,7 @@ public class ConversionFactor {
 
         String COLOR = this.value == null ? Constants.RED : Constants.BOLD + Constants.GREEN;
 
-        toReturn.append( this.name_leaf_1 + Util.padRight( this.name_leaf_1, 50 ) + "-->\t\t" + this.name_leaf_2 + Util.padRight( this.name_leaf_2, 50 ) + ": " + COLOR + this.value + Constants.RESET );
+        toReturn.append( this.leaf_1.getName() + Util.padRight( this.leaf_1.getName(), 50 ) + "-->\t\t" + this.leaf_2.getName() + Util.padRight( this.leaf_2.getName(), 50 ) + ": " + COLOR + this.value + Constants.RESET );
 
         return toReturn.toString();
     }

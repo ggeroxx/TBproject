@@ -22,7 +22,7 @@ public class ConversionFactors {
 
     public void put ( ConversionFactor toPut )
     {
-        this.list.put( index++, toPut);
+        this.list.put( index++, toPut );
     }
 
     public boolean contains ( ConversionFactor toFind )
@@ -48,11 +48,11 @@ public class ConversionFactors {
 
         while ( rs.next() )
         {
-            ConversionFactor toAdd = new ConversionFactor( rs.getInt( 1 ), rs.getInt( 2 ), rs.getDouble( 3 ));
-            if ( !this.contains( toAdd ) && !toAdd.getName_leaf_1().equals( toAdd.getName_leaf_2() ) ) this.put( toAdd );
+            ConversionFactor toAdd = new ConversionFactor( new Category( rs.getInt( 1 ) ), new Category( rs.getInt( 2 ) ), rs.getDouble( 3 ) );
+            if ( !this.contains( toAdd ) && !toAdd.getLeaf_1().getName().equals( toAdd.getLeaf_2().getName() ) ) this.put( toAdd );
         }
 
-        query = "SELECT id FROM categories WHERE field IS NULL UNION SELECT id FROM tmp_categories WHERE field IS NULL";
+        query = "SELECT * FROM categories WHERE field IS NULL UNION SELECT * FROM tmp_categories WHERE field IS NULL";
         fixed = Conn.exQuery( query );
         mobile = Conn.exQuery( query );
         
@@ -61,11 +61,10 @@ public class ConversionFactors {
             while ( mobile.next() ) 
             {
                 if ( fixed.getInt( 1 ) != mobile.getInt( 1 ) )
-                {
-                    ConversionFactor toAdd = new ConversionFactor( fixed.getInt( 1 ), mobile.getInt( 1 ), null );
-                    if ( !( this.contains( toAdd ) ) && !toAdd.getName_leaf_1().equals( toAdd.getName_leaf_2() ) ) this.put( toAdd );
+                {  
+                    ConversionFactor toAdd = new ConversionFactor( new Category( fixed.getInt( 1 ) ), new Category( mobile.getInt( 1 ) ), null );
+                    if ( !this.contains( toAdd ) && !toAdd.getLeaf_1().getName().equals( toAdd.getLeaf_2().getName() ) ) this.put( toAdd );
                 }
-                    
             }
             mobile = Conn.exQuery( query );
         }
@@ -74,78 +73,48 @@ public class ConversionFactors {
     public void calculate ( int index, Double value ) throws SQLException
     {
         this.list.get( index ).setValue( Math.round( value * 100.0 ) / 100.0 );
-        int c1 = this.list.get( index ).getID_leaf_1();
-        int c2 = this.list.get( index ).getID_leaf_2();
+        int c1 = this.list.get( index ).getLeaf_1().getID();
+        int c2 = this.list.get( index ).getLeaf_2().getID();
 
         for ( Entry<Integer, ConversionFactor> toControl : this.list.entrySet() )
         {
-            if ( c2 == toControl.getValue().getID_leaf_1() && toControl.getValue().getValue() != null && c1 != toControl.getValue().getID_leaf_2() )
+            if ( c2 == toControl.getValue().getLeaf_1().getID() && toControl.getValue().getValue() != null && c1 != toControl.getValue().getLeaf_2().getID() )
             {
-                int c3 = toControl.getValue().getID_leaf_2();
-                if (this.list.get( getKeyByValue( new ConversionFactor( c1, c3, null ) ) ).getValue() == null )
+                int c3 = toControl.getValue().getLeaf_2().getID();
+                if ( !( new Category( c1 ).getName().equals( new Category( c3 ).getName() ) ) && this.list.get( getKeyByValue( new ConversionFactor( new Category( c1 ), new Category( c3 ), null ) ) ).getValue() == null )
                 {
                     Double val = toControl.getValue().getValue();
-                    int newIndex = getKeyByValue( new ConversionFactor( c1, c3, null ) );
+                    int newIndex = getKeyByValue( new ConversionFactor( new Category( c1 ), new Category( c3 ), null ) );
                     calculate( newIndex, value * val );
                 }
             }
         }
 
-        int contraryIndex = getKeyByValue( new ConversionFactor( c2, c1, null ) );
+        int contraryIndex = getKeyByValue( new ConversionFactor( new Category( c2 ), new Category( c1 ), null ) );
         if ( this.list.get( contraryIndex ).getValue() == null ) calculate( contraryIndex, 1 / value);
         
         return;
     }
 
-    public String getRootByLeaf ( String leafToCheck, int IDToCheck ) throws SQLException
-    {
-        String query, toReturn = "";
-        ArrayList<String> parameters = new ArrayList<String>();
-        ResultSet rs;
-
-        query = "SELECT ( SELECT COUNT(*) FROM categories WHERE name = ? ) + ( SELECT COUNT(*) FROM tmp_categories WHERE name = ? )";
-
-        parameters = new ArrayList<String>();
-        parameters.add( leafToCheck );
-        parameters.add( leafToCheck );
-
-        rs = Conn.exQuery( query, parameters );
-        rs.next();
-
-        if ( rs.getInt( 1 ) > 1 )
-        {
-            query = "SELECT name FROM categories WHERE id = ( SELECT hierarchyid FROM categories WHERE id = ? AND name = ? ) UNION SELECT name FROM tmp_categories WHERE id = ( SELECT hierarchyid FROM categories WHERE id = ? AND name = ? )";
-
-            parameters = new ArrayList<String>();
-            parameters.add( Integer.toString( IDToCheck ) );
-            parameters.add( leafToCheck );
-            parameters.add( Integer.toString( IDToCheck ) );
-            parameters.add( leafToCheck );
-
-            rs = Conn.exQuery( query, parameters );
-            rs.next();
-
-            toReturn = "  [ " + rs.getString( 1 ) + " ]  ";
-        }
-
-        return toReturn;
-    }
-
     public boolean inRange ()
     {
-        for ( Entry<Integer, ConversionFactor> entry : this.list.entrySet() )
-            if ( entry.getValue().getValue() != null )
-                if ( entry.getValue().getValue() < 0.5 || entry.getValue().getValue() > 2.0 ) return false;
+        // for ( Entry<Integer, ConversionFactor> entry : this.list.entrySet() )
+        //     if ( entry.getValue().getValue() != null )
+        //         if ( entry.getValue().getValue() < 0.5 || entry.getValue().getValue() > 2.0 ) return false;
 
-        return true;
+        // return true;
+
+        return this.list.entrySet().stream().allMatch( entry -> entry.getValue().getValue() >= 0.5 && entry.getValue().getValue() <= 2.0 );
     }
 
     public boolean isComplete ()
     {
-        for ( Entry<Integer, ConversionFactor> entry : this.list.entrySet() )
-            if ( entry.getValue().getValue() == null ) return false;
+        // for ( Entry<Integer, ConversionFactor> entry : this.list.entrySet() )
+        //     if ( entry.getValue().getValue() == null ) return false;
 
-        return true;
+        // return true;
+
+        return this.list.entrySet().stream().allMatch( entry -> entry.getValue().getValue() != null );
     }
 
     public void copy ( ConversionFactors toCopy ) throws SQLException
@@ -153,7 +122,7 @@ public class ConversionFactors {
         this.index = toCopy.index;
         this.list = new HashMap<Integer, ConversionFactor>();
         for ( Entry<Integer, ConversionFactor> entry : toCopy.getList().entrySet() )
-            this.list.put( entry.getKey(), new ConversionFactor( entry.getValue().getID_leaf_1(), entry.getValue().getID_leaf_2(), entry.getValue().getValue() ) );
+            this.list.put( entry.getKey(), new ConversionFactor( entry.getValue().getLeaf_1(), entry.getValue().getLeaf_2(), entry.getValue().getValue() ) );
     }
 
     @Override

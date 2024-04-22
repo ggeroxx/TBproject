@@ -53,8 +53,8 @@ public class Save {
     {
         for ( Entry<Integer, ConversionFactor> entry : toSave.getList().entrySet() )
         {
-            int leaf1 = entry.getValue().getID_leaf_1();
-            int leaf2 = entry.getValue().getID_leaf_2();
+            int leaf1 = entry.getValue().getLeaf_1().getID();
+            int leaf2 = entry.getValue().getLeaf_2().getID();
             Double value = entry.getValue().getValue();
 
             String query = "INSERT IGNORE INTO conversionFactors (ID_leaf_1, ID_leaf_2, value) VALUES (?, ? ,?)";

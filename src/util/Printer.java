@@ -56,15 +56,23 @@ public class Printer {
         ResultSet rs;
         StringBuffer toReturn = new StringBuffer();
 
-        query = "SELECT id, name FROM categories WHERE field IS NULL";
+        query = "SELECT id FROM categories WHERE field IS NULL";
         rs = Conn.exQuery( query );
 
-        while ( rs.next() ) toReturn.append( " " + rs.getInt( 1 ) + ". " + rs.getString( 2 ) + "\n" );
+        while ( rs.next() )
+        {
+            Category toPrint = new Category( rs.getInt( 1 ) );
+            toReturn.append( " " + toPrint.getID() + ". " + Util.padRight( Integer.toString( toPrint.getID() ) , 3 ) + toPrint.getName() + Util.padRight( toPrint.getName() , 50 ) + "  [ " + Category.getRootByLeaf( toPrint ).getName() + " ]  " + "\n" );
+        }
 
-        query = "SELECT id, name FROM tmp_categories WHERE field IS NULL";
+        query = "SELECT id FROM tmp_categories WHERE field IS NULL";
         rs = Conn.exQuery( query );
 
-        while ( rs.next() ) toReturn.append( " " + rs.getInt( 1 ) + ". " + rs.getString( 2 ) + "  -->  (not saved)\n" );
+        while ( rs.next() )
+        {
+            Category toPrint = new Category( rs.getInt( 1 ) );
+            toReturn.append( " " + toPrint.getID() + ". " + Util.padRight( Integer.toString( toPrint.getID() ) , 3 ) + toPrint.getName() + Util.padRight( toPrint.getName() , 50 ) + "  [ " + Category.getRootByLeaf( toPrint ).getName() + " ]  " + "  -->  (not saved)\n" );
+        }
 
         return toReturn.toString();
     }
@@ -191,14 +199,38 @@ public class Printer {
     public static String printConversionFactors ( ConversionFactors conversionFactors ) throws SQLException
     {
         StringBuffer toReturn = new StringBuffer();
-        String COLOR, var1, var2;
+        ArrayList<String> parameters;
+        ResultSet rs;
+        String COLOR, rootLeaf1, rootLeaf2;
+
+        String query = "SELECT ( SELECT COUNT(*) FROM categories WHERE name = ? ) + ( SELECT COUNT(*) FROM tmp_categories WHERE name = ? )";
 
         for ( Entry<Integer, ConversionFactor> entry : conversionFactors.getList().entrySet() )
         {
-            var1 = conversionFactors.getRootByLeaf( entry.getValue().getName_leaf_1(), entry.getValue().getID_leaf_1() );
-            var2 = conversionFactors.getRootByLeaf( entry.getValue().getName_leaf_2(), entry.getValue().getID_leaf_2() );
+            rootLeaf1 = "";
+
+            parameters = new ArrayList<String>();
+            parameters.add( entry.getValue().getLeaf_1().getName() );
+            parameters.add( entry.getValue().getLeaf_1().getName() );
+
+            rs = Conn.exQuery( query, parameters );
+            rs.next();
+
+            if ( rs.getInt( 1 ) > 1 ) rootLeaf1 = "  [ " + Category.getRootByLeaf( entry.getValue().getLeaf_1() ).getName() + " ]  ";
+
+            rootLeaf2 = "";
+
+            parameters = new ArrayList<String>();
+            parameters.add( entry.getValue().getLeaf_2().getName() );
+            parameters.add( entry.getValue().getLeaf_2().getName() );
+
+            rs = Conn.exQuery( query, parameters );
+            rs.next();
+
+            if ( rs.getInt( 1 ) > 1 ) rootLeaf2 = "  [ " + Category.getRootByLeaf( entry.getValue().getLeaf_2() ).getName() + " ]  ";
+
             COLOR = entry.getValue().getValue() == null ? Constants.RED : Constants.BOLD + Constants.GREEN;
-            toReturn.append( entry.getValue().getName_leaf_1() + var1 + Util.padRight( entry.getValue().getName_leaf_1() + var1, 70 ) + "-->\t\t" + entry.getValue().getName_leaf_2() + var2 + Util.padRight( entry.getValue().getName_leaf_2() + var2, 70 ) + ": " + COLOR + entry.getValue().getValue() + Constants.RESET + "\n" );
+            toReturn.append( " " + entry.getKey() + ". " + Util.padRight( Integer.toString( entry.getKey() ), 5 ) + entry.getValue().getLeaf_1().getName() + rootLeaf1 + Util.padRight( entry.getValue().getLeaf_1().getName() + rootLeaf1, 70 ) + "-->\t\t" + entry.getValue().getLeaf_2().getName() + rootLeaf2 + Util.padRight( entry.getValue().getLeaf_2().getName() + rootLeaf2, 70 ) + ": " + COLOR + entry.getValue().getValue() + Constants.RESET + "\n" );
         }
 
         return toReturn.toString();
@@ -209,7 +241,7 @@ public class Printer {
         StringBuffer toReturn = new StringBuffer();
 
         for ( Entry<Integer, ConversionFactor> entry : conversionFactors.getList().entrySet() )
-            if ( entry.getValue().getID_leaf_1() == IDLeafCategory || entry.getValue().getID_leaf_2() == IDLeafCategory )
+            if ( entry.getValue().getLeaf_1().getID() == IDLeafCategory || entry.getValue().getLeaf_2().getID() == IDLeafCategory )
                 toReturn.append( "  " + entry.getValue().toString() + "\n" );
         
         return toReturn.toString();

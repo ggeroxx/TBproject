@@ -26,6 +26,26 @@ public class Category {
         this.ID = takeID();
     }
 
+    public Category ( int ID ) throws SQLException
+    {
+        String query = "SELECT * FROM categories WHERE id = ? UNION SELECT * FROM tmp_categories WHERE id = ?";
+
+        ArrayList<String> parameters = new ArrayList<String>();
+        parameters.add( Integer.toString( ID ) );
+        parameters.add( Integer.toString( ID ) );
+
+        ResultSet rs = Conn.exQuery( query, parameters );
+        rs.next();
+
+        this.ID = ID;
+        this.name = rs.getString( 2 );
+        this.field = rs.getString( 3 );
+        this.description = rs.getString( 4 );
+        this.root = rs.getBoolean( 5 );
+        this.hierarchyID = rs.getInt( 6 );
+        this.IDConfigurator = rs.getInt( 7 );
+    }
+
     public int getID() 
     {
         return ID;
@@ -98,6 +118,28 @@ public class Category {
         return rs.next();
     }
 
+    public static Category getRootByLeaf ( Category leaf ) throws SQLException
+    {
+        String query = "SELECT id FROM categories WHERE id = ( SELECT hierarchyid FROM categories WHERE id = ? AND name = ? UNION SELECT hierarchyid FROM tmp_categories WHERE id = ? AND name = ?) " + 
+                       "UNION " + 
+                       "SELECT id FROM tmp_categories WHERE id = ( SELECT hierarchyid FROM categories WHERE id = ? AND name = ? UNION SELECT hierarchyid FROM tmp_categories WHERE id = ? AND name = ?)";
+
+        ArrayList<String> parameters = new ArrayList<String>();
+        parameters.add( Integer.toString( leaf.getID() ) );
+        parameters.add( leaf.getName() );
+        parameters.add( Integer.toString( leaf.getID() ) );
+        parameters.add( leaf.getName() );
+        parameters.add( Integer.toString( leaf.getID() ) );
+        parameters.add( leaf.getName() );
+        parameters.add( Integer.toString( leaf.getID() ) );
+        parameters.add( leaf.getName() );
+
+        ResultSet rs = Conn.exQuery( query, parameters );
+        rs.next();
+
+        return new Category ( rs.getInt( 1 ) );
+    }
+
     public boolean isValidParentID ( int IDToCheck ) throws SQLException
     {
         String query = "SELECT name FROM categories WHERE id = ? AND hierarchyID = ? AND field IS NOT NULL AND id != LAST_INSERT_ID() " +
@@ -113,6 +155,12 @@ public class Category {
         ResultSet rs = Conn.exQuery( query, parameters );
 
         return rs.next();
+    }
+
+    @Override
+    public boolean equals ( Object obj ) 
+    {
+        return this.ID == ((Category)obj).ID;
     }
 
 }
