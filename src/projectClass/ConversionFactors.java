@@ -49,7 +49,7 @@ public class ConversionFactors {
         while ( rs.next() )
         {
             ConversionFactor toAdd = new ConversionFactor( rs.getInt( 1 ), rs.getInt( 2 ), rs.getDouble( 3 ));
-            if ( !this.contains( toAdd ) ) this.put( toAdd );
+            if ( !this.contains( toAdd ) && !toAdd.getName_leaf_1().equals( toAdd.getName_leaf_2() ) ) this.put( toAdd );
         }
 
         query = "SELECT id FROM categories WHERE field IS NULL UNION SELECT id FROM tmp_categories WHERE field IS NULL";
@@ -63,7 +63,7 @@ public class ConversionFactors {
                 if ( fixed.getInt( 1 ) != mobile.getInt( 1 ) )
                 {
                     ConversionFactor toAdd = new ConversionFactor( fixed.getInt( 1 ), mobile.getInt( 1 ), null );
-                    if ( !( this.contains( toAdd ) ) ) this.put( toAdd );
+                    if ( !( this.contains( toAdd ) ) && !toAdd.getName_leaf_1().equals( toAdd.getName_leaf_2() ) ) this.put( toAdd );
                 }
                     
             }
@@ -95,6 +95,40 @@ public class ConversionFactors {
         if ( this.list.get( contraryIndex ).getValue() == null ) calculate( contraryIndex, 1 / value);
         
         return;
+    }
+
+    public String getRootByLeaf ( String leafToCheck, int IDToCheck ) throws SQLException
+    {
+        String query, toReturn = "";
+        ArrayList<String> parameters = new ArrayList<String>();
+        ResultSet rs;
+
+        query = "SELECT ( SELECT COUNT(*) FROM categories WHERE name = ? ) + ( SELECT COUNT(*) FROM tmp_categories WHERE name = ? )";
+
+        parameters = new ArrayList<String>();
+        parameters.add( leafToCheck );
+        parameters.add( leafToCheck );
+
+        rs = Conn.exQuery( query, parameters );
+        rs.next();
+
+        if ( rs.getInt( 1 ) > 1 )
+        {
+            query = "SELECT name FROM categories WHERE id = ( SELECT hierarchyid FROM categories WHERE id = ? AND name = ? ) UNION SELECT name FROM tmp_categories WHERE id = ( SELECT hierarchyid FROM categories WHERE id = ? AND name = ? )";
+
+            parameters = new ArrayList<String>();
+            parameters.add( Integer.toString( IDToCheck ) );
+            parameters.add( leafToCheck );
+            parameters.add( Integer.toString( IDToCheck ) );
+            parameters.add( leafToCheck );
+
+            rs = Conn.exQuery( query, parameters );
+            rs.next();
+
+            toReturn = "  [ " + rs.getString( 1 ) + " ]  ";
+        }
+
+        return toReturn;
     }
 
     public boolean inRange ()

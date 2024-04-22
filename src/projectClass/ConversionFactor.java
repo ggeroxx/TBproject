@@ -26,9 +26,19 @@ public class ConversionFactor {
         return ID_leaf_1;
     }
 
+    public String getName_leaf_1() 
+    {
+        return name_leaf_1;
+    }
+
     public int getID_leaf_2 ()
     {
         return ID_leaf_2;
+    }
+
+    public String getName_leaf_2() 
+    {
+        return name_leaf_2;
     }
 
     public Double getValue ()

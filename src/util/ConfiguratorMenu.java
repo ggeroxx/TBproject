@@ -198,7 +198,7 @@ public class ConfiguratorMenu {
         {
             tmp_conversionFactors.copy( conversionFactors );
             Util.clearConsole( Constants.TIME_SWITCH_MENU );
-            System.out.println( "\n" + conversionFactors.toString() + "\n" );
+            System.out.println( "\n" + Printer.printConversionFactors( conversionFactors ) + "\n" );
             int index = Integer.parseInt( Util.insertWithCheck( Constants.ENTER_CHOICE_PAIR, Constants.INVALID_OPTION, ( input ) -> !( Controls.isInt( input ) && ( conversionFactors.getList().containsKey( Integer.parseInt( input ) ) && conversionFactors.getList().get( Integer.parseInt( input ) ).getValue() == null ) ), scanner ) );
             Double value = Double.parseDouble( Util.insertWithCheck( Constants.ENTER_VALUE_CONVERSION_FACTOR, Constants.OUT_OF_RANGE_ERROR, ( input ) -> ( !Controls.isDouble( input ) || ( Double.parseDouble( input ) < 0.5 ) || ( Double.parseDouble( input ) > 2.0 ) ), scanner) );
 
@@ -213,7 +213,7 @@ public class ConfiguratorMenu {
         } while ( !conversionFactors.isComplete() );
 
         Util.clearConsole( Constants.TIME_SWITCH_MENU );
-        System.out.println( "\n" + conversionFactors.toString() + "\n" );
+        System.out.println( "\n" + Printer.printConversionFactors( conversionFactors ) + "\n" );
         System.out.println( Constants.OPERATION_COMPLETED );
         Util.clearConsole( Constants.TIME_MESSAGE );
     } 
@@ -315,7 +315,7 @@ public class ConfiguratorMenu {
         conversionFactors.populate();
         Util.clearConsole( Constants.TIME_SWITCH_MENU );
 
-        System.out.print( "\n" + conversionFactors.toString() + "\n" );
+        System.out.print( "\n" + Printer.printConversionFactors( conversionFactors ) + "\n" );
 
         System.out.print( Constants.ENTER_TO_EXIT );
         scanner.nextLine();

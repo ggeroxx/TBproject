@@ -6,7 +6,7 @@ import java.util.Map.Entry;
 import projectClass.*;
 
 public class Printer {
-    
+
     public static String printCategoriesList ( int hierarchyID ) throws SQLException
     {
         StringBuffer toReturn = new StringBuffer();
@@ -188,6 +188,22 @@ public class Printer {
         return toReturn.toString();
     }
 
+    public static String printConversionFactors ( ConversionFactors conversionFactors ) throws SQLException
+    {
+        StringBuffer toReturn = new StringBuffer();
+        String COLOR, var1, var2;
+
+        for ( Entry<Integer, ConversionFactor> entry : conversionFactors.getList().entrySet() )
+        {
+            var1 = conversionFactors.getRootByLeaf( entry.getValue().getName_leaf_1(), entry.getValue().getID_leaf_1() );
+            var2 = conversionFactors.getRootByLeaf( entry.getValue().getName_leaf_2(), entry.getValue().getID_leaf_2() );
+            COLOR = entry.getValue().getValue() == null ? Constants.RED : Constants.BOLD + Constants.GREEN;
+            toReturn.append( entry.getValue().getName_leaf_1() + var1 + Util.padRight( entry.getValue().getName_leaf_1() + var1, 70 ) + "-->\t\t" + entry.getValue().getName_leaf_2() + var2 + Util.padRight( entry.getValue().getName_leaf_2() + var2, 70 ) + ": " + COLOR + entry.getValue().getValue() + Constants.RESET + "\n" );
+        }
+
+        return toReturn.toString();
+    } 
+
     public static String printConversionFactorsByLeaf ( int IDLeafCategory, ConversionFactors conversionFactors )
     {
         StringBuffer toReturn = new StringBuffer();
@@ -198,4 +214,5 @@ public class Printer {
         
         return toReturn.toString();
     } 
+
 }
