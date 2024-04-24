@@ -1,8 +1,6 @@
 package projectClass;
-import java.sql.*;
-import java.util.ArrayList;
 
-import util.Conn;
+import java.sql.*;
 
 public class Municipality {
     
@@ -11,51 +9,12 @@ public class Municipality {
     private String CAP;
     private String province;
 
-    public Municipality ( String name ) throws SQLException
+    public Municipality ( int ID, String name, String CAP, String province ) throws SQLException
     {
+        this.ID = ID;
         this.name = name;
-        this.ID = takeID();
-        this.CAP = takeCAP();
-        this.province = takeProvince();
-    }
-
-    private int takeID () throws SQLException
-    {
-        String query = "SELECT id FROM municipalities WHERE name = ?";
-
-        ArrayList<String> parameters = new ArrayList<String>();
-        parameters.add( this.name );
-
-        ResultSet rs = Conn.exQuery( query, parameters );
-
-        rs.next();
-        return rs.getInt( 1 );
-    }
-
-    private String takeCAP () throws SQLException
-    {
-        String query = "SELECT cap FROM municipalities WHERE name = ?";
-
-        ArrayList<String> parameters = new ArrayList<String>();
-        parameters.add( this.name );
-
-        ResultSet rs = Conn.exQuery( query, parameters );
-
-        rs.next();
-        return rs.getString( 1 );
-    }
-
-    private String takeProvince () throws SQLException
-    {   
-        String query = "SELECT province FROM municipalities WHERE name = ?";
-
-        ArrayList<String> parameters = new ArrayList<String>();
-        parameters.add( this.name );
-
-        ResultSet rs = Conn.exQuery( query, parameters );
-
-        rs.next();
-        return rs.getString( 1 );
+        this.CAP = CAP;
+        this.province = province;
     }
 
     public int getID() 

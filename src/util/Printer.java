@@ -88,7 +88,7 @@ public class Printer {
         rs = Conn.exQuery( query );
         while ( rs.next() )
         {
-            tmp = new District( rs.getString(1) );
+            tmp = new DistrictDAOImpl().getDistrictByName( rs.getString( "name" ) );
             toReturn.append( tmp.toString() + "\n");
         }
 
@@ -96,7 +96,7 @@ public class Printer {
         rs = Conn.exQuery( query );
         while ( rs.next() )
         {
-            tmp = new District( rs.getString(1) );
+            tmp = new DistrictDAOImpl().getDistrictByName( rs.getString( "name" ) );
             toReturn.append( tmp.toString() + "  -->  (not saved)\n");
         }
 

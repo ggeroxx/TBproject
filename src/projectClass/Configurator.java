@@ -80,7 +80,7 @@ public class Configurator {
 
         Conn.queryUpdate( query, parameters );
 
-        District newDistrict = new District( districtName );
+        District newDistrict = new DistrictDAOImpl().getDistrictByName( districtName );
 
         return newDistrict;
     }

@@ -14,37 +14,30 @@ public class Category {
     private boolean root;
     private int hierarchyID;
     private int IDConfigurator;
+    private CategoryDAO categoryDAO;
 
-    public Category ( String name, String field, String description, boolean root, int hierarchyID, int IDConfigurator ) throws SQLException
+    public Category ( int ID, String name, String field, String description, boolean root, int hierarchyID, int IDConfigurator ) throws SQLException
     {
+        this.ID = ID;
         this.name = name;
         this.field = field;
         this.description = description;
         this.root = root;
         this.hierarchyID = hierarchyID;
         this.IDConfigurator = IDConfigurator;
-        this.ID = takeID();
+        this.categoryDAO = new CategoryDAOImpl();
     }
 
-    public Category ( int ID ) throws SQLException
-    {
-        String query = "SELECT * FROM categories WHERE id = ? UNION SELECT * FROM tmp_categories WHERE id = ?";
-
-        ArrayList<String> parameters = new ArrayList<String>();
-        parameters.add( Integer.toString( ID ) );
-        parameters.add( Integer.toString( ID ) );
-
-        ResultSet rs = Conn.exQuery( query, parameters );
-        rs.next();
-
-        this.ID = ID;
-        this.name = rs.getString( 2 );
-        this.field = rs.getString( 3 );
-        this.description = rs.getString( 4 );
-        this.root = rs.getBoolean( 5 );
-        this.hierarchyID = rs.getInt( 6 );
-        this.IDConfigurator = rs.getInt( 7 );
-    }
+    // public Category ( String name, String field, String description, boolean root, int hierarchyID, int IDConfigurator ) throws SQLException
+    // {
+    //     this.name = name;
+    //     this.field = field;
+    //     this.description = description;
+    //     this.root = root;
+    //     this.hierarchyID = hierarchyID;
+    //     this.IDConfigurator = IDConfigurator;
+    //     this.ID = takeID();
+    // }
 
     public int getID() 
     {

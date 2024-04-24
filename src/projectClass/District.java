@@ -8,19 +8,14 @@ public class District {
     private int ID;
     private String name;
     private int IDConfigurator;
+    private DistrictDAO districtDAO;
 
-    public District ( String name ) throws SQLException
-    {
-        this.name = name;
-        this.ID = takeID();
-        this.IDConfigurator = takeIDConfigurator();
-    }
-
-    public District ( int ID ) throws SQLException
+    public District ( int ID, String name, int IDConfigurator ) throws SQLException
     {
         this.ID = ID;
-        this.name = takeName();
-        this.IDConfigurator = takeIDConfigurator();
+        this.name = name;
+        this.IDConfigurator = IDConfigurator;
+        this.districtDAO = new DistrictDAOImpl();
     }
 
     public String getName() 
@@ -28,76 +23,14 @@ public class District {
         return name;
     }
 
-    private int takeID () throws SQLException
-    {
-        String query = "SELECT id FROM districts WHERE name = ? " +
-                       "UNION " +
-                       "SELECT id FROM tmp_districts WHERE name = ?";
-
-        ArrayList<String> parameters = new ArrayList<String>();
-        parameters.add( this.name );
-        parameters.add( this.name );
-
-        ResultSet rs = Conn.exQuery( query, parameters );
-
-        rs.next();
-        return rs.getInt( 1 );
-    }
-
-    private String takeName() throws SQLException
-    {
-        String query = "SELECT name FROM districts WHERE id = ? " +
-                       "UNION " +
-                       "SELECT name FROM tmp_districts WHERE id = ?";
-
-        ArrayList<String> parameters = new ArrayList<String>();
-        parameters.add( Integer.toString( this.ID ) );
-        parameters.add( Integer.toString( this.ID ) );
-
-        ResultSet rs = Conn.exQuery( query, parameters );
-
-        rs.next();
-        return rs.getString( 1 );
-    }
-
-    private int takeIDConfigurator () throws SQLException
-    {
-        String query = "SELECT idconfigurator FROM districts WHERE name = ? " +
-                       "UNION " +
-                       "SELECT idconfigurator FROM tmp_districts WHERE name = ?";
-
-        ArrayList<String> parameters = new ArrayList<String>();
-        parameters.add( this.name );
-        parameters.add( this.name );
-
-        ResultSet rs = Conn.exQuery( query, parameters );
-
-        rs.next();
-        return rs.getInt( 1 );
-    }
-
     public boolean isPresentMunicipalityInDistrict ( Municipality municipalityToCheck ) throws SQLException
     {
-        String query = "SELECT * FROM tmp_districttomunicipalities WHERE iddistrict = ? AND idmunicipality = ?";
-
-        ArrayList<String> parameters = new ArrayList<String>();
-        parameters.add( Integer.toString( this.ID ) );
-        parameters.add( Integer.toString( municipalityToCheck.getID() ) );
-
-        ResultSet rs = Conn.exQuery( query, parameters );
-
-        return rs.next();
+        return districtDAO.isPresentMunicipalityInDistrict( this.ID, municipalityToCheck.getID() );
     }
 
     public void addMunicipality ( Municipality municipalityToAdd ) throws SQLException
     {
-        String query = "INSERT INTO tmp_districttomunicipalities (IDDistrict, IDMunicipality) VALUES (?, ?)";
-
-        ArrayList<String> parameters = new ArrayList<String>();
-        parameters.add( Integer.toString( this.ID ) );
-        parameters.add( Integer.toString( municipalityToAdd.getID() ) );
-
-        Conn.queryUpdate( query, parameters );  
+        districtDAO.addMunicipality( this.ID, municipalityToAdd.getID() );
     }
 
     public String printAllMunicipalities () throws SQLException
@@ -122,7 +55,8 @@ public class District {
         StringBuffer toReturn = new StringBuffer();
         while ( rs.next() )
         {
-            tmp = new Municipality( rs.getString(1) );
+            //tmp = new Municipality( rs.getString( 1 ) );
+            tmp = new MunicipalityDAOImpl().getMunicipalityByName( rs.getString( 1 ) );
             toReturn.append( tmp.toString() );
         }
 

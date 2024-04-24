@@ -88,7 +88,9 @@ public class ConfiguratorMenu {
                 System.out.println( Constants.NOT_EXIST_MESSAGE );
                 continue;
             }
-            Municipality municipalityToAdd = new Municipality( municipalityName );
+            //Municipality municipalityToAdd = new Municipality( municipalityName );
+            MunicipalityDAO municipalityDAO = new MunicipalityDAOImpl();
+            Municipality municipalityToAdd = municipalityDAO.getMunicipalityByName( municipalityName );
 
             if ( newDistrict.isPresentMunicipalityInDistrict( municipalityToAdd ) )
             {
@@ -255,7 +257,9 @@ public class ConfiguratorMenu {
             return;
         }
 
-        District tmp = new District( Integer.parseInt( districtID ) );
+        //District tmp = new District( Integer.parseInt( districtID ) );
+        DistrictDAO districtDAO = new DistrictDAOImpl();
+        District tmp = districtDAO.getDistrictByID( Integer.parseInt( districtID ) );
         Util.clearConsole( Constants.TIME_SWITCH_MENU );
         System.out.println( "\n" + tmp.getName() + ":\n" );
         System.out.println( tmp.printAllMunicipalities() );
