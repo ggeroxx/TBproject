@@ -5,102 +5,71 @@ import java.util.*;
 import java.util.Map.Entry;
 import projectClass.*;
 
-public class Printer {
+public class PrintService {
 
-    public static String printCategoriesList ( int hierarchyID ) throws SQLException
+    private DistrictJDBC districtJDBC;
+    private DistrictToMunicipalitiesJDBC districtToMunicipalitiesJDBC;
+    private CategoryJDBC categoryJDBC;
+
+    public PrintService () 
     {
-        StringBuffer toReturn = new StringBuffer();
-
-        String query = "SELECT id, name FROM categories WHERE hierarchyID = ? AND field IS NOT NULL AND id NOT IN (SELECT MAX(id) FROM categories) " +
-                       "UNION " +
-                       "SELECT id, name FROM tmp_categories WHERE hierarchyID = ? AND field IS NOT NULL AND id NOT IN (SELECT MAX(id) FROM tmp_categories)";
-
-        ArrayList<String> parameters = new ArrayList<String>();
-        parameters.add( Integer.toString( hierarchyID ) );
-        parameters.add( Integer.toString( hierarchyID ) );
-
-        ResultSet rs = Conn.exQuery( query, parameters );
-
-        while ( rs.next() ) toReturn.append( "  " + Constants.YELLOW + rs.getInt( 1 ) + ". " + Constants.RESET + rs.getString( 2 ) + "\n" );
-
-        return toReturn.toString();
+        this.districtJDBC = new DistrictJDBCImpl();
+        this.districtToMunicipalitiesJDBC = new DistrictToMunicipalitiesJDBCImpl();
+        this.categoryJDBC = new CategoryJDBCImpl();
     }
 
-    public static String printAllRoot () throws SQLException
+    public void printCategoriesList ( int hierarchyID ) throws SQLException
     {
-        String query;
-        ResultSet rs;
-        ArrayList<String> parameters;
         StringBuffer toReturn = new StringBuffer();
 
-        query = "SELECT name, hierarchyid FROM categories WHERE root = ?";
-        parameters = new ArrayList<String>();
-        parameters.add( String.valueOf( 1 ) );
-        rs = Conn.exQuery( query, parameters );
+        for ( Category toPrint : categoryJDBC.getParentCategories( hierarchyID ) ) toReturn.append( "  " + Constants.YELLOW + toPrint.getID() + ". " + Constants.RESET + toPrint.getName() + "\n" );
 
-        while ( rs.next() ) toReturn.append( " " + rs.getString( 2 ) + ". " + rs.getString( 1 ) + "\n" );
-
-        query = "SELECT name, hierarchyid FROM tmp_categories WHERE root = ?";
-        parameters = new ArrayList<String>();
-        parameters.add( String.valueOf( 1 ) );
-        rs = Conn.exQuery( query, parameters );
-
-        while ( rs.next() ) toReturn.append( " " + rs.getString( 2 ) + ". " + rs.getString( 1 ) + "  -->  (not saved)\n" );
-
-        return toReturn.toString();
+        System.out.println( toReturn );
     }
 
-    public static String printAllLeafCategory () throws SQLException
+    public void printAllRoot () throws SQLException
     {
-        String query;
-        ResultSet rs;
         StringBuffer toReturn = new StringBuffer();
 
-        query = "SELECT id FROM categories WHERE field IS NULL";
-        rs = Conn.exQuery( query );
+        for ( Category toPrint : categoryJDBC.getAllSavedRoot() ) toReturn.append( " " + toPrint.getID() + ". " + toPrint.getName() + "\n" );
+        for ( Category toPrint : categoryJDBC.getAllNotSavedRoot() ) toReturn.append( " " + toPrint.getID() + ". " + toPrint.getName() + "  -->  (not saved)\n" );
 
-        while ( rs.next() )
-        {
-            Category toPrint = new Category( rs.getInt( 1 ) );
-            toReturn.append( " " + toPrint.getID() + ". " + Util.padRight( Integer.toString( toPrint.getID() ) , 3 ) + toPrint.getName() + Util.padRight( toPrint.getName() , 50 ) + "  [ " + Category.getRootByLeaf( toPrint ).getName() + " ]  " + "\n" );
-        }
-
-        query = "SELECT id FROM tmp_categories WHERE field IS NULL";
-        rs = Conn.exQuery( query );
-
-        while ( rs.next() )
-        {
-            Category toPrint = new Category( rs.getInt( 1 ) );
-            toReturn.append( " " + toPrint.getID() + ". " + Util.padRight( Integer.toString( toPrint.getID() ) , 3 ) + toPrint.getName() + Util.padRight( toPrint.getName() , 50 ) + "  [ " + Category.getRootByLeaf( toPrint ).getName() + " ]  " + "  -->  (not saved)\n" );
-        }
-
-        return toReturn.toString();
+        System.out.println( toReturn );
     }
 
-    public static String printAllDistricts () throws SQLException
+    public void printAllLeafCategory () throws SQLException
     {
-        String query;
-        ResultSet rs;
-        District tmp;
         StringBuffer toReturn = new StringBuffer();
 
-        query = "SELECT name FROM districts ";
-        rs = Conn.exQuery( query );
-        while ( rs.next() )
-        {
-            tmp = new DistrictDAOImpl().getDistrictByName( rs.getString( "name" ) );
-            toReturn.append( tmp.toString() + "\n");
-        }
+        for ( Category toPrint : categoryJDBC.getAllSavedLeaf() )
+            toReturn.append( " " + toPrint.getID() + ". " + Util.padRight( Integer.toString( toPrint.getID() ) , 3 ) + toPrint.getName() + Util.padRight( toPrint.getName() , 50 ) + "  [ " + categoryJDBC.getRootByLeaf( toPrint ).getName() + " ]  " + "\n" );
 
-        query = "SELECT name FROM tmp_districts";
-        rs = Conn.exQuery( query );
-        while ( rs.next() )
-        {
-            tmp = new DistrictDAOImpl().getDistrictByName( rs.getString( "name" ) );
-            toReturn.append( tmp.toString() + "  -->  (not saved)\n");
-        }
+        for ( Category toPrint : categoryJDBC.getAllNotSavedLeaf() )
+            toReturn.append( " " + toPrint.getID() + ". " + Util.padRight( Integer.toString( toPrint.getID() ) , 3 ) + toPrint.getName() + Util.padRight( toPrint.getName() , 50 ) + "  [ " + categoryJDBC.getRootByLeaf( toPrint ).getName() + " ]  " + "  -->  (not saved)\n" );
 
-        return toReturn.toString();
+        System.out.println( toReturn );
+    }
+
+    public void printAllDistricts () throws SQLException
+    {
+        StringBuffer toReturn = new StringBuffer();
+
+        for ( District toPrint : districtJDBC.getAllSavedDistricts() )
+            toReturn.append( " " + toPrint.getID() + ". " + toPrint.getName() + "\n" );
+
+        for ( District toPrint : districtJDBC.getAllNotSavedDistricts() )
+            toReturn.append( " " + toPrint.getID() + ". " + toPrint.getName() + "  -->  (not saved)\n" );
+
+        System.out.println( toReturn );
+    }
+
+    public void printAllMunicipalitiesOfDistrict ( District district ) throws SQLException
+    {
+        StringBuffer toReturn = new StringBuffer();
+
+        for ( Municipality toPrint : districtToMunicipalitiesJDBC.selectAllMunicipalityOfDistrict( district ) ) toReturn.append( toPrint.getName() );
+
+        System.out.println( toReturn );
     }
 
     public static String printHierarchy ( int IDToPrint ) throws SQLException

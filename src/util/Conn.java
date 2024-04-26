@@ -1,6 +1,7 @@
 package util;
+
 import java.sql.*;
-import java.util.ArrayList;
+import java.util.*;
 
 public class Conn
 {
@@ -113,15 +114,15 @@ public class Conn
         return rs;
     }
 
-    public static ResultSet exQuery ( String query, ArrayList<String> parameters ) throws SQLException
+    public static <T> ResultSet exQuery ( String query, List<T> parameters ) throws SQLException
     {
         int i = 1;
         
         PreparedStatement stmt = conn.prepareStatement( query );
-        for ( String parameter : parameters ) 
+        for ( T parameter : parameters ) 
         {
-            stmt.setString( i, parameter );
-            i++;    
+            stmt.setString( i, ( String ) parameter );
+            i++;
         }
         ResultSet rs = stmt.executeQuery();
 
@@ -135,14 +136,14 @@ public class Conn
         stmt.executeUpdate( query );
     }
 
-    public static void queryUpdate ( String query, ArrayList<String> parameters ) throws SQLException
+    public static <T> void queryUpdate ( String query, List<T> parameters ) throws SQLException
     {
         int i = 1;
         
         PreparedStatement stmt = conn.prepareStatement( query );
-        for ( String parameter : parameters ) 
+        for ( T parameter : parameters ) 
         {
-            stmt.setString( i, parameter );
+            stmt.setString( i, ( String ) parameter );
             i++;    
         }
         stmt.executeUpdate();

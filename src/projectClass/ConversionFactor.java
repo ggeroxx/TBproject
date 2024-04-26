@@ -1,15 +1,14 @@
 package projectClass;
 
 import util.*;
-import java.sql.*;
 
-public class ConversionFactor {
+public class ConversionFactor implements Cloneable {
 
     private Category leaf_1;
     private Category leaf_2;
     private Double value;
 
-    public ConversionFactor ( Category leaf_1, Category leaf_2, Double value ) throws SQLException
+    public ConversionFactor ( Category leaf_1, Category leaf_2, Double value )
     {
         this.leaf_1 = leaf_1;
         this.leaf_2 = leaf_2;
@@ -37,9 +36,15 @@ public class ConversionFactor {
     }
 
     @Override
+    protected Object clone() throws CloneNotSupportedException 
+    {
+        return new ConversionFactor( ( Category ) this.leaf_1.clone(), ( Category ) this.leaf_2.clone(), this.value );
+    }
+
+    @Override
     public boolean equals( Object obj ) 
     {
-        return this.leaf_1.equals( ((ConversionFactor)obj).leaf_1 ) && this.leaf_2.equals( ((ConversionFactor)obj).leaf_2 );
+        return this.leaf_1.equals( ( ( ConversionFactor )obj ).leaf_1 ) && this.leaf_2.equals( ( ( ConversionFactor ) obj ).leaf_2 );
     }
 
     @Override

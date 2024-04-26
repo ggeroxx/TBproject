@@ -1,15 +1,14 @@
 package projectClass;
 
-import java.sql.SQLException;
+import java.sql.*;
+import java.util.*;
 
-public interface DistrictDAO {
+public interface DistrictToMunicipalitiesJDBC {
     
-    District getDistrictByName( String name ) throws SQLException;
-
-    District getDistrictByID ( int ID ) throws SQLException;
-
     void addMunicipality ( int districtID, int municipalityID ) throws SQLException;
 
     boolean isPresentMunicipalityInDistrict ( int districtID, int municipalityID ) throws SQLException;
+
+    List<Municipality> selectAllMunicipalityOfDistrict ( District district ) throws SQLException;
 
 }

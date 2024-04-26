@@ -22,14 +22,15 @@ public class Municipality {
         return this.ID;
     }
 
+    public String getName() 
+    {
+        return this.name;
+    }
+
     @Override
     public String toString() 
     {
-        StringBuffer toReturn = new StringBuffer();
-
-        toReturn.append( "  " + this.CAP + "  " + this.province + "  " + this.name + "\n" );
-
-        return toReturn.toString();
+        return new StringBuffer().append( "  " + this.CAP + "  " + this.province + "  " + this.name + "\n" ).toString();
     }
 
 }
