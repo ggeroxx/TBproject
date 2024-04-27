@@ -11,6 +11,8 @@ public class DistrictJDBCImpl implements DistrictJDBC {
     String CREATE_DISTRICT_QUERY = "INSERT INTO tmp_districts (name, idconfigurator) VALUES (?, ?)";
     String GET_ALL_SAVED_DISTRICTS = "SELECT id FROM districts";
     String GET_ALL_NOT_SAVED_DISTRICTS = "SELECT id FROM tmp_districts";
+    String SAVE_TMP_DISTRICTS_QUERY = "INSERT INTO districts (name, idconfigurator) SELECT name, idconfigurator FROM tmp_districts";
+    String DELETE_TMP_DISTRICTS_QUERY = "DELETE FROM tmp_districts";;
 
     @Override
     public District getDistrictByName( String name ) throws SQLException 
@@ -43,6 +45,18 @@ public class DistrictJDBCImpl implements DistrictJDBC {
     public List<District> getAllNotSavedDistricts() throws SQLException 
     {
         return getAll( GET_ALL_NOT_SAVED_DISTRICTS );
+    }
+
+    @Override
+    public void saveTmpDistricts () throws SQLException 
+    {
+        Conn.exQuery( SAVE_TMP_DISTRICTS_QUERY );
+    }
+
+    @Override
+    public void deleteTmpDistricts () throws SQLException 
+    {
+        Conn.exQuery( DELETE_TMP_DISTRICTS_QUERY );
     }
 
     private List<District> getAll( String query ) throws SQLException

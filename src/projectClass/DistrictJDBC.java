@@ -15,4 +15,8 @@ public interface DistrictJDBC {
 
     List<District> getAllNotSavedDistricts () throws SQLException;
 
+    void saveTmpDistricts () throws SQLException;
+
+    void deleteTmpDistricts () throws SQLException;
+
 }

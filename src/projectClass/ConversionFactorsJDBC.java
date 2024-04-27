@@ -7,4 +7,6 @@ public interface ConversionFactorsJDBC {
     
     List<ConversionFactor> getAll () throws SQLException;
 
+    void saveAll ( ConversionFactors conversionFactors ) throws SQLException;
+
 }

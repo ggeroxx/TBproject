@@ -7,8 +7,6 @@ public interface CategoryJDBC {
     
     Category getCategoryByID ( int ID ) throws SQLException;
 
-    void createRelationship ( int parentID, int childID, String fieldType ) throws SQLException;
-
     boolean isPresentInternalCategory ( int hierarchyID, String nameToCheck ) throws SQLException;
 
     boolean isValidParentID ( int hierarchyID, int IDToCheck ) throws SQLException;
@@ -30,5 +28,11 @@ public interface CategoryJDBC {
     Category createCategory ( String name, String field, String description, boolean isRoot, Integer hierarchyID, int configuratorID ) throws SQLException;
 
     Category getRootByLeaf ( Category leaf ) throws SQLException;
+
+    int getNumberOfEqualsCategories ( Category category ) throws SQLException;
+
+    void saveTmpCategories () throws SQLException;
+
+    void deleteTmpCategories () throws SQLException;
 
 }

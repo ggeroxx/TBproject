@@ -12,6 +12,7 @@ public class Category implements Cloneable {
     private int hierarchyID;
     private int IDConfigurator;
     private CategoryJDBC categoryJDBC;
+    private RelationshipsBetweenCategoriesJDBC relationshipsBetweenCategoriesJDBC;
 
     public Category ( int ID, String name, String field, String description, boolean root, int hierarchyID, int IDConfigurator )
     {
@@ -23,6 +24,7 @@ public class Category implements Cloneable {
         this.hierarchyID = hierarchyID;
         this.IDConfigurator = IDConfigurator;
         this.categoryJDBC = new CategoryJDBCImpl();
+        this.relationshipsBetweenCategoriesJDBC = new RelationshipsBetweenCategoriesJDBCImpl();
     }
 
     public int getID() 
@@ -45,6 +47,11 @@ public class Category implements Cloneable {
         return this.description;
     }
 
+    public boolean getRoot()
+    {
+        return this.root;
+    }
+
     public int getHierarchyID() 
     {
         return this.hierarchyID;
@@ -52,7 +59,7 @@ public class Category implements Cloneable {
 
     public void createRelationship ( int parentID, String fieldType ) throws SQLException
     {
-        categoryJDBC.createRelationship( parentID, this.ID, fieldType );
+        relationshipsBetweenCategoriesJDBC.createRelationship( parentID, this.ID, fieldType );
     }
 
     public boolean isPresentInternalCategory ( String nameToCheck ) throws SQLException

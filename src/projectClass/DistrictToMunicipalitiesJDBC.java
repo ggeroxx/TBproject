@@ -11,4 +11,8 @@ public interface DistrictToMunicipalitiesJDBC {
 
     List<Municipality> selectAllMunicipalityOfDistrict ( District district ) throws SQLException;
 
+    void saveTmpDistrictToMunicipalities () throws SQLException;
+
+    void deleteTmpDistrictToMunicipalities () throws SQLException;
+
 }
