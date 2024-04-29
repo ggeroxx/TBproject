@@ -11,6 +11,7 @@ public class Main
         Scanner scanner = new Scanner( System.in );
         Console console = System.console();
         Session session = new Session();
+        ConfiguratorJDBC configuratorJDBC = new ConfiguratorJDBCImpl();
 
         try
         {
@@ -27,7 +28,7 @@ public class Main
                 switch ( choice ) 
                 {
                     case "1":
-                            caseOneMainMenu( scanner, console, session );
+                            caseOneMainMenu( scanner, console, session, configuratorJDBC );
                         break;
 
                     case "2":
@@ -64,7 +65,7 @@ public class Main
         }
     }
 
-    public static void caseOneMainMenu ( Scanner scanner, Console console, Session session ) throws SQLException, Exception
+    public static void caseOneMainMenu ( Scanner scanner, Console console, Session session, ConfiguratorJDBC configuratorJDBC ) throws SQLException, Exception
     {
         Util.clearConsole( Constants.TIME_SWITCH_MENU );
         System.out.print( Constants.LOGIN_SCREEN );
@@ -83,7 +84,8 @@ public class Main
             return;
         }
 
-        Configurator conf = new Configurator( username, password );
+        Configurator conf = configuratorJDBC.getConfiguratorByUsername( username );
+        conf.setPassword( password );
 
         if ( conf.getFirstAccess() )
         {

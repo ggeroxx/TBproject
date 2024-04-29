@@ -17,4 +17,8 @@ public interface RelationshipsBetweenCategoriesJDBC {
 
     void deleteTmpRelationshipsBetweenCategories () throws SQLException;
 
+    void dropTmpRelationshipsBetweenCategoriesTable () throws SQLException;
+
+    void createTmpTable () throws SQLException;
+
 }

@@ -47,14 +47,19 @@ public class Category implements Cloneable {
         return this.description;
     }
 
-    public boolean getRoot()
+    public int getHierarchyID() 
+    {
+        return this.hierarchyID;
+    }
+
+    public boolean isRoot ()
     {
         return this.root;
     }
 
-    public int getHierarchyID() 
+    public boolean isLeaf ()
     {
-        return this.hierarchyID;
+        return this.field == null;
     }
 
     public void createRelationship ( int parentID, String fieldType ) throws SQLException

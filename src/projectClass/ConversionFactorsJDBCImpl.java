@@ -6,15 +6,12 @@ import java.util.Map.*;
 import util.*;
 
 public class ConversionFactorsJDBCImpl implements ConversionFactorsJDBC {
-    
-    String GET_ALL_QUERY = "SELECT * FROM conversionFactors";
-    String SAVE_QUERY = "INSERT IGNORE INTO conversionFactors (ID_leaf_1, ID_leaf_2, value) VALUES (?, ? ,?)";;
 
     @Override
     public List<ConversionFactor> getAll() throws SQLException 
     {
         List<ConversionFactor> toReturn = new ArrayList<ConversionFactor>();
-        ResultSet rs = Conn.exQuery( GET_ALL_QUERY );
+        ResultSet rs = Conn.exQuery( Queries.GET_ALL_CONVERION_FACTORS_QUERY );
         while ( rs.next() ) toReturn.add( new ConversionFactor( new CategoryJDBCImpl().getCategoryByID( rs.getInt( 1 ) ), new CategoryJDBCImpl().getCategoryByID( rs.getInt( 2 ) ), rs.getDouble( 3 ) ) );
         return toReturn;
     }
@@ -27,7 +24,7 @@ public class ConversionFactorsJDBCImpl implements ConversionFactorsJDBC {
 
     private void save ( ConversionFactor conversionFactor ) throws SQLException
     {
-        Conn.exQuery( SAVE_QUERY, new ArrayList<>( Arrays.asList( conversionFactor.getLeaf_1().getID(), conversionFactor.getLeaf_2().getID(), conversionFactor.getValue() ) ) );
+        Conn.queryUpdate( Queries.SAVE_CONVERSION_FACTORS_QUERY, new ArrayList<>( Arrays.asList( conversionFactor.getLeaf_1().getID(), conversionFactor.getLeaf_2().getID(), conversionFactor.getValue() ) ) );
     }
 
 }

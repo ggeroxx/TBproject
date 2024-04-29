@@ -19,6 +19,16 @@ public class PrintService {
         this.relationshipsBetweenCategoriesJDBC = new RelationshipsBetweenCategoriesJDBCImpl();
     }
 
+    public void print ( String toPrint )
+    {
+        System.out.print( toPrint );
+    }
+
+    public void println ( String toPrint )
+    {
+        System.out.println( toPrint );
+    }
+
     public void printCategoriesList ( int hierarchyID ) throws SQLException
     {
         StringBuffer toReturn = new StringBuffer();
@@ -82,7 +92,7 @@ public class PrintService {
     {
         Category notLeaf = categoryJDBC.getCategoryByID( IDToPrint );
 
-        if ( notLeaf.getRoot() ) toReturn.append( notLeaf.getID() + ". " + notLeaf.getName() + "\n\n" );
+        if ( notLeaf.isRoot() ) toReturn.append( notLeaf.getID() + ". " + notLeaf.getName() + "\n\n" );
         else toReturn.append( spaces.toString() + "└──── " + notLeaf.getID() + ". " + notLeaf.getName() + "\n\n" );
         
         for ( Integer IDLeaf : relationshipsBetweenCategoriesJDBC.getChildIDsFromParentID( IDToPrint ) ) printHierarchy( IDLeaf, toReturn, spaces.append( "\t" ) );

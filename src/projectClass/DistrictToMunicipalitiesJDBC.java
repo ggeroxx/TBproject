@@ -15,4 +15,8 @@ public interface DistrictToMunicipalitiesJDBC {
 
     void deleteTmpDistrictToMunicipalities () throws SQLException;
 
+    void dropTmpDistrictToMunicipalitiesTable () throws SQLException;
+
+    void createTmpTable () throws SQLException;
+
 }

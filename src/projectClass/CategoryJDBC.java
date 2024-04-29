@@ -7,6 +7,10 @@ public interface CategoryJDBC {
     
     Category getCategoryByID ( int ID ) throws SQLException;
 
+    Category getRootCategortByID ( int ID ) throws SQLException;
+
+    Category getRootCategoryByName ( String name ) throws SQLException;
+
     boolean isPresentInternalCategory ( int hierarchyID, String nameToCheck ) throws SQLException;
 
     boolean isValidParentID ( int hierarchyID, int IDToCheck ) throws SQLException;
@@ -14,6 +18,8 @@ public interface CategoryJDBC {
     Category getCategoryByNameAndHierarchyID ( String name, int hierarchyID ) throws SQLException;
 
     List<Category> getAllLeaf () throws SQLException;
+
+    List<Category> getAllRoot () throws SQLException;
 
     List<Category> getAllSavedLeaf () throws SQLException;
 
@@ -34,5 +40,15 @@ public interface CategoryJDBC {
     void saveTmpCategories () throws SQLException;
 
     void deleteTmpCategories () throws SQLException;
+
+    void dropTmpCategoriesTable () throws SQLException;
+
+    void createTmpTable () throws SQLException;
+
+    Integer getMaxID () throws SQLException;
+
+    void setIDValueAutoIncrement ( int newValue ) throws SQLException;
+
+    void setTmpIDValueAutoIncrement ( int newValue ) throws SQLException;
 
 }

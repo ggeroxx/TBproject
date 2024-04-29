@@ -30,6 +30,11 @@ public class Configurator {
         return this.firstAccess;
     }
 
+    public void setPassword ( String password ) 
+    {
+        this.password = password;
+    }
+
     public void changeCredentials ( String approvedUsername, String newPassword ) throws SQLException
     {
         configuratorJDBC.changeCredentials( this.username, approvedUsername, BCrypt.hashpw( newPassword, BCrypt.gensalt() ) );

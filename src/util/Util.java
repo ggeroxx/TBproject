@@ -15,15 +15,15 @@ public class Util {
             new ProcessBuilder("clear").inheritIO().start().waitFor();
     }
 
-    public static <T> T insertWithCheck ( String textToPrint, String errorMessage, Predicate<T> condition, Scanner scanner ) throws SQLException, Exception
+    public static <T> T insertWithCheck ( String textToPrint, String errorMessage, Predicate<T> condition, Scanner scanner, PrintService printService ) throws SQLException, Exception
     {
         T toReturn;
 
         do
         {
-            System.out.print( textToPrint );
+            printService.print( textToPrint );
             toReturn = (T) scanner.nextLine();
-            if ( condition.test( (T) toReturn ) ) System.out.println( errorMessage );
+            if ( condition.test( (T) toReturn ) ) printService.println( errorMessage );
         } while ( condition.test( (T) toReturn ) );
 
         return toReturn;
