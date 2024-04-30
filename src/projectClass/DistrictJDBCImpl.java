@@ -9,14 +9,14 @@ public class DistrictJDBCImpl implements DistrictJDBC {
     @Override
     public District getDistrictByName( String name ) throws SQLException 
     {
-        ResultSet rs = Conn.exQuery( Queries.GET_DISTRICT_BY_NAME_QUERY, new ArrayList<>( Arrays.asList( name ) ) );
+        ResultSet rs = Conn.exQuery( Queries.GET_DISTRICT_BY_NAME_QUERY, new ArrayList<>( Arrays.asList( name, name ) ) );
         return rs.next() ? new District( rs.getInt( 1 ), name, rs.getInt( 2 ) ) : null;
     }
 
     @Override
     public District getDistrictByID( int ID ) throws SQLException 
     {
-        ResultSet rs = Conn.exQuery( Queries.GET_DISTRICT_BY_ID_QUERY, new ArrayList<>( Arrays.asList( ID ) ) );
+        ResultSet rs = Conn.exQuery( Queries.GET_DISTRICT_BY_ID_QUERY, new ArrayList<>( Arrays.asList( ID, ID ) ) );
         return rs.next() ? new District( ID, rs.getString( 1 ), rs.getInt( 2 ) ) : null;
     }
 
@@ -93,7 +93,7 @@ public class DistrictJDBCImpl implements DistrictJDBC {
     @Override
     public void setTmpIDValueAutoIncrement ( int newValue ) throws SQLException 
     {
-        Conn.exQuery( Queries.SET_DISTRICT_TMP_ID_VALUE_AUTO_INCREMENT_QUERY, new ArrayList<>( Arrays.asList( newValue ) ) );
+        Conn.queryUpdate( Queries.SET_DISTRICT_TMP_ID_VALUE_AUTO_INCREMENT_QUERY, new ArrayList<>( Arrays.asList( newValue ) ) );
     }
 
 }

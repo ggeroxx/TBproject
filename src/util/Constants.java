@@ -99,7 +99,7 @@ public class Constants {
     public static final String ENTER_FIELD = "\nenter field: ";
     public static final String ENTER_DESCRIPTION = "\nenter description (enter to skip): ";
     public static final String LEAF_CATEGORY_MESSAGE = "\nleaf category? (y/n) --> ";
-    public static final String ENTER_DAD_MESSAGE = "\n enter parent ID --> ";
+    public static final String ENTER_DAD_MESSAGE = " enter parent ID --> ";
     public static final String ENTER_FIELD_TYPE = "\nenter field type: ";
     public static final String ENTER_CHOICE_PAIR = "Enter your choice: ";
     public static final String ENTER_VALUE_CONVERSION_FACTOR = "Enter value of conversion factor: ";

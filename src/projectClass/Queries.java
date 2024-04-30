@@ -156,7 +156,7 @@ public class Queries {
                                                                              "FROM categories " +
                                                                              "WHERE name = ? AND hierarchyID = ? " +
                                                                              "UNION " +
-                                                                             "SELECT id " +
+                                                                             "SELECT * " +
                                                                              "FROM tmp_categories " +
                                                                              "WHERE name = ? AND hierarchyID = ?";
 
@@ -186,21 +186,21 @@ public class Queries {
 
     public static final String GET_ALL_SAVED_ROOT = "SELECT id " +
                                                     "FROM categories " +
-                                                    "WHERE root = ?";
+                                                    "WHERE root = 1";
 
     public static final String GET_ALL_NOT_SAVED_ROOT = "SELECT id " +
                                                         "FROM tmp_categories " +
-                                                        "WHERE root = ?";
+                                                        "WHERE root = 1";
 
-    public static final String GET_PARENT_CATEGORIES_QUERY = "SELECT id " +
+    public static final String GET_PARENT_CATEGORIES_QUERY = "SELECT * " +
                                                              "FROM categories " +
                                                              "WHERE hierarchyID = ? AND field IS NOT NULL AND id NOT IN (SELECT MAX(id) " +
-                                                             "FROM categories) " +
+                                                             "FROM categories ) " +
                                                              "UNION " +
                                                              "SELECT * " +
                                                              "FROM tmp_categories " +
                                                              "WHERE hierarchyID = ? AND field IS NOT NULL AND id NOT IN (SELECT MAX(id) " +
-                                                             "FROM tmp_categories)";
+                                                             "FROM tmp_categories )";
 
     public static final String CREATE_CATEGORY_QUERY_1 = "SELECT MAX(id) " +
                                                          "AS max_id " +

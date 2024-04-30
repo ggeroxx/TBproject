@@ -78,7 +78,7 @@ public class PrintService {
     {
         StringBuffer toReturn = new StringBuffer();
 
-        for ( Municipality toPrint : districtToMunicipalitiesJDBC.selectAllMunicipalityOfDistrict( district ) ) toReturn.append( toPrint.getName() );
+        for ( Municipality toPrint : districtToMunicipalitiesJDBC.selectAllMunicipalityOfDistrict( district ) ) toReturn.append( "  " + toPrint.getCAP() + " " + toPrint.getProvince() + " " + toPrint.getName() + "\n" );
 
         System.out.println( toReturn );
     }

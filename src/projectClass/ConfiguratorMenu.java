@@ -2,6 +2,8 @@ package projectClass;
 
 import java.sql.*;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicReference;
+
 import util.*;
 
 public class ConfiguratorMenu {
@@ -73,7 +75,7 @@ public class ConfiguratorMenu {
     public static void caseOne ( Scanner scanner, Configurator conf ) throws SQLException, Exception
     {
         Util.clearConsole( Constants.TIME_SWITCH_MENU );
-        String districName = Util.insertWithCheck( Constants.ENTER_DISTRICT_NAME, Constants.ERROR_PATTERN_NAME, ( input ) -> Controls.checkPattern( input, 0, 50 ), scanner, printService );
+        String districName = Util.insertWithCheck( Constants.ENTER_DISTRICT_NAME, Constants.ERROR_PATTERN_NAME, ( input ) -> Controls.checkPattern( input, 0, 50 ), scanner );
         
         if ( Controls.isPresentDistrict( districName ) )
         {
@@ -104,11 +106,11 @@ public class ConfiguratorMenu {
             newDistrict.addMunicipality( municipalityToAdd );
             printService.println( Constants.ADDED_SUCCESFULL_MESSAGE );
 
-            continueInsert = Util.insertWithCheck( Constants.END_ADD_MESSAGE, Constants.INVALID_OPTION, ( input ) -> !input.equals("n") && !input.equals("y"), scanner, printService);
+            continueInsert = Util.insertWithCheck( Constants.END_ADD_MESSAGE, Constants.INVALID_OPTION, ( input ) -> !input.equals("n") && !input.equals("y"), scanner );
             
         } while ( !continueInsert.equals("y") );
 
-        System.out.println( Constants.OPERATION_COMPLETED );
+        printService.println( Constants.OPERATION_COMPLETED );
         Util.clearConsole( Constants.TIME_MESSAGE );
     }
 
@@ -131,7 +133,7 @@ public class ConfiguratorMenu {
                 printService.println( Constants.LINE );
             } 
 
-            String categoryName = Util.insertWithCheck( Constants.ENTER_CATEGORY_NAME, Constants.ERROR_PATTERN_NAME, ( input ) -> Controls.checkPattern( input, 0, 50 ), scanner, printService );
+            String categoryName = Util.insertWithCheck( Constants.ENTER_CATEGORY_NAME, Constants.ERROR_PATTERN_NAME, ( input ) -> Controls.checkPattern( input, 0, 50 ), scanner );
 
             if ( !notFirstIteration && Controls.isPresentRootCategory( categoryName ) )
             {
@@ -147,13 +149,13 @@ public class ConfiguratorMenu {
             }
 
             String leafCategory = "n";
-            if ( notFirstIteration ) leafCategory = Util.insertWithCheck( Constants.LEAF_CATEGORY_MESSAGE, Constants.INVALID_OPTION, ( input ) -> !input.equals("n") && !input.equals("y"), scanner, printService );
+            if ( notFirstIteration ) leafCategory = Util.insertWithCheck( Constants.LEAF_CATEGORY_MESSAGE, Constants.INVALID_OPTION, ( input ) -> !input.equals("n") && !input.equals("y"), scanner );
 
             String field = null;
             String description = null;
             if ( leafCategory.equals( "n" ) )
-                field = Util.insertWithCheck( Constants.ENTER_FIELD, Constants.ERROR_PATTERN_FIELD , ( input ) -> Controls.checkPattern( input, 0, 25 ), scanner, printService );
-            if ( notFirstIteration ) description = Util.insertWithCheck( Constants.ENTER_DESCRIPTION, Constants.ERROR_PATTERN_DESCRIPTION, ( input ) -> Controls.checkPattern( input, -1, 100 ), scanner, printService );
+                field = Util.insertWithCheck( Constants.ENTER_FIELD, Constants.ERROR_PATTERN_FIELD , ( input ) -> Controls.checkPattern( input, 0, 25 ), scanner );
+            if ( notFirstIteration ) description = Util.insertWithCheck( Constants.ENTER_DESCRIPTION, Constants.ERROR_PATTERN_DESCRIPTION, ( input ) -> Controls.checkPattern( input, -1, 100 ), scanner );
             Category newCategory = isRoot ? ( conf.createCategory( categoryName, field, description, isRoot, null ) ) : ( conf.createCategory( categoryName, field, description, isRoot, root.getHierarchyID() ) );
 
             notFirstIteration = true;
@@ -175,13 +177,13 @@ public class ConfiguratorMenu {
                 if ( parentID.isEmpty() || !Controls.isInt( parentID ) || !root.isValidParentID( Integer.parseInt( parentID ) ) ) printService.println( Constants.NOT_EXIST_MESSAGE + "\n" );
             } while ( parentID.isEmpty() || !Controls.isInt( parentID ) || !root.isValidParentID( Integer.parseInt( parentID ) ) );
             
-            String fieldType = Util.insertWithCheck( Constants.ENTER_FIELD_TYPE, Constants.ERROR_PATTERN_FIELD, ( input ) -> Controls.checkPattern( input, 0, 25 ), scanner, printService );
+            String fieldType = Util.insertWithCheck( Constants.ENTER_FIELD_TYPE, Constants.ERROR_PATTERN_FIELD, ( input ) -> Controls.checkPattern( input, 0, 25 ), scanner );
 
             newCategory.createRelationship( Integer.parseInt( parentID ), fieldType );
 
             if ( leafCategory.equals( "n" ) ) continue;
 
-            insertContinue = Util.insertWithCheck( "\n" + Constants.END_ADD_MESSAGE, Constants.INVALID_OPTION, ( input ) -> !input.equals("n") && !input.equals("y"), scanner, printService );
+            insertContinue = Util.insertWithCheck( "\n" + Constants.END_ADD_MESSAGE, Constants.INVALID_OPTION, ( input ) -> !input.equals("n") && !input.equals("y"), scanner );
 
         } while( insertContinue.equals( "n" ) );
 
@@ -210,8 +212,10 @@ public class ConfiguratorMenu {
             printService.println( "\n" );
             printService.printConversionFactors( conversionFactors ); 
             printService.print("\n" );
-            //String index = Util.insertWithCheck( Constants.ENTER_CHOICE_PAIR, Constants.INVALID_OPTION, ( input ) -> !( Controls.isInt( input ) && ( conversionFactors.getList().containsKey( Integer.parseInt( input ) ) && conversionFactors.getList().get( Integer.parseInt( input ) ).getValue() == null ) ), scanner, printService );
-            Double value = Double.parseDouble( Util.insertWithCheck( Constants.ENTER_VALUE_CONVERSION_FACTOR, Constants.OUT_OF_RANGE_ERROR, ( input ) -> ( !Controls.isDouble( input ) || ( Double.parseDouble( input ) < 0.5 ) || ( Double.parseDouble( input ) > 2.0 ) ), scanner, printService ) );
+
+            AtomicReference<ConversionFactors> conversionFactorsRef = new AtomicReference<>( conversionFactors );
+            int index = Integer.parseInt( Util.insertWithCheck( Constants.ENTER_CHOICE_PAIR, Constants.INVALID_OPTION, ( input ) -> !( !input.equals("") && Controls.isInt( input ) && ( conversionFactorsRef.get().getList().containsKey( Integer.parseInt( input ) ) && conversionFactorsRef.get().getList().get( Integer.parseInt( input ) ).getValue() == null ) ), scanner ) );
+            Double value = Double.parseDouble( Util.insertWithCheck( Constants.ENTER_VALUE_CONVERSION_FACTOR, Constants.OUT_OF_RANGE_ERROR, ( input ) -> ( input.equals("") || !Controls.isDouble( input ) || ( Double.parseDouble( input ) < 0.5 ) || ( Double.parseDouble( input ) > 2.0 ) ), scanner ) );
 
             tmp_conversionFactors.calculate( index, value );
 
@@ -252,7 +256,7 @@ public class ConfiguratorMenu {
 
         if ( districtJDBC.getAllDistricts().isEmpty() )
         {
-            System.out.println( Constants.NOT_EXIST_MESSAGE + "\n" );
+            printService.println( Constants.NOT_EXIST_MESSAGE + "\n" );
             Util.clearConsole( Constants.TIME_ERROR_MESSAGE );
             return;
         }
@@ -310,12 +314,9 @@ public class ConfiguratorMenu {
         printService.print( "\n" + Constants.ENTER_CATEGORY_ID );
         String categoryID = scanner.nextLine();
 
-        //Category cat = categoryJDBC.getCategoryByID( categoryID );
-        //cat.getHierarchyID() != hierarchyID || cat == null
-
-        if ( categoryID.isEmpty() || !Controls.isInt( categoryID ) || !Controls.isPresentCategoryInHierarchy( Integer.parseInt( categoryID ) , Integer.parseInt( hierarchyID ) ) )
+        if ( categoryID.isEmpty() || !Controls.isInt( categoryID ) || ( categoryJDBC.getCategoryByID( Integer.parseInt( categoryID ) ) ) == null || ( categoryJDBC.getCategoryByID( Integer.parseInt( categoryID ) ) ).getHierarchyID() != Integer.parseInt( hierarchyID ) )
         {
-            System.out.println( Constants.NOT_EXIST_MESSAGE );
+            printService.println( Constants.NOT_EXIST_MESSAGE );
             Util.clearConsole( Constants.TIME_ERROR_MESSAGE );
             return;
         }
@@ -360,10 +361,7 @@ public class ConfiguratorMenu {
         printService.print( Constants.ENTER_CATEGORY_ID );
         String categoryID = scanner.nextLine();
 
-        //Category cat = categoryJDBC.getCategoryByID( categoryID )
-        //!cat.isLeaf() || cat == null
-
-        if ( categoryID.isEmpty() || !Controls.isInt( categoryID ) || !Controls.isPresentCategory( Integer.parseInt( categoryID ) ) )
+        if ( categoryID.isEmpty() || !Controls.isInt( categoryID ) || ( categoryJDBC.getCategoryByID( Integer.parseInt( categoryID ) ) ) == null || !( categoryJDBC.getCategoryByID( Integer.parseInt( categoryID ) ) ).isLeaf() )
         {
             printService.println( Constants.NOT_EXIST_MESSAGE );
             Util.clearConsole( Constants.TIME_ERROR_MESSAGE );

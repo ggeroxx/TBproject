@@ -97,7 +97,7 @@ public class CategoryJDBCImpl implements CategoryJDBC {
     {
         List<Category> toReturn = new ArrayList<Category>();
         ResultSet rs = Conn.exQuery( Queries.GET_PARENT_CATEGORIES_QUERY, new ArrayList<>( Arrays.asList( hierarchyID, hierarchyID ) ) );
-        while ( rs.next() ) toReturn.add( new CategoryJDBCImpl().getCategoryByID( rs.getInt( 1 ) ) );
+        while ( rs.next() ) toReturn.add( getCategoryByID( rs.getInt( 1 ) ) );
         return toReturn;
     }
 
@@ -112,13 +112,14 @@ public class CategoryJDBCImpl implements CategoryJDBC {
         }
 
         Conn.queryUpdate( Queries.CREATE_CATEGORY_QUERY_2, new ArrayList<>( Arrays.asList( name, field, description, ( isRoot ? 1 : 0 ), hierarchyID, configuratorID ) ) );
-        return new CategoryJDBCImpl().getCategoryByNameAndHierarchyID( name, hierarchyID );
+        return getCategoryByNameAndHierarchyID( name, hierarchyID );
     }
 
     @Override
     public Category getRootByLeaf ( Category leaf ) throws SQLException 
     {
         ResultSet rs = Conn.exQuery( Queries.GET_ROOT_BY_LEAF_QUERY, new ArrayList<>( Arrays.asList( leaf.getID(), leaf.getName(), leaf.getID(), leaf.getName(), leaf.getID(), leaf.getName(), leaf.getID(), leaf.getName() ) ) );
+        rs.next();
         return getCategoryByID( rs.getInt( 1 ) );
     }
 

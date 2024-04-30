@@ -1,10 +1,12 @@
 package util;
 
-import java.sql.SQLException;
-import java.util.Scanner;
-import java.util.function.Predicate;
+import java.sql.*;
+import java.util.*;
+import java.util.function.*;
 
 public class Util {
+
+    private static PrintService printService = new PrintService();
 
     public static void clearConsole ( int millis ) throws Exception
     {
@@ -15,7 +17,7 @@ public class Util {
             new ProcessBuilder("clear").inheritIO().start().waitFor();
     }
 
-    public static <T> T insertWithCheck ( String textToPrint, String errorMessage, Predicate<T> condition, Scanner scanner, PrintService printService ) throws SQLException, Exception
+    public static <T> T insertWithCheck ( String textToPrint, String errorMessage, Predicate<T> condition, Scanner scanner ) throws SQLException, Exception
     {
         T toReturn;
 

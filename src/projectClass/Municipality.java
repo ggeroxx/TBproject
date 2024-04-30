@@ -17,18 +17,28 @@ public class Municipality {
         this.province = province;
     }
 
-    public int getID() 
+    public int getID () 
     {
         return this.ID;
     }
 
-    public String getName() 
+    public String getName () 
     {
         return this.name;
     }
 
+    public String getCAP () 
+    {
+        return this.CAP;
+    }
+
+    public String getProvince () 
+    {
+        return this.province;
+    }
+
     @Override
-    public String toString() 
+    public String toString () 
     {
         return new StringBuffer().append( "  " + this.CAP + "  " + this.province + "  " + this.name + "\n" ).toString();
     }

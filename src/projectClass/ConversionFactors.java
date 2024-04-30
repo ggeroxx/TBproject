@@ -9,11 +9,13 @@ public class ConversionFactors implements Cloneable {
     private Integer index;
     private HashMap<Integer, ConversionFactor> list;
     private ConversionFactorsJDBC conversionFactorsJDBC;
+    private CategoryJDBC categoryJDBC;
 
     public ConversionFactors() {
         this.index = 0;
         this.list = new HashMap<>();
         this.conversionFactorsJDBC = new ConversionFactorsJDBCImpl();
+        this.categoryJDBC = new CategoryJDBCImpl();
     }
 
     public HashMap<Integer, ConversionFactor> getList() 
@@ -51,7 +53,7 @@ public class ConversionFactors implements Cloneable {
             {
                 if ( fixed.getID() != mobile.getID() )
                 {  
-                    ConversionFactor toAdd = new ConversionFactor( new CategoryJDBCImpl().getCategoryByID( fixed.getID() ), new CategoryJDBCImpl().getCategoryByID( mobile.getID() ), null );
+                    ConversionFactor toAdd = new ConversionFactor( categoryJDBC.getCategoryByID( fixed.getID() ), categoryJDBC.getCategoryByID( mobile.getID() ), null );
                     if ( !this.contains( toAdd ) && !toAdd.getLeaf_1().getName().equals( toAdd.getLeaf_2().getName() ) ) this.put( toAdd );
                 }
             }

@@ -70,7 +70,9 @@ public class Conn
         PreparedStatement stmt = conn.prepareStatement( query );
         for ( T parameter : parameters ) 
         {
-            stmt.setString( i, ( String ) parameter );
+            if ( parameter == null ) stmt.setNull( i, java.sql.Types.NULL );
+            else if( parameter instanceof Integer ) stmt.setInt( i , Integer.parseInt( parameter.toString() ) );
+            else stmt.setString( i, String.valueOf( parameter ) );
             i++;
         }
         ResultSet rs = stmt.executeQuery();
@@ -92,7 +94,9 @@ public class Conn
         PreparedStatement stmt = conn.prepareStatement( query );
         for ( T parameter : parameters ) 
         {
-            stmt.setString( i, ( String ) parameter );
+            if ( parameter == null ) stmt.setString( i, null );
+            else if( parameter instanceof Integer ) stmt.setInt( i , Integer.parseInt( parameter.toString() ) );
+            else stmt.setString( i, String.valueOf( parameter ) );
             i++;    
         }
         stmt.executeUpdate();
