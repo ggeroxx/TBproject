@@ -37,7 +37,7 @@ public class CategoryJDBCImpl implements CategoryJDBC {
     @Override
     public boolean isValidParentID ( int hierarchyID, int IDToCheck ) throws SQLException 
     {
-        ResultSet rs = Conn.exQuery( Queries.IS_VALID_PARENT_ID_QUERY, new ArrayList<>( Arrays.asList( hierarchyID, IDToCheck, hierarchyID, IDToCheck ) ) );
+        ResultSet rs = Conn.exQuery( Queries.IS_VALID_PARENT_ID_QUERY, new ArrayList<>( Arrays.asList( IDToCheck, hierarchyID, IDToCheck, hierarchyID ) ) );
         return rs.next();
     }
 

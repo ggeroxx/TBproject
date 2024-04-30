@@ -12,11 +12,11 @@ public class ConfiguratorMenu {
     private static MunicipalityJDBC municipalityDAO = new MunicipalityJDBCImpl();
     private static DistrictJDBC districtJDBC = new DistrictJDBCImpl();
     private static CategoryJDBC categoryJDBC = new CategoryJDBCImpl();
+    private static ConversionFactors conversionFactors = new ConversionFactors();
 
     public static void menu ( Scanner scanner, Configurator conf, Session session ) throws SQLException, Exception
     {
         String choice;
-        ConversionFactors conversionFactors = new ConversionFactors();
         conversionFactors.populate();
 
         do
@@ -35,11 +35,11 @@ public class ConfiguratorMenu {
                     break;
 
                 case "3":
-                        caseThree( scanner, conversionFactors );
+                        caseThree( scanner );
                     break;
 
                 case "4":
-                        caseFour( conf, conversionFactors );
+                        caseFour( conf );
                     break;
 
                 case "5":
@@ -51,11 +51,11 @@ public class ConfiguratorMenu {
                     break;
 
                 case "7":
-                        caseSeven( scanner, conversionFactors );
+                        caseSeven( scanner );
                     break;
 
                 case "8":
-                        caseEight( scanner, conversionFactors );
+                        caseEight( scanner );
                     break;
 
                 case "9":
@@ -194,14 +194,14 @@ public class ConfiguratorMenu {
         Util.clearConsole( Constants.TIME_MESSAGE );
     }
 
-    public static void caseThree ( Scanner scanner, ConversionFactors conversionFactors ) throws SQLException, Exception
+    public static void caseThree ( Scanner scanner ) throws SQLException, Exception
     {
         ConversionFactors tmp_conversionFactors = new ConversionFactors();
         conversionFactors.populate();
 
         if ( conversionFactors.isComplete() )
         {
-            caseSeven( scanner, conversionFactors );
+            caseSeven( scanner );
             return;
         }
 
@@ -219,7 +219,7 @@ public class ConfiguratorMenu {
 
             tmp_conversionFactors.calculate( index, value );
 
-            if ( tmp_conversionFactors.inRange() ) conversionFactors = ( ConversionFactors ) tmp_conversionFactors.clone();
+            if ( tmp_conversionFactors.inRange() ) conversionFactors = tmp_conversionFactors;
             else 
             {
                 printService.println( Constants.OUT_OF_RANGE_VALUE );
@@ -235,16 +235,16 @@ public class ConfiguratorMenu {
         Util.clearConsole( Constants.TIME_MESSAGE );
     } 
 
-    public static void caseFour ( Configurator conf, ConversionFactors toSave ) throws SQLException, Exception
+    public static void caseFour ( Configurator conf ) throws SQLException, Exception
     {
-        toSave.populate();
-        if ( !toSave.isComplete() )
+        conversionFactors.populate();
+        if ( !conversionFactors.isComplete() )
         {
             printService.println( Constants.IMPOSSIBLE_SAVE_CF );
             Util.clearConsole( Constants.TIME_ERROR_MESSAGE );
             return;
         }
-        conf.saveAll( toSave );
+        conf.saveAll( conversionFactors );
         printService.println( Constants.SAVE_COMPLETED );
         Util.clearConsole( Constants.TIME_MESSAGE );
     }
@@ -330,7 +330,7 @@ public class ConfiguratorMenu {
         return;
     }
 
-    public static void caseSeven ( Scanner scanner, ConversionFactors conversionFactors ) throws Exception
+    public static void caseSeven ( Scanner scanner ) throws Exception
     {
         conversionFactors.populate();
         Util.clearConsole( Constants.TIME_SWITCH_MENU );
@@ -345,7 +345,7 @@ public class ConfiguratorMenu {
         return;
     }
 
-    public static void caseEight ( Scanner scanner, ConversionFactors conversionFactors ) throws Exception
+    public static void caseEight ( Scanner scanner ) throws Exception
     {
         Util.clearConsole( Constants.TIME_SWITCH_MENU );
         printService.print( Constants.LEAF_CATEGORY_LIST );

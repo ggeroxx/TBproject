@@ -38,7 +38,7 @@ public class ConversionFactor implements Cloneable {
     @Override
     protected Object clone() throws CloneNotSupportedException 
     {
-        return new ConversionFactor( ( Category ) this.leaf_1.clone(), ( Category ) this.leaf_2.clone(), this.value );
+        return new ConversionFactor( ( Category ) this.leaf_1.clone(), ( Category ) this.leaf_2.clone(), this.value == null ? null : Double.valueOf( this.value ) );
     }
 
     @Override

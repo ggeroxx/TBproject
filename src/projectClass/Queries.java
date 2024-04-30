@@ -146,11 +146,11 @@ public class Queries {
 
     public static final String IS_VALID_PARENT_ID_QUERY = "SELECT name " +
                                                           "FROM categories " +
-                                                          "WHERE id = ? AND hierarchyID = ? AND field IS NOT NULL AND id != LAST_INSERT_ID() " +
+                                                          "WHERE id = ? AND hierarchyID = ? AND field IS NOT NULL  AND id != LAST_INSERT_ID() " +
                                                           "UNION " +
                                                           "SELECT name " +
                                                           "FROM tmp_categories " +
-                                                          "WHERE id = ? AND hierarchyID = ? AND field IS NOT NULL AND id != LAST_INSERT_ID()";
+                                                          "WHERE id = ? AND hierarchyID = ? AND field IS NOT NULL  AND id != LAST_INSERT_ID() ";
 
     public static final String GET_CATEGORY_BY_NAME_AND_HIERARCHY_ID_QUERY = "SELECT * " +
                                                                              "FROM categories " +
