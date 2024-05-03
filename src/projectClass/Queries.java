@@ -275,6 +275,12 @@ public class Queries {
 
     public static final String SET_CATEGORY_TMP_ID_VALUE_AUTO_INCREMENT_QUERY = "ALTER TABLE tmp_categories AUTO_INCREMENT = ?";
 
+    public static final String GET_CATEGORY_WITHOUT_CHILD_QUERY = "SELECT id " +
+                                                              "FROM tmp_categories " +
+                                                              "WHERE field IS NOT NULL " +
+                                                              "AND id NOT IN (" + Queries.GET_PARENTID_QUERY + ")";
+    
+
     // ---------------------------------------- RelationshipsBetweenCategoriesJDBCImpl ----------------------------------------
 
     public static final String CREATE_RELATIONSHIP_QUERY = "INSERT INTO tmp_relationshipsBetweenCategories (parentid, childid, fieldtype) " +
@@ -303,6 +309,9 @@ public class Queries {
                                                                     "SELECT childid " +
                                                                     "FROM tmp_relationshipsBetweenCategories " +
                                                                     "WHERE parentid = ?";
+
+    public static final String GET_PARENTID_QUERY = "SELECT parentID "+
+                                                    "FROM tmp_relationshipsbetweencategories";
 
     public static final String SAVE_TMP_RELATIONSHIPS_BETWEEN_CATEGORIES_QUERY = "INSERT INTO relationshipsbetweencategories (parentid, childid, fieldtype) " +
                                                                                  "SELECT parentid, childid, fieldtype " +

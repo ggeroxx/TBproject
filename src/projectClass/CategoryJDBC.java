@@ -31,6 +31,8 @@ public interface CategoryJDBC {
 
     List<Category> getParentCategories ( int hierarchyID ) throws SQLException;
 
+    List<Category> getCategoryWithoutChild () throws SQLException;
+
     Category createCategory ( String name, String field, String description, boolean isRoot, Integer hierarchyID, int configuratorID ) throws SQLException;
 
     Category getRootByLeaf ( Category leaf ) throws SQLException;

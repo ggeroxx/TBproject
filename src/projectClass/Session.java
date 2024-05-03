@@ -1,7 +1,6 @@
 package projectClass;
 
 import java.sql.*;
-import java.util.ArrayList;
 import org.mindrot.jbcrypt.BCrypt;
 
 import util.Conn;
@@ -9,6 +8,7 @@ import util.Conn;
 public class Session {
     
     private Boolean status;
+    private ConfiguratorJDBC configuratorJDBC = new ConfiguratorJDBCImpl();
 
     public Boolean getStatus() 
     {
@@ -17,27 +17,20 @@ public class Session {
 
     public void login ( String usernameToCheck, String passwordToCheck ) throws SQLException
     {
-        String query = "SELECT * FROM configurators WHERE username = ?";
-
-        ArrayList<String> parameters = new ArrayList<String>();
-        parameters.add( usernameToCheck );
-
-        ResultSet rs = Conn.exQuery( query, parameters );
-
-        if ( !rs.next() )
+        Configurator conf = configuratorJDBC.getConfiguratorByUsername( usernameToCheck );
+        if( conf == null) 
         {
             this.status = false;
             return;
         }
         else
         {
-            if ( !BCrypt.checkpw( passwordToCheck, rs.getString(3) ) )
+            if ( !BCrypt.checkpw( passwordToCheck, conf.getPassword() ) )
             {
                 this.status = false;
                 return;
             }
         }
-
         this.status = true;
         Conn.creationTmpDistrictTable();
         Conn.creationTmpCategoryTable();

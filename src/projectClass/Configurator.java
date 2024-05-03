@@ -30,9 +30,9 @@ public class Configurator {
         return this.firstAccess;
     }
 
-    public void setPassword ( String password ) 
+    public String getPassword()
     {
-        this.password = password;
+        return this.password;
     }
 
     public void changeCredentials ( String approvedUsername, String newPassword ) throws SQLException

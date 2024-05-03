@@ -84,6 +84,12 @@ public class CategoryJDBCImpl implements CategoryJDBC {
         return getAll( Queries.GET_ALL_NOT_SAVED_ROOT );
     }
 
+    @Override
+    public List<Category> getCategoryWithoutChild() throws SQLException 
+    {
+        return getAll( Queries.GET_CATEGORY_WITHOUT_CHILD_QUERY );
+    }
+
     private List<Category> getAll ( String query ) throws SQLException
     {
         List<Category> toReturn = new ArrayList<Category>();

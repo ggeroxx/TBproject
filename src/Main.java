@@ -85,7 +85,6 @@ public class Main
         }
 
         Configurator conf = configuratorJDBC.getConfiguratorByUsername( username );
-        conf.setPassword( password );
 
         if ( conf.getFirstAccess() )
         {

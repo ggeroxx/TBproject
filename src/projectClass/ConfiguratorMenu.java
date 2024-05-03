@@ -9,7 +9,7 @@ import util.*;
 public class ConfiguratorMenu {
     
     private static PrintService printService = new PrintService();
-    private static MunicipalityJDBC municipalityDAO = new MunicipalityJDBCImpl();
+    private static MunicipalityJDBC municipalityJDBC = new MunicipalityJDBCImpl();
     private static DistrictJDBC districtJDBC = new DistrictJDBCImpl();
     private static CategoryJDBC categoryJDBC = new CategoryJDBCImpl();
     private static ConversionFactors conversionFactors = new ConversionFactors();
@@ -96,7 +96,7 @@ public class ConfiguratorMenu {
                 continue;
             }
 
-            Municipality municipalityToAdd = municipalityDAO.getMunicipalityByName( municipalityName );
+            Municipality municipalityToAdd = municipalityJDBC.getMunicipalityByName( municipalityName );
 
             if ( newDistrict.isPresentMunicipalityInDistrict( municipalityToAdd ) )
             {
@@ -181,7 +181,7 @@ public class ConfiguratorMenu {
 
             newCategory.createRelationship( Integer.parseInt( parentID ), fieldType );
 
-            if ( leafCategory.equals( "n" ) ) continue;
+            if ( leafCategory.equals( "n" ) || categoryJDBC.getCategoryWithoutChild().size() > 0 ) continue;
 
             insertContinue = Util.insertWithCheck( "\n" + Constants.END_ADD_MESSAGE, Constants.INVALID_OPTION, ( input ) -> !input.equals("n") && !input.equals("y"), scanner );
 

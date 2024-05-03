@@ -93,7 +93,25 @@ public class PrintService {
         Category notLeaf = categoryJDBC.getCategoryByID( IDToPrint );
 
         if ( notLeaf.isRoot() ) toReturn.append( notLeaf.getID() + ". " + notLeaf.getName() + "\n\n" );
-        else toReturn.append( spaces.toString() + "└──── " + notLeaf.getID() + ". " + notLeaf.getName() + "\n\n" );
+        else 
+        {
+            if(categoryJDBC.getCategoryWithoutChild().size() > 0)
+            {
+                boolean append = false;
+
+                for( Category toPrint : categoryJDBC.getCategoryWithoutChild()) 
+                {
+                    if(notLeaf.getID() == toPrint.getID())
+                    {
+                        toReturn.append( spaces.toString() + "└──── " + Constants.RED + notLeaf.getID() + ". " + notLeaf.getName() + " (no child) " + Constants.RESET + "\n\n" );
+                        append = true;
+                        break;
+                    }
+                }
+                if(!append) toReturn.append( spaces.toString() + "└──── " + notLeaf.getID() + ". " + notLeaf.getName() + "\n\n" );
+            }
+            else toReturn.append( spaces.toString() + "└──── " + notLeaf.getID() + ". " + notLeaf.getName() + "\n\n" );
+        }
         
         for ( Integer IDLeaf : relationshipsBetweenCategoriesJDBC.getChildIDsFromParentID( IDToPrint ) ) printHierarchy( IDLeaf, toReturn, spaces.append( "\t" ) );
 
