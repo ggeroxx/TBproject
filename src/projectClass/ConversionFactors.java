@@ -1,17 +1,19 @@
 package projectClass;
 
 import java.util.*;
-import java.util.Map.Entry;
+import java.util.Map.*;
+import util.*;
 import java.sql.*;
 
-public class ConversionFactors implements Cloneable {
+public class ConversionFactors {
     
     private Integer index;
     private HashMap<Integer, ConversionFactor> list;
     private ConversionFactorsJDBC conversionFactorsJDBC;
     private CategoryJDBC categoryJDBC;
 
-    public ConversionFactors() {
+    public ConversionFactors() 
+    {
         this.index = 0;
         this.list = new HashMap<>();
         this.conversionFactorsJDBC = new ConversionFactorsJDBCImpl();
@@ -90,90 +92,35 @@ public class ConversionFactors implements Cloneable {
 
     public double[] calculateRange( int index )
     {
-        int leaf_ID1 = this.getList().get(index).getLeaf_1().getID();
-        int leaf_ID2 = this.getList().get(index).getLeaf_2().getID();
+        int ID_leaf1 = this.getList().get(index).getLeaf_1().getID();
+        int ID_leaf2 = this.getList().get(index).getLeaf_2().getID();
+        double max = Constants.MIN_VALUES_CONVERSION_FACTOR, min = Constants.MAX_VALUES_CONVERSION_FACTOR;
 
-        ArrayList<Double> values = new ArrayList<>();
-        boolean firstIteration = true;
+        ArrayList<Double> involvedValues = new ArrayList<>();
 
-        /*for(Entry<Integer,ConversionFactor> entry: this.getList().entrySet())
-        {
-            if(entry.getValue().getValue() != null && (entry.getValue().getLeaf_1().getID() == leaf_ID1 || entry.getValue().getLeaf_1().getID() == leaf_ID2 || entry.getValue().getLeaf_2().getID() == leaf_ID1 || entry.getValue().getLeaf_2().getID() == leaf_ID2))
-            {
-                if(firstIteration)
-                {
-                    max = entry.getValue().getValue();
-                    firstIteration = false;
-                }
-                else if(entry.getValue().getValue() < max) max = entry.getValue().getValue();
-            }
-        }
-        firstIteration = true;
-        for(Entry<Integer,ConversionFactor> entry: this.getList().entrySet())
-        {
-            if(entry.getValue().getValue() != null && (entry.getValue().getLeaf_1().getID() == leaf_ID1 || entry.getValue().getLeaf_1().getID() == leaf_ID2 || entry.getValue().getLeaf_2().getID() == leaf_ID1 || entry.getValue().getLeaf_2().getID() == leaf_ID2))
-            {
-                if(firstIteration)
-                {
-                    min = entry.getValue().getValue();
-                    firstIteration = false;
-                }
-                else if(entry.getValue().getValue() > min) min = entry.getValue().getValue();
-            }
-        }*/
+        for ( Entry<Integer, ConversionFactor> entry : this.getList().entrySet() )
+            if ( entry.getValue().getValue() != null && ( entry.getValue().getLeaf_2().getID() == ID_leaf1 || entry.getValue().getLeaf_1().getID() == ID_leaf2 ) )
+                involvedValues.add( entry.getValue().getValue() );
 
-        for (Entry<Integer, ConversionFactor> entry : this.getList().entrySet()) 
-        {
-            ConversionFactor conversionFactor = entry.getValue();
-            if (conversionFactor.getValue() != null && (entry.getValue().getLeaf_2().getID() == leaf_ID1 || entry.getValue().getLeaf_1().getID() == leaf_ID2)) 
-            {
-                values.add(conversionFactor.getValue());
-            }
-        }
-
-        if(values.isEmpty())
-        {
-            return new double[]{0.5,2.0}; 
-        }
+        if ( involvedValues.isEmpty() ) return new double[]{ Constants.MIN_VALUES_CONVERSION_FACTOR, Constants.MAX_VALUES_CONVERSION_FACTOR }; 
         else
         {
-            double max = 0.5;
-            double min = 2.0;
-            for(Double v : values)
+            for ( Double value : involvedValues )
             {
-                if( v > max)
-                {
-                    max = v;
-                }
-                if( v < min)
-                {
-                    min = v;
-                }
+                max = value > max ? value : max;
+                min = value < min ? value : min;
             }
-            max = 2.0/max >= 2 ? 2 : 2/max;
-            min = 0.5/min <= 0.5 ? 0.5 : 0.5/min;
-            return new double[]{min,max};
+            max = ( Constants.MAX_VALUES_CONVERSION_FACTOR / max >= Constants.MAX_VALUES_CONVERSION_FACTOR ) ? Constants.MAX_VALUES_CONVERSION_FACTOR : ( Constants.MAX_VALUES_CONVERSION_FACTOR / max );
+            min = ( Constants.MIN_VALUES_CONVERSION_FACTOR / min <= Constants.MIN_VALUES_CONVERSION_FACTOR ) ? Constants.MIN_VALUES_CONVERSION_FACTOR : ( Constants.MIN_VALUES_CONVERSION_FACTOR / min );
+            max = ( ( int ) ( max * 100.0 ) ) / 100.0;
+            min = Math.round( min * 100.0 ) / 100.0;
+            return new double[]{ min, max };
         }
-    }
-
-    public boolean inRange ()
-    {
-        return this.list.entrySet().stream().allMatch( entry -> entry.getValue().getValue() >= 0.5 && entry.getValue().getValue() <= 2.0 );
     }
 
     public boolean isComplete ()
     {
         return this.list.entrySet().stream().allMatch( entry -> entry.getValue().getValue() != null );
-    }
-
-    @Override
-    protected Object clone() throws CloneNotSupportedException 
-    {
-        ConversionFactors toReturn = new ConversionFactors();
-
-        for ( Entry<Integer, ConversionFactor> entry : this.list.entrySet() ) toReturn.put( (ConversionFactor) entry.getValue().clone() );
-
-        return toReturn;
     }
 
     @Override

@@ -276,10 +276,9 @@ public class Queries {
     public static final String SET_CATEGORY_TMP_ID_VALUE_AUTO_INCREMENT_QUERY = "ALTER TABLE tmp_categories AUTO_INCREMENT = ?";
 
     public static final String GET_CATEGORY_WITHOUT_CHILD_QUERY = "SELECT id " +
-                                                              "FROM tmp_categories " +
-                                                              "WHERE field IS NOT NULL " +
-                                                              "AND id NOT IN (" + Queries.GET_PARENTID_QUERY + ")";
-    
+                                                                  "FROM tmp_categories " +
+                                                                  "WHERE field IS NOT NULL " +
+                                                                  "AND id NOT IN (" + Queries.GET_PARENTID_QUERY + ")";
 
     // ---------------------------------------- RelationshipsBetweenCategoriesJDBCImpl ----------------------------------------
 

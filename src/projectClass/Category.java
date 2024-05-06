@@ -2,7 +2,7 @@ package projectClass;
 
 import java.sql.SQLException;
 
-public class Category implements Cloneable {
+public class Category {
     
     private int ID;
     private String name;
@@ -75,12 +75,6 @@ public class Category implements Cloneable {
     public boolean isValidParentID ( int IDToCheck ) throws SQLException
     {
         return categoryJDBC.isValidParentID( this.hierarchyID, IDToCheck );
-    }
-
-    @Override
-    protected Object clone() throws CloneNotSupportedException 
-    {
-        return new Category( this.ID, this.name, this.field, this.description, this.root, this.hierarchyID, this.IDConfigurator );
     }
 
     @Override

@@ -2,8 +2,6 @@ package projectClass;
 
 import java.sql.*;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicReference;
-
 import util.*;
 
 public class ConfiguratorMenu {
@@ -60,6 +58,7 @@ public class ConfiguratorMenu {
 
                 case "9":
                         session.logout();
+                        conversionFactors = new ConversionFactors();
                         printService.println( Constants.LOG_OUT );
                         Util.clearConsole( Constants.TIME_LOGOUT );
                     break;
@@ -69,7 +68,7 @@ public class ConfiguratorMenu {
                         Util.clearConsole( Constants.TIME_ERROR_MESSAGE);
                     break;
             }
-        } while ( !choice.equals("9") );
+        } while ( !choice.equals( "9" ) );
     }
 
     public static void caseOne ( Scanner scanner, Configurator conf ) throws SQLException, Exception
@@ -85,7 +84,7 @@ public class ConfiguratorMenu {
         } 
         District newDistrict = conf.createDistrict( districName );
 
-        String municipalityName, continueInsert = "n";
+        String municipalityName, continueInsert = Constants.NO_MESSAGE;
         do
         {
             printService.print( Constants.ENTER_MUNICIPALITY );
@@ -106,9 +105,9 @@ public class ConfiguratorMenu {
             newDistrict.addMunicipality( municipalityToAdd );
             printService.println( Constants.ADDED_SUCCESFULL_MESSAGE );
 
-            continueInsert = Util.insertWithCheck( Constants.END_ADD_MESSAGE, Constants.INVALID_OPTION, ( input ) -> !input.equals("n") && !input.equals("y"), scanner );
+            continueInsert = Util.insertWithCheck( Constants.END_ADD_MESSAGE, Constants.INVALID_OPTION, ( input ) -> !input.equals(Constants.NO_MESSAGE) && !input.equals(Constants.YES_MESSAGE), scanner );
             
-        } while ( !continueInsert.equals("y") );
+        } while ( !continueInsert.equals(Constants.YES_MESSAGE) );
 
         printService.println( Constants.OPERATION_COMPLETED );
         Util.clearConsole( Constants.TIME_MESSAGE );
@@ -120,7 +119,7 @@ public class ConfiguratorMenu {
         printService.print( Constants.HIERARCHY_SCREEN );
 
         boolean isRoot = true, notFirstIteration = false;
-        String insertContinue = "n";
+        String insertContinue = Constants.NO_MESSAGE;
         Category root = null;
 
         do
@@ -148,12 +147,12 @@ public class ConfiguratorMenu {
                 continue;
             }
 
-            String leafCategory = "n";
-            if ( notFirstIteration ) leafCategory = Util.insertWithCheck( Constants.LEAF_CATEGORY_MESSAGE, Constants.INVALID_OPTION, ( input ) -> !input.equals("n") && !input.equals("y"), scanner );
+            String leafCategory = Constants.NO_MESSAGE;
+            if ( notFirstIteration ) leafCategory = Util.insertWithCheck( Constants.LEAF_CATEGORY_MESSAGE, Constants.INVALID_OPTION, ( input ) -> !input.equals(Constants.NO_MESSAGE) && !input.equals(Constants.YES_MESSAGE), scanner );
 
             String field = null;
             String description = null;
-            if ( leafCategory.equals( "n" ) )
+            if ( leafCategory.equals( Constants.NO_MESSAGE ) )
                 field = Util.insertWithCheck( Constants.ENTER_FIELD, Constants.ERROR_PATTERN_FIELD , ( input ) -> Controls.checkPattern( input, 0, 25 ), scanner );
             if ( notFirstIteration ) description = Util.insertWithCheck( Constants.ENTER_DESCRIPTION, Constants.ERROR_PATTERN_DESCRIPTION, ( input ) -> Controls.checkPattern( input, -1, 100 ), scanner );
             Category newCategory = isRoot ? ( conf.createCategory( categoryName, field, description, isRoot, null ) ) : ( conf.createCategory( categoryName, field, description, isRoot, root.getHierarchyID() ) );
@@ -181,11 +180,11 @@ public class ConfiguratorMenu {
 
             newCategory.createRelationship( Integer.parseInt( parentID ), fieldType );
 
-            if ( leafCategory.equals( "n" ) || categoryJDBC.getCategoryWithoutChild().size() > 0 ) continue;
+            if ( leafCategory.equals( Constants.NO_MESSAGE ) || categoryJDBC.getCategoriesWithoutChild().size() > 0 ) continue;
 
-            insertContinue = Util.insertWithCheck( "\n" + Constants.END_ADD_MESSAGE, Constants.INVALID_OPTION, ( input ) -> !input.equals("n") && !input.equals("y"), scanner );
+            insertContinue = Util.insertWithCheck( "\n" + Constants.END_ADD_MESSAGE, Constants.INVALID_OPTION, ( input ) -> !input.equals(Constants.NO_MESSAGE) && !input.equals(Constants.YES_MESSAGE), scanner );
 
-        } while( insertContinue.equals( "n" ) );
+        } while( insertContinue.equals( Constants.NO_MESSAGE ) );
 
         Util.clearConsole( Constants.TIME_SWITCH_MENU );
         printService.print( "\n" );
@@ -196,9 +195,7 @@ public class ConfiguratorMenu {
 
     public static void caseThree ( Scanner scanner ) throws SQLException, Exception
     {
-        ConversionFactors tmp_conversionFactors = new ConversionFactors();
         conversionFactors.populate();
-        tmp_conversionFactors.populate();
 
         if ( conversionFactors.isComplete() )
         {
@@ -208,32 +205,21 @@ public class ConfiguratorMenu {
 
         do
         {
-            //Util.clearConsole( Constants.TIME_SWITCH_MENU );
-            printService.println( "\n" );
+            Util.clearConsole( Constants.TIME_SWITCH_MENU );
+            printService.print( "\n" );
             printService.printConversionFactors( conversionFactors ); 
             printService.print("\n" );
 
-            AtomicReference<ConversionFactors> conversionFactorsRef = new AtomicReference<>( conversionFactors );
-            int index = Integer.parseInt( Util.insertWithCheck( Constants.ENTER_CHOICE_PAIR, Constants.INVALID_OPTION, ( input ) -> !( !input.equals("") && Controls.isInt( input ) && ( conversionFactorsRef.get().getList().containsKey( Integer.parseInt( input ) ) && conversionFactorsRef.get().getList().get( Integer.parseInt( input ) ).getValue() == null ) ), scanner ) );
-            double[] range = conversionFactors.calculateRange(index);
-            String rangeToPrint = "["+range[0]+","+range[1]+"]: ";
-            Double value = Double.parseDouble( Util.insertWithCheck( Constants.ENTER_VALUE_CONVERSION_FACTOR + rangeToPrint, Constants.OUT_OF_RANGE_ERROR, ( input ) -> ( input.equals("") || !Controls.isDouble( input ) || ( Double.parseDouble( input ) < 0.5 ) || ( Double.parseDouble( input ) > 2.0  ) ), scanner ) );
+            int index = Integer.parseInt( Util.insertWithCheck( Constants.ENTER_CHOICE_PAIR, Constants.INVALID_OPTION, ( input ) -> !( !input.equals("") && Controls.isInt( input ) && ( conversionFactors.getList().containsKey( Integer.parseInt( input ) ) && conversionFactors.getList().get( Integer.parseInt( input ) ).getValue() == null ) ), scanner ) );
+            double[] range = conversionFactors.calculateRange( index );
+            String rangeToPrint = "[ "+range[0]+", "+range[1]+" ]: ";
+            Double value = Double.parseDouble( Util.insertWithCheck( Constants.ENTER_VALUE_CONVERSION_FACTOR + rangeToPrint, Constants.OUT_OF_RANGE_ERROR, ( input ) -> ( input.equals("") || !Controls.isDouble( input ) || ( Double.parseDouble( input ) < range[0] ) || ( Double.parseDouble( input ) > range[1] ) ), scanner ) );
 
-            //tmp_conversionFactors.populate();
-            tmp_conversionFactors.calculate(index, value);
-            printService.printConversionFactors( tmp_conversionFactors );
-            
-
-            if((value >= range[0] && value <= range[1]))
-            {
-                conversionFactors.calculate( index, value );
-            }
-            tmp_conversionFactors = (ConversionFactors) conversionFactors.clone();
-
+            conversionFactors.calculate( index, value );
         } while ( !conversionFactors.isComplete() );
 
         Util.clearConsole( Constants.TIME_SWITCH_MENU );
-        printService.println( "\n" );
+        printService.print( "\n" );
         printService.printConversionFactors( conversionFactors ); 
         printService.print( "\n" );
         printService.println( Constants.OPERATION_COMPLETED );

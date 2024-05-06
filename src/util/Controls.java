@@ -55,7 +55,7 @@ public class Controls {
     {
         Category root = null;
 
-        if ( toCheck instanceof Integer ) root = categoryJDBC.getRootCategortByID( ( Integer ) toCheck );
+        if ( toCheck instanceof Integer ) root = categoryJDBC.getRootCategoryByID( ( Integer ) toCheck );
         if ( toCheck instanceof String ) root = categoryJDBC.getRootCategoryByName( ( String ) toCheck );
 
         return root != null;

@@ -14,10 +14,10 @@ public class CategoryJDBCImpl implements CategoryJDBC {
     }
 
     @Override
-    public Category getRootCategortByID ( int ID ) throws SQLException 
+    public Category getRootCategoryByID ( int ID ) throws SQLException 
     {
         ResultSet rs = Conn.exQuery( Queries.GET_ROOT_CATEGORY_BY_ID_QUERY, new ArrayList<>( Arrays.asList( ID, 1, ID, 1 ) ) );
-        return rs.next() ? new Category( ID, rs.getString( 2 ), rs.getString( 3 ), rs.getString( 4 ), rs.getBoolean( 5 ), rs.getInt( 6 ), rs.getInt( 7 ) )  : null;
+        return rs.next() ? new Category( ID, rs.getString( 2 ), rs.getString( 3 ), rs.getString( 4 ), rs.getBoolean( 5 ), rs.getInt( 6 ), rs.getInt( 7 ) ) : null;
     }
 
     @Override
@@ -30,7 +30,7 @@ public class CategoryJDBCImpl implements CategoryJDBC {
     @Override
     public boolean isPresentInternalCategory ( int hierarchyID, String nameToCheck ) throws SQLException 
     {
-        ResultSet rs = Conn.exQuery( Queries.IS_PRESENT_INTERNAL_CATEGORY_QUERY, new ArrayList<>( Arrays.asList( hierarchyID, nameToCheck, hierarchyID, nameToCheck ) ) );
+        ResultSet rs = Conn.exQuery( Queries.IS_PRESENT_INTERNAL_CATEGORY_QUERY, new ArrayList<>( Arrays.asList( nameToCheck, hierarchyID, nameToCheck, hierarchyID ) ) );
         return rs.next();
     }
 
@@ -85,7 +85,7 @@ public class CategoryJDBCImpl implements CategoryJDBC {
     }
 
     @Override
-    public List<Category> getCategoryWithoutChild() throws SQLException 
+    public List<Category> getCategoriesWithoutChild() throws SQLException 
     {
         return getAll( Queries.GET_CATEGORY_WITHOUT_CHILD_QUERY );
     }

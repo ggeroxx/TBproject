@@ -2,8 +2,7 @@ package projectClass;
 
 import java.sql.*;
 import org.mindrot.jbcrypt.BCrypt;
-
-import util.Conn;
+import util.*;
 
 public class Session {
     
@@ -18,7 +17,7 @@ public class Session {
     public void login ( String usernameToCheck, String passwordToCheck ) throws SQLException
     {
         Configurator conf = configuratorJDBC.getConfiguratorByUsername( usernameToCheck );
-        if( conf == null) 
+        if( conf == null ) 
         {
             this.status = false;
             return;

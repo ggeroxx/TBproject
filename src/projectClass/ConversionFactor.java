@@ -2,7 +2,7 @@ package projectClass;
 
 import util.*;
 
-public class ConversionFactor implements Cloneable {
+public class ConversionFactor {
 
     private Category leaf_1;
     private Category leaf_2;
@@ -33,12 +33,6 @@ public class ConversionFactor implements Cloneable {
     public void setValue ( Double value ) 
     {
         this.value = value;
-    }
-
-    @Override
-    protected Object clone() throws CloneNotSupportedException 
-    {
-        return new ConversionFactor( ( Category ) this.leaf_1.clone(), ( Category ) this.leaf_2.clone(), this.value == null ? null : Double.valueOf( this.value ) );
     }
 
     @Override

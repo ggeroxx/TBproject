@@ -102,7 +102,9 @@ public class Constants {
     public static final String ENTER_DAD_MESSAGE = " enter parent ID --> ";
     public static final String ENTER_FIELD_TYPE = "\nenter field type: ";
     public static final String ENTER_CHOICE_PAIR = "Enter your choice: ";
-    public static final String ENTER_VALUE_CONVERSION_FACTOR = "Enter value of conversion factor: ";
+    public static final String ENTER_VALUE_CONVERSION_FACTOR = "Enter value of conversion factor ";
+    public static final String YES_MESSAGE = "y";
+    public static final String NO_MESSAGE = "n";
 
     public static final String BYE_BYE_MESSAGE = YELLOW + "\nBye bye ...\n\n" + RESET;
     public static final String ADDED_SUCCESFULL_MESSAGE = GREEN + "\n --- Added succesfull ✓ --- \n" + RESET;
@@ -126,7 +128,7 @@ public class Constants {
     public static final String NOT_EXIST_MESSAGE = RED + "\n --- NOT exist ! --- " + RESET;
     public static final String ROOT_CATEGORY_ALREADY_PRESENT = RED + "\n --- Root category already present --- \n" + RESET;
     public static final String INTERNAL_CATEGORY_ALREADY_PRESENT = RED + "\n --- Category already present --- \n" + RESET;
-    public static final String OUT_OF_RANGE_ERROR = RED + "\n --- Invalid or out of range !!! [0.5-2.0] --- \n" + RESET;
+    public static final String OUT_OF_RANGE_ERROR = RED + "\n --- Invalid or out of range !!! --- \n" + RESET;
     public static final String OUT_OF_RANGE_VALUE = RED + "\n ---  A value out of range was calculated, reinsert it --- \n" + RESET;
     public static final String IMPOSSIBLE_SAVE_CF = RED + "\n --- " + BOLD + "ATTENTION" + BOLD + ", not all conversion factors have been set !!! " + RESET;
 
@@ -139,4 +141,6 @@ public class Constants {
     public static final int TIME_MESSAGE = 1500;
     public static final int TIME_LOGOUT = 1000;
 
+    public static final double MIN_VALUES_CONVERSION_FACTOR = 0.5;
+    public static final double MAX_VALUES_CONVERSION_FACTOR = 2.0;
 }
