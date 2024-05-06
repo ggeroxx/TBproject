@@ -88,6 +88,74 @@ public class ConversionFactors implements Cloneable {
         return;
     }
 
+    public double[] calculateRange( int index )
+    {
+        int leaf_ID1 = this.getList().get(index).getLeaf_1().getID();
+        int leaf_ID2 = this.getList().get(index).getLeaf_2().getID();
+
+        ArrayList<Double> values = new ArrayList<>();
+        boolean firstIteration = true;
+
+        /*for(Entry<Integer,ConversionFactor> entry: this.getList().entrySet())
+        {
+            if(entry.getValue().getValue() != null && (entry.getValue().getLeaf_1().getID() == leaf_ID1 || entry.getValue().getLeaf_1().getID() == leaf_ID2 || entry.getValue().getLeaf_2().getID() == leaf_ID1 || entry.getValue().getLeaf_2().getID() == leaf_ID2))
+            {
+                if(firstIteration)
+                {
+                    max = entry.getValue().getValue();
+                    firstIteration = false;
+                }
+                else if(entry.getValue().getValue() < max) max = entry.getValue().getValue();
+            }
+        }
+        firstIteration = true;
+        for(Entry<Integer,ConversionFactor> entry: this.getList().entrySet())
+        {
+            if(entry.getValue().getValue() != null && (entry.getValue().getLeaf_1().getID() == leaf_ID1 || entry.getValue().getLeaf_1().getID() == leaf_ID2 || entry.getValue().getLeaf_2().getID() == leaf_ID1 || entry.getValue().getLeaf_2().getID() == leaf_ID2))
+            {
+                if(firstIteration)
+                {
+                    min = entry.getValue().getValue();
+                    firstIteration = false;
+                }
+                else if(entry.getValue().getValue() > min) min = entry.getValue().getValue();
+            }
+        }*/
+
+        for (Entry<Integer, ConversionFactor> entry : this.getList().entrySet()) 
+        {
+            ConversionFactor conversionFactor = entry.getValue();
+            if (conversionFactor.getValue() != null && (entry.getValue().getLeaf_2().getID() == leaf_ID1 || entry.getValue().getLeaf_1().getID() == leaf_ID2)) 
+            {
+                values.add(conversionFactor.getValue());
+            }
+        }
+
+        if(values.isEmpty())
+        {
+            return new double[]{0.5,2.0}; 
+        }
+        else
+        {
+            double max = 0.5;
+            double min = 2.0;
+            for(Double v : values)
+            {
+                if( v > max)
+                {
+                    max = v;
+                }
+                if( v < min)
+                {
+                    min = v;
+                }
+            }
+            max = 2.0/max >= 2 ? 2 : 2/max;
+            min = 0.5/min <= 0.5 ? 0.5 : 0.5/min;
+            return new double[]{min,max};
+        }
+    }
+
     public boolean inRange ()
     {
         return this.list.entrySet().stream().allMatch( entry -> entry.getValue().getValue() >= 0.5 && entry.getValue().getValue() <= 2.0 );

@@ -198,6 +198,7 @@ public class ConfiguratorMenu {
     {
         ConversionFactors tmp_conversionFactors = new ConversionFactors();
         conversionFactors.populate();
+        tmp_conversionFactors.populate();
 
         if ( conversionFactors.isComplete() )
         {
@@ -207,24 +208,28 @@ public class ConfiguratorMenu {
 
         do
         {
-            tmp_conversionFactors = ( ConversionFactors ) conversionFactors.clone();
-            Util.clearConsole( Constants.TIME_SWITCH_MENU );
+            //Util.clearConsole( Constants.TIME_SWITCH_MENU );
             printService.println( "\n" );
             printService.printConversionFactors( conversionFactors ); 
             printService.print("\n" );
 
             AtomicReference<ConversionFactors> conversionFactorsRef = new AtomicReference<>( conversionFactors );
             int index = Integer.parseInt( Util.insertWithCheck( Constants.ENTER_CHOICE_PAIR, Constants.INVALID_OPTION, ( input ) -> !( !input.equals("") && Controls.isInt( input ) && ( conversionFactorsRef.get().getList().containsKey( Integer.parseInt( input ) ) && conversionFactorsRef.get().getList().get( Integer.parseInt( input ) ).getValue() == null ) ), scanner ) );
-            Double value = Double.parseDouble( Util.insertWithCheck( Constants.ENTER_VALUE_CONVERSION_FACTOR, Constants.OUT_OF_RANGE_ERROR, ( input ) -> ( input.equals("") || !Controls.isDouble( input ) || ( Double.parseDouble( input ) < 0.5 ) || ( Double.parseDouble( input ) > 2.0 ) ), scanner ) );
+            double[] range = conversionFactors.calculateRange(index);
+            String rangeToPrint = "["+range[0]+","+range[1]+"]: ";
+            Double value = Double.parseDouble( Util.insertWithCheck( Constants.ENTER_VALUE_CONVERSION_FACTOR + rangeToPrint, Constants.OUT_OF_RANGE_ERROR, ( input ) -> ( input.equals("") || !Controls.isDouble( input ) || ( Double.parseDouble( input ) < 0.5 ) || ( Double.parseDouble( input ) > 2.0  ) ), scanner ) );
 
-            tmp_conversionFactors.calculate( index, value );
+            //tmp_conversionFactors.populate();
+            tmp_conversionFactors.calculate(index, value);
+            printService.printConversionFactors( tmp_conversionFactors );
+            
 
-            if ( tmp_conversionFactors.inRange() ) conversionFactors = tmp_conversionFactors;
-            else 
+            if((value >= range[0] && value <= range[1]))
             {
-                printService.println( Constants.OUT_OF_RANGE_VALUE );
-                Util.clearConsole( Constants.TIME_ERROR_MESSAGE );
+                conversionFactors.calculate( index, value );
             }
+            tmp_conversionFactors = (ConversionFactors) conversionFactors.clone();
+
         } while ( !conversionFactors.isComplete() );
 
         Util.clearConsole( Constants.TIME_SWITCH_MENU );
