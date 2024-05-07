@@ -45,20 +45,13 @@ public class Queries {
 
     public static final String DELETE_TMP_DISTRICTS_QUERY = "DELETE FROM tmp_districts";
 
-    public static final String DROP_TMP_DISTRICTS_TABLE_QUERY = "DROP TABLE tmp_districts";
-
-    public static final String CREATE_TMP_DISTRICT_TABLE_QUERY = "CREATE TABLE tmp_districts (" +
-                                                                    "ID int NOT NULL AUTO_INCREMENT," +
-                                                                    "name varchar(50) NOT NULL," +
-                                                                    "IDConfigurator int DEFAULT NULL," +
-                                                                    "PRIMARY KEY (ID)," +
-                                                                    "KEY IDConfigurator (IDConfigurator)," +
-                                                                    "CONSTRAINT fk_tmp_districts FOREIGN KEY (IDConfigurator) REFERENCES configurators (ID)" +
-                                                                 ")";
-
     public static final String GET_MAX_ID_DISTRICT_QUERY = "SELECT MAX(id) + 1 " +
                                                            "AS max_id " +
-                                                           "FROM districts";
+                                                           "FROM ( " +
+                                                                "SELECT id FROM districts " +
+                                                                "UNION ALL " +
+                                                                "SELECT id FROM tmp_districts " +
+                                                           ") AS merged_table";
 
     public static final String SET_DISTRICT_ID_VALUE_AUTO_INCREMENT_QUERY = "ALTER TABLE districts AUTO_INCREMENT = ?";
 
@@ -88,24 +81,15 @@ public class Queries {
 
     public static final String DELETE_TMP_DISTRICT_TO_MUNICIPALITIES_QUERY = "DELETE FROM tmp_districttomunicipalities";
 
-    public static final String DROP_TMP_DISTRICT_TO_MUNICIPALITIES_TABLE_QUERY = "DROP TABLE tmp_districtToMunicipalities";
-
-    public static final String CREATE_TMP_DISTRICT_TO_MUNICIPALITIES_TABLE_QUERY = "CREATE TABLE tmp_districtToMunicipalities (" +
-                                                                                        "ID int NOT NULL AUTO_INCREMENT," +
-                                                                                        "IDDistrict int DEFAULT NULL," +
-                                                                                        "IDMunicipality int DEFAULT NULL," +
-                                                                                        "PRIMARY KEY (ID)," +
-                                                                                        "KEY IDDistrict (IDDistrict)," +
-                                                                                        "KEY IDMunicipality (IDMunicipality)," +
-                                                                                        "CONSTRAINT fk1_tmp_districttomunicipalities FOREIGN KEY (IDDistrict) REFERENCES tmp_districts (ID)," +
-                                                                                        "CONSTRAINT fk2_tmp_districttomunicipalities FOREIGN KEY (IDMunicipality) REFERENCES municipalities (ID)" +
-                                                                                   ")";
-
     // ---------------------------------------- ConfiguratorJDBCImpl ----------------------------------------
 
-    public static final String GET_CONFIGURATOR_BY_USERNAME_AND_PASSWORD_QUERY = "SELECT * " +
-                                                                                 "FROM configurators " +
-                                                                                 "WHERE username = ?";
+    public static final String GET_CONFIGURATOR_BY_USERNAME_QUERY = "SELECT * " +
+                                                                    "FROM configurators " +
+                                                                    "WHERE username = ?";
+
+    public static final String GET_CONFIGURATOR_BY_ID_QUERY = "SELECT * " +
+                                                              "FROM configurators " +
+                                                              "WHERE id = ?";
 
     public static final String CHANGE_CREDENTIALS_QUERY = "UPDATE configurators " +
                                                           "SET username = ?, password = ?, firstAccess = 0 " +
@@ -256,20 +240,14 @@ public class Queries {
                                                            "FROM tmp_categories";
 
     public static final String DELETE_TMP_CATEGORIES_QUERY = "DELETE FROM tmp_categories";
-
-    public static final String DROP_TMP_CATEGORIES_TABLE_QUERY = "DROP TABLE tmp_categories";
-
-    public static final String CREATE_TMP_CATEGORY_TABLE_QUERY = "CREATE TABLE tmp_categories ( " +
-                                                                    "ID int NOT NULL PRIMARY KEY AUTO_INCREMENT," +
-                                                                    "name VARCHAR(50) NOT NULL, field VARCHAR(25)," +
-                                                                    "description VARCHAR(100)," +
-                                                                    "root BOOLEAN NOT NULL," + 
-                                                                    "hierarchyID int NOT NULL," +
-                                                                    "IDConfigurator int NOT NULL," + 
-                                                                    "CONSTRAINT fk_tmp_categories FOREIGN KEY (IDConfigurator) REFERENCES configurators(ID)" +
-                                                                 ")"; 
     
-    public static final String GET_MAX_ID_CATEGORY_QUERY = "SELECT MAX(id) + 1 AS max_id FROM categories";
+    public static final String GET_MAX_ID_CATEGORY_QUERY = "SELECT MAX(id) + 1 " +
+                                                           "AS max_id " +
+                                                           "FROM ( " +
+                                                                "SELECT id FROM categories " +
+                                                                "UNION ALL " +
+                                                                "SELECT id FROM tmp_categories " +
+                                                           ") AS merged_table";
 
     public static final String SET_CATEGORY_ID_VALUE_AUTO_INCREMENT_QUERY = "ALTER TABLE categories AUTO_INCREMENT = ?";
 
@@ -318,17 +296,6 @@ public class Queries {
 
     public static final String DELETE_TMP_RELATIONSHIPS_BETWEEN_CATEGORIES_QUERY = "DELETE FROM tmp_relationshipsbetweencategories";
 
-    public static final String DROP_TMP_RELATIONSHIPS_BETWEEN_CATEGORIES_TABLE_QUERY = "DROP TABLE tmp_relationshipsBetweenCategories";
-
-    public static final String CREATE_TMP_RELATIONSHIPS_BETWEEN_CATEGORIES_TABLE_QUERY = "CREATE TABLE tmp_relationshipsBetweenCategories (" +
-                                                                                            "parentID int NOT NULL," +
-                                                                                            "childID int NOT NULL," +
-                                                                                            "fieldType VARCHAR(25) NOT NULL," +
-                                                                                            "PRIMARY KEY (parentID, childID)," +
-                                                                                            "CONSTRAINT fk1_tmp_relationshipsBetweenCategories FOREIGN KEY (parentID) REFERENCES tmp_categories(ID)," +
-                                                                                            "CONSTRAINT fk2_tmp_relationshipsBetweenCategories FOREIGN KEY (childID) REFERENCES tmp_categories(ID)" +
-                                                                                         ")";
-
     // ---------------------------------------- ConversioFactorsJDBCImpl ----------------------------------------
 
     public static final String GET_ALL_CONVERION_FACTORS_QUERY = "SELECT * " +
@@ -336,5 +303,20 @@ public class Queries {
 
     public static final String SAVE_CONVERSION_FACTORS_QUERY = "INSERT IGNORE INTO conversionFactors (ID_leaf_1, ID_leaf_2, value) " +
                                                                "VALUES (?, ? ,?)";
+
+    // ---------------------------------------- UserJDBCImpl ----------------------------------------
+
+    public static final String GET_USER_BY_USERNAME_QUERY = "SELECT * " +
+                                                            "FROM users " +
+                                                            "WHERE username = ?";
+
+    public static final String INSERT_USER_QUERY = "INSERT INTO users ( username, password, districtid, mail ) " +
+                                                   "VALUES ( ?, ?, ?, ? )";
+
+    // ---------------------------------------- AccessJDBCImpl ----------------------------------------
+
+    public static final String GET_PERMISSION_QUERY = "SELECT configuratorid " +
+                                                      "FROM access " +
+                                                      "WHERE permit = 0";
 
 }

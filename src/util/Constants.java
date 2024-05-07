@@ -21,10 +21,11 @@ public class Constants {
                                             "─────────────────────────────\n" + 
                                             YELLOW + BOLD + "\t  TIME BANK\n" + RESET +
                                             "─────────────────────────────\n" +
-                                            " 1.  login\n\n" +
-                                            " 2.  exit\n" +
+                                            " 1.  login\n" +
+                                            " 2.  sign in\n\n" +
+                                            " 3.  exit\n" +
                                             "─────────────────────────────\n" +
-                                            "Enter yout choice (1/2) --> ";
+                                            "Enter yout choice [1-3] --> ";
 
     public static final String LOGIN_SCREEN = "\n" +
                                               //"───────────\n" +
@@ -105,6 +106,7 @@ public class Constants {
     public static final String ENTER_VALUE_CONVERSION_FACTOR = "Enter value of conversion factor ";
     public static final String YES_MESSAGE = "y";
     public static final String NO_MESSAGE = "n";
+    public static final String ENTER_MAIL = "Enter mail: ";
 
     public static final String BYE_BYE_MESSAGE = YELLOW + "\nBye bye ...\n\n" + RESET;
     public static final String ADDED_SUCCESFULL_MESSAGE = GREEN + "\n --- Added succesfull ✓ --- \n" + RESET;
@@ -130,7 +132,8 @@ public class Constants {
     public static final String INTERNAL_CATEGORY_ALREADY_PRESENT = RED + "\n --- Category already present --- \n" + RESET;
     public static final String OUT_OF_RANGE_ERROR = RED + "\n --- Invalid or out of range !!! --- \n" + RESET;
     public static final String OUT_OF_RANGE_VALUE = RED + "\n ---  A value out of range was calculated, reinsert it --- \n" + RESET;
-    public static final String IMPOSSIBLE_SAVE_CF = RED + "\n --- " + BOLD + "ATTENTION" + BOLD + ", not all conversion factors have been set !!! " + RESET;
+    public static final String IMPOSSIBLE_SAVE_CF = RED + BOLD + "\n --- ATTENTION, not all conversion factors have been set !!! --- " + RESET;
+    public static final String ERROR_PATTERN_MAIL = RED + "\n --- " + BOLD + "ATTENTION" + RESET + RED + ", parameters not respected! --- \n" + RESET;
 
     public static final String SQL_EXCEPTION_MESSAGE = "Database error: ";
     public static final String GENERIC_EXCEPTION_MESSAGE = "Generic error:";

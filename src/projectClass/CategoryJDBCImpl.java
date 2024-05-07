@@ -150,18 +150,6 @@ public class CategoryJDBCImpl implements CategoryJDBC {
     }
 
     @Override
-    public void dropTmpCategoriesTable () throws SQLException 
-    {
-        Conn.queryUpdate( Queries.DROP_TMP_CATEGORIES_TABLE_QUERY );
-    }
-
-    @Override
-    public void createTmpTable () throws SQLException 
-    {
-        Conn.queryUpdate( Queries.CREATE_TMP_CATEGORY_TABLE_QUERY );
-    }
-
-    @Override
     public Integer getMaxID () throws SQLException 
     {
         ResultSet rs = Conn.exQuery( Queries.GET_MAX_ID_CATEGORY_QUERY );

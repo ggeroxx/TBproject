@@ -9,6 +9,7 @@ public class Controls {
     private static MunicipalityJDBC municipalityJDBC = new MunicipalityJDBCImpl();
     private static DistrictJDBC districtJDBC = new DistrictJDBCImpl();
     private static CategoryJDBC categoryJDBC = new CategoryJDBCImpl();
+    private static UserJDBC userJDBC = new UserJDBCImpl();
 
     public static boolean checkPattern ( String strToCheck, int minLength, int maxLength )
     {
@@ -32,7 +33,8 @@ public class Controls {
     public static boolean isPresentUsername ( String usernameToCheck ) throws SQLException
     {
         Configurator configurator = configuratorJDBC.getConfiguratorByUsername( usernameToCheck );
-        return configurator != null;
+        User user = userJDBC.getUserByUsername( usernameToCheck );
+        return configurator != null && user != null;
     } 
 
     public static boolean existMunicipality ( String nameToCheck ) throws SQLException
@@ -80,6 +82,26 @@ public class Controls {
             str = toCheck.substring( 0, toCheck.indexOf( '.' ) ) + toCheck.substring( toCheck.indexOf( '.' ) + 1 );
             
         return isInt( str );
+    }
+
+    public static boolean checkPatternMail ( String mailToCheck, int minLength, int maxLength )
+    {
+        char[] invalidChars = { ' ', '!', '"', '#', '$', '%', '&', '\'', '*', '+', '/', '=', '?', '^', '`', '{', '|', '}', '~' };
+
+        if ( mailToCheck.length() <= minLength || mailToCheck.length() >= maxLength ) return false;
+
+        int contAt = 0;
+        for ( char character : mailToCheck.toCharArray() )
+            if( character == '@' ) contAt++;
+
+        if ( contAt != 1 ) return false;
+        
+        String name = mailToCheck.substring( 0, mailToCheck.indexOf( '@' ) );
+        for ( char character : invalidChars )
+            if ( name.contains( Character.toString( character ) ) ) return false;
+
+        String domain = mailToCheck.substring( mailToCheck.indexOf( '@' ), mailToCheck.length() );
+        return domain.contains( Character.toString( '.' ) );
     }
 
 }

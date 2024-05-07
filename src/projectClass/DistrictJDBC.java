@@ -21,10 +21,6 @@ public interface DistrictJDBC {
 
     void deleteTmpDistricts () throws SQLException;
 
-    void dropTmpDistrictsTable () throws SQLException;
-
-    void createTmpTable () throws SQLException;
-
     Integer getMaxID () throws SQLException;
 
     void setIDValueAutoIncrement ( int newValue ) throws SQLException;

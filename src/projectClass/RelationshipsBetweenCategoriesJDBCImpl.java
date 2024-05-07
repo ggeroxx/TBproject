@@ -49,16 +49,4 @@ public class RelationshipsBetweenCategoriesJDBCImpl implements RelationshipsBetw
         Conn.queryUpdate( Queries.DELETE_TMP_RELATIONSHIPS_BETWEEN_CATEGORIES_QUERY );
     }
 
-    @Override
-    public void dropTmpRelationshipsBetweenCategoriesTable () throws SQLException 
-    {
-        Conn.queryUpdate( Queries.DROP_TMP_RELATIONSHIPS_BETWEEN_CATEGORIES_TABLE_QUERY );
-    }
-
-    @Override
-    public void createTmpTable () throws SQLException 
-    {
-        Conn.queryUpdate( Queries.CREATE_TMP_RELATIONSHIPS_BETWEEN_CATEGORIES_TABLE_QUERY );
-    }
-
 }

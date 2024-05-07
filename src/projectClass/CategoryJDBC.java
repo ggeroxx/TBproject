@@ -43,10 +43,6 @@ public interface CategoryJDBC {
 
     void deleteTmpCategories () throws SQLException;
 
-    void dropTmpCategoriesTable () throws SQLException;
-
-    void createTmpTable () throws SQLException;
-
     Integer getMaxID () throws SQLException;
 
     void setIDValueAutoIncrement ( int newValue ) throws SQLException;

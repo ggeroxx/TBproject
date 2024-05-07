@@ -25,6 +25,11 @@ public class Configurator {
         this.categoryJDBC = new CategoryJDBCImpl();
     }
 
+    public String getUsername() 
+    {
+        return this.username;
+    }
+
     public boolean getFirstAccess()
     {
         return this.firstAccess;

@@ -40,16 +40,4 @@ public class DistrictToMunicipalitiesJDBCImpl implements DistrictToMunicipalitie
         Conn.queryUpdate( Queries.DELETE_TMP_DISTRICT_TO_MUNICIPALITIES_QUERY );
     }
 
-    @Override
-    public void dropTmpDistrictToMunicipalitiesTable () throws SQLException 
-    {
-        Conn.queryUpdate( Queries.DROP_TMP_DISTRICT_TO_MUNICIPALITIES_TABLE_QUERY );
-    }
-
-    @Override
-    public void createTmpTable () throws SQLException
-    {
-        Conn.queryUpdate( Queries.CREATE_TMP_DISTRICT_TO_MUNICIPALITIES_TABLE_QUERY );
-    }
-
 }
