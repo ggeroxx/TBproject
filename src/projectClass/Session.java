@@ -2,7 +2,6 @@ package projectClass;
 
 import java.sql.*;
 import org.mindrot.jbcrypt.BCrypt;
-import util.*;
 
 public class Session {
     
@@ -15,11 +14,15 @@ public class Session {
     private CategoryJDBC categoryJDBC = new CategoryJDBCImpl();
     private RelationshipsBetweenCategoriesJDBC relationshipsBetweenCategoriesJDBC = new RelationshipsBetweenCategoriesJDBCImpl();
     private AccessJDBC accessJDBC = new AccessJDBDImpl();
-    private PrintService printService = new PrintService();
 
     public Boolean getStatus() 
     {
-        return status;
+        return this.status;
+    }
+
+    public Character getSubject() 
+    {
+        return this.subject;
     }
 
     public void login ( String usernameToCheck, String passwordToCheck ) throws SQLException
@@ -47,7 +50,6 @@ public class Session {
                 {
                     if ( accessJDBC.getPermission() != null )
                     {
-                        printService.print( "accesso negato: " + accessJDBC.getPermission().getUsername() );
                         this.status = false;
                         return;
                     }
@@ -62,6 +64,8 @@ public class Session {
                         max_id = categoryJDBC.getMaxID();
                         if( max_id == null ) categoryJDBC.setIDValueAutoIncrement( 1 );
                         categoryJDBC.setTmpIDValueAutoIncrement( max_id );
+
+                        accessJDBC.denyPermission( conf );
                     }
                 }
             }
@@ -81,10 +85,15 @@ public class Session {
     {
         this.status = false;
 
-        districtToMunicipalitiesJDBC.deleteTmpDistrictToMunicipalities();
-        districtJDBC.deleteTmpDistricts();
-        relationshipsBetweenCategoriesJDBC.deleteTmpRelationshipsBetweenCategories();
-        categoryJDBC.deleteTmpCategories();
+        if ( this.subject == 'c' )
+        {
+            districtToMunicipalitiesJDBC.deleteTmpDistrictToMunicipalities();
+            districtJDBC.deleteTmpDistricts();
+            relationshipsBetweenCategoriesJDBC.deleteTmpRelationshipsBetweenCategories();
+            categoryJDBC.deleteTmpCategories();
+
+            accessJDBC.allowPermission();
+        }
     }
 
 }

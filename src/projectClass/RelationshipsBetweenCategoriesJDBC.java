@@ -17,4 +17,6 @@ public interface RelationshipsBetweenCategoriesJDBC {
 
     void deleteTmpRelationshipsBetweenCategories () throws SQLException;
     
+    Category getChildCategoryByFieldAndParentID ( String field, Category parent ) throws SQLException;
+
 }

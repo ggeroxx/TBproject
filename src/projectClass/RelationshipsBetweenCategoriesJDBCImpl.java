@@ -6,6 +6,8 @@ import util.*;
 
 public class RelationshipsBetweenCategoriesJDBCImpl implements RelationshipsBetweenCategoriesJDBC {
 
+    private static CategoryJDBC categoryJDBC = new CategoryJDBCImpl();
+
     @Override
     public void createRelationship ( int parentID, int childID, String fieldType ) throws SQLException
     {
@@ -47,6 +49,13 @@ public class RelationshipsBetweenCategoriesJDBCImpl implements RelationshipsBetw
     public void deleteTmpRelationshipsBetweenCategories () throws SQLException 
     {
         Conn.queryUpdate( Queries.DELETE_TMP_RELATIONSHIPS_BETWEEN_CATEGORIES_QUERY );
+    }
+
+    @Override
+    public Category getChildCategoryByFieldAndParentID ( String field, Category parent ) throws SQLException 
+    {
+        ResultSet rs = Conn.exQuery( Queries.GET_CHILD_CATEGORY_BY_FIELD_QUERY, new ArrayList<>( Arrays.asList( field, parent.getID(), field, parent.getID() ) ) );
+        return rs.next() ? categoryJDBC.getCategoryByID( rs.getInt( 1 ) ) : null;
     }
 
 }

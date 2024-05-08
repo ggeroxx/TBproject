@@ -104,20 +104,18 @@ public class PrintService {
         return toReturn.toString();
     } 
 
-    public void printInfoCategory( int IDCategoryToPrint ) throws SQLException
+    public void printInfoCategory( Category toPrint ) throws SQLException
     {
         StringBuffer toReturn = new StringBuffer();    
-
-        Category toPrint = categoryJDBC.getCategoryByID( IDCategoryToPrint );
 
         toReturn.append( "name:" + Util.padRight( "name:", 20 ) + Constants.BOLD + toPrint.getName() + Constants.RESET + "\n" );
         toReturn.append( "description:" + Util.padRight( "description:", 20 ) + toPrint.getDescription() + "\n" );
 
-        if ( toPrint.getField() == null ) toReturn.append( "value of domain:" + Util.padRight( "value of domain:", 20 ) + relationshipsBetweenCategoriesJDBC.getFieldValueFromChildID( IDCategoryToPrint ) + "\n" );
+        if ( toPrint.getField() == null ) toReturn.append( "value of domain:" + Util.padRight( "value of domain:", 20 ) + relationshipsBetweenCategoriesJDBC.getFieldValueFromChildID( toPrint.getID() ) + "\n" );
         else 
         {
             toReturn.append( "field:" + Util.padRight( "field:", 20 ) + toPrint.getField() + " = { " );
-            for ( String fieldValue : relationshipsBetweenCategoriesJDBC.getFieldValuesFromParentID( IDCategoryToPrint ) ) toReturn.append( fieldValue + ", " );
+            for ( String fieldValue : relationshipsBetweenCategoriesJDBC.getFieldValuesFromParentID( toPrint.getID() ) ) toReturn.append( fieldValue + ", " );
             toReturn.deleteCharAt( toReturn.length() - 2 );
             toReturn.append( "}\n" );
         }

@@ -296,6 +296,14 @@ public class Queries {
 
     public static final String DELETE_TMP_RELATIONSHIPS_BETWEEN_CATEGORIES_QUERY = "DELETE FROM tmp_relationshipsbetweencategories";
 
+    public static final String GET_CHILD_CATEGORY_BY_FIELD_QUERY = "SELECT childid " +
+                                                                   "FROM relationshipsbetweencategories " +
+                                                                   "WHERE fieldtype = ? AND parentid = ? " +
+                                                                   "UNION " +
+                                                                   "SELECT childid " +
+                                                                   "FROM tmp_relationshipsbetweencategories " +
+                                                                   "WHERE fieldtype = ? AND parentid = ?";
+
     // ---------------------------------------- ConversioFactorsJDBCImpl ----------------------------------------
 
     public static final String GET_ALL_CONVERION_FACTORS_QUERY = "SELECT * " +
@@ -318,5 +326,13 @@ public class Queries {
     public static final String GET_PERMISSION_QUERY = "SELECT configuratorid " +
                                                       "FROM access " +
                                                       "WHERE permit = 0";
+
+    public static final String DENY_PERMISSION_QUERY = "UPDATE access " +
+                                                       "SET permit = 0, configuratorid = ? " +
+                                                       "WHERE id = 1";
+
+    public static final String ALLOW_PERMISSION_QUERY = "UPDATE access " +
+                                                        "SET permit = 1 " +
+                                                        "WHERE id = 1";
 
 }

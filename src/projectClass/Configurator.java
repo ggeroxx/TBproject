@@ -25,6 +25,11 @@ public class Configurator {
         this.categoryJDBC = new CategoryJDBCImpl();
     }
 
+    public int getID() 
+    {
+        return this.ID;
+    }
+
     public String getUsername() 
     {
         return this.username;

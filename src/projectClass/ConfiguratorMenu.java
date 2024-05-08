@@ -11,8 +11,9 @@ public class ConfiguratorMenu {
     private static DistrictJDBC districtJDBC = new DistrictJDBCImpl();
     private static CategoryJDBC categoryJDBC = new CategoryJDBCImpl();
     private static ConversionFactors conversionFactors = new ConversionFactors();
+    private static Scanner scanner = new Scanner( System.in );
 
-    public static void menu ( Scanner scanner, Configurator conf, Session session ) throws SQLException, Exception
+    public static void menu ( Configurator conf, Session session ) throws SQLException, Exception
     {
         String choice;
         conversionFactors.populate();
@@ -25,15 +26,15 @@ public class ConfiguratorMenu {
             switch ( choice )
             {
                 case "1":
-                        caseOne( scanner, conf );
+                        caseOne( conf );
                     break;
 
                 case "2":
-                        caseTwo( scanner, conf );
+                        caseTwo( conf );
                     break;
 
                 case "3":
-                        caseThree( scanner );
+                        caseThree();
                     break;
 
                 case "4":
@@ -41,19 +42,19 @@ public class ConfiguratorMenu {
                     break;
 
                 case "5":
-                        caseFive( scanner );
+                        caseFive();
                     break;
 
                 case "6":
-                        caseSix( scanner );
+                        caseSix();
                     break;
 
                 case "7":
-                        caseSeven( scanner );
+                        caseSeven();
                     break;
 
                 case "8":
-                        caseEight( scanner );
+                        caseEight();
                     break;
 
                 case "9":
@@ -71,7 +72,7 @@ public class ConfiguratorMenu {
         } while ( !choice.equals( "9" ) );
     }
 
-    public static void caseOne ( Scanner scanner, Configurator conf ) throws SQLException, Exception
+    public static void caseOne ( Configurator conf ) throws SQLException, Exception
     {
         Util.clearConsole( Constants.TIME_SWITCH_MENU );
         String districName = Util.insertWithCheck( Constants.ENTER_DISTRICT_NAME, Constants.ERROR_PATTERN_NAME, ( input ) -> Controls.checkPattern( input, 0, 50 ), scanner );
@@ -113,7 +114,7 @@ public class ConfiguratorMenu {
         Util.clearConsole( Constants.TIME_MESSAGE );
     }
 
-    public static void caseTwo ( Scanner scanner, Configurator conf ) throws SQLException, Exception
+    public static void caseTwo ( Configurator conf ) throws SQLException, Exception
     {
         Util.clearConsole( Constants.TIME_SWITCH_MENU );
         printService.print( Constants.HIERARCHY_SCREEN );
@@ -193,13 +194,13 @@ public class ConfiguratorMenu {
         Util.clearConsole( Constants.TIME_MESSAGE );
     }
 
-    public static void caseThree ( Scanner scanner ) throws SQLException, Exception
+    public static void caseThree () throws SQLException, Exception
     {
         conversionFactors.populate();
 
         if ( conversionFactors.isComplete() )
         {
-            caseSeven( scanner );
+            caseSeven();
             return;
         }
 
@@ -240,7 +241,7 @@ public class ConfiguratorMenu {
         Util.clearConsole( Constants.TIME_MESSAGE );
     }
 
-    public static void caseFive ( Scanner scanner ) throws SQLException, Exception
+    public static void caseFive () throws SQLException, Exception
     {
         Util.clearConsole( Constants.TIME_SWITCH_MENU );
         printService.print( Constants.DISTRICT_LIST );
@@ -274,12 +275,11 @@ public class ConfiguratorMenu {
         return;
     }
 
-    public static void caseSix ( Scanner scanner ) throws SQLException, Exception
+    public static void caseSix () throws SQLException, Exception
     {
         Util.clearConsole( Constants.TIME_SWITCH_MENU );
         printService.print( Constants.HIERARCHY_LIST );
 
-        
         if ( categoryJDBC.getAllRoot().isEmpty() )
         {
             printService.println( Constants.NOT_EXIST_MESSAGE + "\n" );
@@ -313,7 +313,7 @@ public class ConfiguratorMenu {
         }
 
         printService.println( "\n" );
-        printService.printInfoCategory( Integer.parseInt( categoryID ) );
+        printService.printInfoCategory( categoryJDBC.getCategoryByID( Integer.parseInt( categoryID ) ) );
 
         printService.print( "\n" + Constants.ENTER_TO_EXIT );
         scanner.nextLine();
@@ -321,7 +321,7 @@ public class ConfiguratorMenu {
         return;
     }
 
-    public static void caseSeven ( Scanner scanner ) throws Exception
+    public static void caseSeven () throws Exception
     {
         conversionFactors.populate();
         Util.clearConsole( Constants.TIME_SWITCH_MENU );
@@ -336,7 +336,7 @@ public class ConfiguratorMenu {
         return;
     }
 
-    public static void caseEight ( Scanner scanner ) throws Exception
+    public static void caseEight () throws Exception
     {
         Util.clearConsole( Constants.TIME_SWITCH_MENU );
         printService.print( Constants.LEAF_CATEGORY_LIST );

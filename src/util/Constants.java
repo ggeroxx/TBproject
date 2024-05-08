@@ -14,6 +14,7 @@ public class Constants {
     public static final String PURPLE = "\u001B[38;2;143;0;255m";
 
     public static final String BOLD = "\u001B[1m";
+    public static final String ITALIC = "\033[1m\033[3m";
     public static final String UNDERLINE = "\u001B[4m";
     public static final String RESET = "\u001B[0m";
     
@@ -57,6 +58,15 @@ public class Constants {
                                                    "───────────────────────────────────────────\n" +
                                                    "Enter your choice [1-9] --> ";
 
+    public static final String USER_MENU = "\n" +
+                                           "───────────────────────────────────────────\n" +
+                                           BLUE + BOLD + "\t\t  OPTIONS\n" + RESET +
+                                           "───────────────────────────────────────────\n" +
+                                           " 1.  navigate hierarchies\n\n" +
+                                           " 9.  logout\n" +
+                                           "───────────────────────────────────────────\n" +
+                                           "Enter your choice [1-9] --> ";
+
     public static final String DISTRICT_LIST = "\n" +
                                                //"───────────────\n" + 
                                                "\n" +
@@ -68,6 +78,13 @@ public class Constants {
                                                 //"───────────────\n" + 
                                                 "\n" +
                                                 PURPLE + BOLD + "HIERARCHY LIST\n" + RESET +
+                                                //"───────────────\n";
+                                                "\n";
+
+    public static final String CATEGORY_INFO = "\n" +
+                                                //"───────────────\n" + 
+                                                "\n" +
+                                                PURPLE + BOLD + "CATEGORY INFO\n" + RESET +
                                                 //"───────────────\n";
                                                 "\n";
 
@@ -94,6 +111,7 @@ public class Constants {
     public static final String END_ADD_MESSAGE = "end: (y/n) --> ";
     public static final String ENTER_TO_EXIT = "Press enter to exit ↵  ";
     public static final String ENTER_DISTRICT_TO_VIEW = "Enter district ID --> ";
+    public static final String ENTER_DISTRICT_OR_EXIT = "Enter district ID (enter 'e' to exit) --> ";
     public static final String ENTER_HIERARCHY_ID = "Enter hierarchy ID --> ";
     public static final String ENTER_CATEGORY_ID = "Enter category ID --> ";
     public static final String ENTER_CATEGORY_NAME = "enter category name: ";
@@ -134,6 +152,7 @@ public class Constants {
     public static final String OUT_OF_RANGE_VALUE = RED + "\n ---  A value out of range was calculated, reinsert it --- \n" + RESET;
     public static final String IMPOSSIBLE_SAVE_CF = RED + BOLD + "\n --- ATTENTION, not all conversion factors have been set !!! --- " + RESET;
     public static final String ERROR_PATTERN_MAIL = RED + "\n --- " + BOLD + "ATTENTION" + RESET + RED + ", parameters not respected! --- \n" + RESET;
+    public static final String DENIED_ACCESS = RED + BOLD + "\n --- DENIED ACCESS, %s is working... --- \n" + RESET;
 
     public static final String SQL_EXCEPTION_MESSAGE = "Database error: ";
     public static final String GENERIC_EXCEPTION_MESSAGE = "Generic error:";
