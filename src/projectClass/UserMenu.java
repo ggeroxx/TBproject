@@ -67,15 +67,34 @@ public class UserMenu {
         printService.print( Constants.CATEGORY_INFO );
         printService.printInfoCategory( categoryJDBC.getCategoryByID( Integer.parseInt( hierarchyID ) ) );
 
-        Category toNavigate = categoryJDBC.getCategoryByID( Integer.parseInt( hierarchyID ) );
+        ArrayList<Category> history = new ArrayList<Category>();
+        history.add( categoryJDBC.getCategoryByID( Integer.parseInt( hierarchyID ) ) );
         do
         {
-            String domainValue = Util.insertWithCheck( "Enter value of field --> ", Constants.NOT_EXIST_MESSAGE, ( input ) -> input.isEmpty(), scanner );
+            String domainValue = Util.insertWithCheck( Constants.ENTER_VALUE_OF_FIELD_MESSAGE, Constants.NOT_EXIST_FIELD_MESSAGE, ( input ) -> input.isEmpty() );
             Util.clearConsole( Constants.TIME_SWITCH_MENU );
             printService.print( Constants.CATEGORY_INFO );
-            toNavigate = relationshipsBetweenCategoriesJDBC.getChildCategoryByFieldAndParentID( domainValue, toNavigate );
-            printService.printInfoCategory( toNavigate );
-        } while ( !toNavigate.isLeaf() );
+            if ( domainValue.equals( "<" ) )
+            {
+                history.remove( history.size() - 1 );
+                if ( history.isEmpty() )
+                {
+                    caseOne();
+                    return; 
+                } 
+            }
+            else
+            {
+                if ( !Controls.existValueOfField( domainValue, history.get( history.size() - 1 ) ) )
+                {
+                    printService.printInfoCategory( history.get( history.size() - 1 ) );
+                    printService.println( Constants.NOT_EXIST_FIELD_MESSAGE );
+                    continue;
+                }
+                history.add( relationshipsBetweenCategoriesJDBC.getChildCategoryByFieldAndParentID( domainValue, history.get( history.size() - 1 ) ) );
+            }
+            printService.printInfoCategory( history.get( history.size() - 1 ) );
+        } while ( !history.get( history.size() - 1 ).isLeaf() );
 
         printService.print( Constants.ENTER_TO_EXIT );
         scanner.nextLine();

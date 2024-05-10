@@ -1,14 +1,12 @@
 import java.util.*;
-
 import org.mindrot.jbcrypt.BCrypt;
-
 import projectClass.*;
 import util.*;
 import java.io.Console;
 import java.sql.*;
 
-public class Main 
-{
+public class Main {
+
     private static PrintService printService = new PrintService();
     private static ConfiguratorJDBC configuratorJDBC = new ConfiguratorJDBCImpl();
     private static DistrictJDBC districtJDBC = new DistrictJDBCImpl();
@@ -90,7 +88,7 @@ public class Main
         String password = new String( passwordChars );
 
         session.login( username, password );
-        if ( !session.getStatus() && session.getSubject() == null ) 
+        if ( !session.getStatus() && session.getSubject() == null )
         {   
             printService.println( Constants.LOGIN_ERROR );
             Util.clearConsole( Constants.TIME_ERROR_MESSAGE );
@@ -159,7 +157,7 @@ public class Main
 
         String newPassword = enterNewPassword();
 
-        String mail = Util.insertWithCheck( Constants.ENTER_MAIL, Constants.ERROR_PATTERN_MAIL, ( input ) -> !Controls.checkPatternMail( input, 4, 51 ), scanner );
+        String mail = Util.insertWithCheck( Constants.ENTER_MAIL, Constants.ERROR_PATTERN_MAIL, ( input ) -> !Controls.checkPatternMail( input, 4, 51 ) );
 
         userJDBC.insertUser( new User( null, newUsername, BCrypt.hashpw( newPassword, BCrypt.gensalt() ), Integer.parseInt( districtID ), mail ) );
 

@@ -125,6 +125,7 @@ public class Constants {
     public static final String YES_MESSAGE = "y";
     public static final String NO_MESSAGE = "n";
     public static final String ENTER_MAIL = "Enter mail: ";
+    public static final String ENTER_VALUE_OF_FIELD_MESSAGE = "Enter " + YELLOW + "value of field" + RESET + " ('<' to go back) --> ";
 
     public static final String BYE_BYE_MESSAGE = YELLOW + "\nBye bye ...\n\n" + RESET;
     public static final String ADDED_SUCCESFULL_MESSAGE = GREEN + "\n --- Added succesfull ✓ --- \n" + RESET;
@@ -146,6 +147,8 @@ public class Constants {
     public static final String DISTRICT_NAME_ALREADY_PRESENT = RED + "\n --- District name already present --- \n" + RESET;
     public static final String MUNICIPALITY_NAME_ALREADY_PRESENT = RED + "\n --- Municipality already present ---" + RESET;
     public static final String NOT_EXIST_MESSAGE = RED + "\n --- NOT exist ! --- " + RESET;
+    public static final String NOT_EXIST_FIELD_MESSAGE = RED + BOLD + " --- NOT exist field ! --- \n" + RESET;
+    public static final String VALUE_ALREADY_PRESENT_MESSAGE = RED + "\n --- value already present ! --- \n" + RESET;
     public static final String ROOT_CATEGORY_ALREADY_PRESENT = RED + "\n --- Root category already present --- \n" + RESET;
     public static final String INTERNAL_CATEGORY_ALREADY_PRESENT = RED + "\n --- Category already present --- \n" + RESET;
     public static final String OUT_OF_RANGE_ERROR = RED + "\n --- Invalid or out of range !!! --- \n" + RESET;
@@ -153,6 +156,7 @@ public class Constants {
     public static final String IMPOSSIBLE_SAVE_CF = RED + BOLD + "\n --- ATTENTION, not all conversion factors have been set !!! --- " + RESET;
     public static final String ERROR_PATTERN_MAIL = RED + "\n --- " + BOLD + "ATTENTION" + RESET + RED + ", parameters not respected! --- \n" + RESET;
     public static final String DENIED_ACCESS = RED + BOLD + "\n --- DENIED ACCESS, %s is working... --- \n" + RESET;
+    public static final String IMPOSSIBLE_TO_GO_BACK = RED + BOLD + " --- Impossible to go back --- \n" + RESET;
 
     public static final String SQL_EXCEPTION_MESSAGE = "Database error: ";
     public static final String GENERIC_EXCEPTION_MESSAGE = "Generic error:";

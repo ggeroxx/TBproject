@@ -75,7 +75,7 @@ public class ConfiguratorMenu {
     public static void caseOne ( Configurator conf ) throws SQLException, Exception
     {
         Util.clearConsole( Constants.TIME_SWITCH_MENU );
-        String districName = Util.insertWithCheck( Constants.ENTER_DISTRICT_NAME, Constants.ERROR_PATTERN_NAME, ( input ) -> Controls.checkPattern( input, 0, 50 ), scanner );
+        String districName = Util.insertWithCheck( Constants.ENTER_DISTRICT_NAME, Constants.ERROR_PATTERN_NAME, ( input ) -> Controls.checkPattern( input, 0, 50 ) );
         
         if ( Controls.isPresentDistrict( districName ) )
         {
@@ -106,7 +106,7 @@ public class ConfiguratorMenu {
             newDistrict.addMunicipality( municipalityToAdd );
             printService.println( Constants.ADDED_SUCCESFULL_MESSAGE );
 
-            continueInsert = Util.insertWithCheck( Constants.END_ADD_MESSAGE, Constants.INVALID_OPTION, ( input ) -> !input.equals(Constants.NO_MESSAGE) && !input.equals(Constants.YES_MESSAGE), scanner );
+            continueInsert = Util.insertWithCheck( Constants.END_ADD_MESSAGE, Constants.INVALID_OPTION, ( input ) -> !input.equals(Constants.NO_MESSAGE) && !input.equals(Constants.YES_MESSAGE) );
             
         } while ( !continueInsert.equals(Constants.YES_MESSAGE) );
 
@@ -133,7 +133,7 @@ public class ConfiguratorMenu {
                 printService.println( Constants.LINE );
             } 
 
-            String categoryName = Util.insertWithCheck( Constants.ENTER_CATEGORY_NAME, Constants.ERROR_PATTERN_NAME, ( input ) -> Controls.checkPattern( input, 0, 50 ), scanner );
+            String categoryName = Util.insertWithCheck( Constants.ENTER_CATEGORY_NAME, Constants.ERROR_PATTERN_NAME, ( input ) -> Controls.checkPattern( input, 0, 50 ) );
 
             if ( !notFirstIteration && Controls.isPresentRootCategory( categoryName ) )
             {
@@ -149,13 +149,12 @@ public class ConfiguratorMenu {
             }
 
             String leafCategory = Constants.NO_MESSAGE;
-            if ( notFirstIteration ) leafCategory = Util.insertWithCheck( Constants.LEAF_CATEGORY_MESSAGE, Constants.INVALID_OPTION, ( input ) -> !input.equals(Constants.NO_MESSAGE) && !input.equals(Constants.YES_MESSAGE), scanner );
+            if ( notFirstIteration ) leafCategory = Util.insertWithCheck( Constants.LEAF_CATEGORY_MESSAGE, Constants.INVALID_OPTION, ( input ) -> !input.equals(Constants.NO_MESSAGE) && !input.equals(Constants.YES_MESSAGE) );
 
             String field = null;
             String description = null;
-            if ( leafCategory.equals( Constants.NO_MESSAGE ) )
-                field = Util.insertWithCheck( Constants.ENTER_FIELD, Constants.ERROR_PATTERN_FIELD , ( input ) -> Controls.checkPattern( input, 0, 25 ), scanner );
-            if ( notFirstIteration ) description = Util.insertWithCheck( Constants.ENTER_DESCRIPTION, Constants.ERROR_PATTERN_DESCRIPTION, ( input ) -> Controls.checkPattern( input, -1, 100 ), scanner );
+            if ( leafCategory.equals( Constants.NO_MESSAGE ) ) field = Util.insertWithCheck( Constants.ENTER_FIELD, Constants.ERROR_PATTERN_FIELD , ( input ) -> Controls.checkPattern( input, 0, 25 ) );
+            if ( notFirstIteration ) description = Util.insertWithCheck( Constants.ENTER_DESCRIPTION, Constants.ERROR_PATTERN_DESCRIPTION, ( input ) -> input.length() <= -1 || input.length() >= 100 );
             Category newCategory = isRoot ? ( conf.createCategory( categoryName, field, description, isRoot, null ) ) : ( conf.createCategory( categoryName, field, description, isRoot, root.getHierarchyID() ) );
 
             notFirstIteration = true;
@@ -177,13 +176,20 @@ public class ConfiguratorMenu {
                 if ( parentID.isEmpty() || !Controls.isInt( parentID ) || !root.isValidParentID( Integer.parseInt( parentID ) ) ) printService.println( Constants.NOT_EXIST_MESSAGE + "\n" );
             } while ( parentID.isEmpty() || !Controls.isInt( parentID ) || !root.isValidParentID( Integer.parseInt( parentID ) ) );
             
-            String fieldType = Util.insertWithCheck( Constants.ENTER_FIELD_TYPE, Constants.ERROR_PATTERN_FIELD, ( input ) -> Controls.checkPattern( input, 0, 25 ), scanner );
+            String fieldType = null;
+            do
+            {
+                printService.print( Constants.ENTER_FIELD_TYPE );
+                fieldType = scanner.nextLine();
+                if ( Controls.checkPattern( fieldType, 0, 25 ) ) printService.print( Constants.ERROR_PATTERN_FIELD );
+                if ( Controls.existValueOfField( fieldType, categoryJDBC.getCategoryByID( Integer.parseInt( parentID ) ) ) ) printService.print( Constants.VALUE_ALREADY_PRESENT_MESSAGE );
+            } while ( Controls.checkPattern( fieldType, 0, 25 ) || Controls.existValueOfField( fieldType, categoryJDBC.getCategoryByID( Integer.parseInt( parentID ) ) ) );
 
             newCategory.createRelationship( Integer.parseInt( parentID ), fieldType );
 
             if ( leafCategory.equals( Constants.NO_MESSAGE ) || categoryJDBC.getCategoriesWithoutChild().size() > 0 ) continue;
 
-            insertContinue = Util.insertWithCheck( "\n" + Constants.END_ADD_MESSAGE, Constants.INVALID_OPTION, ( input ) -> !input.equals(Constants.NO_MESSAGE) && !input.equals(Constants.YES_MESSAGE), scanner );
+            insertContinue = Util.insertWithCheck( "\n" + Constants.END_ADD_MESSAGE, Constants.INVALID_OPTION, ( input ) -> !input.equals(Constants.NO_MESSAGE) && !input.equals(Constants.YES_MESSAGE) );
 
         } while( insertContinue.equals( Constants.NO_MESSAGE ) );
 
@@ -211,10 +217,10 @@ public class ConfiguratorMenu {
             printService.printConversionFactors( conversionFactors ); 
             printService.print("\n" );
 
-            int index = Integer.parseInt( Util.insertWithCheck( Constants.ENTER_CHOICE_PAIR, Constants.INVALID_OPTION, ( input ) -> !( !input.equals("") && Controls.isInt( input ) && ( conversionFactors.getList().containsKey( Integer.parseInt( input ) ) && conversionFactors.getList().get( Integer.parseInt( input ) ).getValue() == null ) ), scanner ) );
+            int index = Integer.parseInt( Util.insertWithCheck( Constants.ENTER_CHOICE_PAIR, Constants.INVALID_OPTION, ( input ) -> !( !input.equals("") && Controls.isInt( input ) && ( conversionFactors.getList().containsKey( Integer.parseInt( input ) ) && conversionFactors.getList().get( Integer.parseInt( input ) ).getValue() == null ) ) ) );
             double[] range = conversionFactors.calculateRange( index );
             String rangeToPrint = "[ "+range[0]+", "+range[1]+" ]: ";
-            Double value = Double.parseDouble( Util.insertWithCheck( Constants.ENTER_VALUE_CONVERSION_FACTOR + rangeToPrint, Constants.OUT_OF_RANGE_ERROR, ( input ) -> ( input.equals("") || !Controls.isDouble( input ) || ( Double.parseDouble( input ) < range[0] ) || ( Double.parseDouble( input ) > range[1] ) ), scanner ) );
+            Double value = Double.parseDouble( Util.insertWithCheck( Constants.ENTER_VALUE_CONVERSION_FACTOR + rangeToPrint, Constants.OUT_OF_RANGE_ERROR, ( input ) -> ( input.equals("") || !Controls.isDouble( input ) || ( Double.parseDouble( input ) < range[0] ) || ( Double.parseDouble( input ) > range[1] ) ) ) );
 
             conversionFactors.calculate( index, value );
         } while ( !conversionFactors.isComplete() );

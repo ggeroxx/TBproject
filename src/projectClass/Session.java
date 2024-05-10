@@ -37,55 +37,55 @@ public class Session {
             this.status = false;
             return;
         }
-        else
+        else if ( subject == 'c' )
         {
-            if ( subject == 'c' )
+            if ( !BCrypt.checkpw( passwordToCheck, conf.getPassword() ) )
             {
-                if ( !BCrypt.checkpw( passwordToCheck, conf.getPassword() ) )
+                this.status = false;
+                this.subject = null;
+                return;
+            }
+            else
+            {
+                if ( accessJDBC.getPermission() != null )
                 {
                     this.status = false;
                     return;
                 }
                 else
                 {
-                    if ( accessJDBC.getPermission() != null )
-                    {
-                        this.status = false;
-                        return;
-                    }
-                    else
-                    {
-                        Integer max_id;
+                    this.status = true;
+                    Integer max_id;
 
-                        max_id = districtJDBC.getMaxID();
-                        if( max_id == null ) districtJDBC.setIDValueAutoIncrement( 1 );
-                        districtJDBC.setTmpIDValueAutoIncrement( max_id );
+                    max_id = districtJDBC.getMaxID();
+                    if( max_id == null ) districtJDBC.setIDValueAutoIncrement( 1 );
+                    districtJDBC.setTmpIDValueAutoIncrement( max_id );
 
-                        max_id = categoryJDBC.getMaxID();
-                        if( max_id == null ) categoryJDBC.setIDValueAutoIncrement( 1 );
-                        categoryJDBC.setTmpIDValueAutoIncrement( max_id );
+                    max_id = categoryJDBC.getMaxID();
+                    if( max_id == null ) categoryJDBC.setIDValueAutoIncrement( 1 );
+                    categoryJDBC.setTmpIDValueAutoIncrement( max_id );
 
-                        accessJDBC.denyPermission( conf );
-                    }
-                }
-            }
-            else
-            {
-                if ( !BCrypt.checkpw( passwordToCheck, user.getPassword() ) )
-                {
-                    this.status = false;
-                    return;
+                    accessJDBC.denyPermission( conf );
                 }
             }
         }
-        this.status = true;
+        else if ( subject == 'u' )
+        {
+            if ( !BCrypt.checkpw( passwordToCheck, user.getPassword() ) )
+            {
+                this.status = false;
+                this.subject = null;
+                return;
+            }
+            else this.status = true;
+        }
     }
 
     public void logout () throws SQLException
     {
         this.status = false;
 
-        if ( this.subject == 'c' )
+        if ( this.subject != null && this.subject == 'c' )
         {
             districtToMunicipalitiesJDBC.deleteTmpDistrictToMunicipalities();
             districtJDBC.deleteTmpDistricts();
@@ -94,6 +94,8 @@ public class Session {
 
             accessJDBC.allowPermission();
         }
+
+        this.subject = null;
     }
 
 }

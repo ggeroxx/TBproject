@@ -10,6 +10,7 @@ public class Controls {
     private static DistrictJDBC districtJDBC = new DistrictJDBCImpl();
     private static CategoryJDBC categoryJDBC = new CategoryJDBCImpl();
     private static UserJDBC userJDBC = new UserJDBCImpl();
+    private static RelationshipsBetweenCategoriesJDBC relationshipsBetweenCategoriesJDBC = new RelationshipsBetweenCategoriesJDBCImpl();
 
     public static boolean checkPattern ( String strToCheck, int minLength, int maxLength )
     {
@@ -112,6 +113,11 @@ public class Controls {
 
         String domain = mailToCheck.substring( mailToCheck.indexOf( '@' ), mailToCheck.length() );
         return domain.contains( Character.toString( '.' ) );
+    }
+
+    public static boolean existValueOfField ( String field, Category parent ) throws SQLException
+    {
+        return relationshipsBetweenCategoriesJDBC.getChildCategoryByFieldAndParentID( field, parent ) != null;
     }
 
 }
