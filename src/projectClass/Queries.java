@@ -307,10 +307,14 @@ public class Queries {
     // ---------------------------------------- ConversioFactorsJDBCImpl ----------------------------------------
 
     public static final String GET_ALL_CONVERION_FACTORS_QUERY = "SELECT * " +
-                                                                 "FROM conversionFactors";
+                                                                 "FROM conversionfactors";
 
-    public static final String SAVE_CONVERSION_FACTORS_QUERY = "INSERT IGNORE INTO conversionFactors (ID_leaf_1, ID_leaf_2, value) " +
+    public static final String SAVE_CONVERSION_FACTORS_QUERY = "INSERT IGNORE INTO conversionfactors (ID_leaf_1, ID_leaf_2, value) " +
                                                                "VALUES (?, ? ,?)";
+
+    public static final String GET_CONVERSION_FACTOR_QUERY = "SELECT * " +
+                                                             "FROM conversionfactors " +
+                                                             "WHERE id_leaf_1 = ? AND id_leaf_2 = ?";
 
     // ---------------------------------------- UserJDBCImpl ----------------------------------------
 
@@ -334,5 +338,10 @@ public class Queries {
     public static final String ALLOW_PERMISSION_QUERY = "UPDATE access " +
                                                         "SET permit = 1 " +
                                                         "WHERE id = 1";
+
+    // ---------------------------------------- ProposalJDBCImpl ----------------------------------------
+
+    public static final String INSERT_PROPOSAL_QUERY = "INSERT INTO proposals ( requestedcategoryid, offeredcategoryid, requestedhours, offeredhours, userid, state ) " + 
+                                                       "VALUES ( ?, ?, ?, ?, ?, ? )";
 
 }

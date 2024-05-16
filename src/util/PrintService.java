@@ -35,20 +35,20 @@ public class PrintService {
 
         for ( Category toPrint : categoryJDBC.getParentCategories( hierarchyID ) ) toReturn.append( "  " + Constants.YELLOW + toPrint.getID() + ". " + Constants.RESET + toPrint.getName() + "\n" );
 
-        System.out.println( toReturn );
+        this.println( toReturn.toString() );
     }
 
-    public void printAllRoot () throws SQLException
+    public void printAllRoots () throws SQLException
     {
         StringBuffer toReturn = new StringBuffer();
 
         for ( Category toPrint : categoryJDBC.getAllSavedRoot() ) toReturn.append( " " + toPrint.getID() + ". " + toPrint.getName() + "\n" );
-        for ( Category toPrint : categoryJDBC.getAllNotSavedRoot() ) toReturn.append( " " + toPrint.getID() + ". " + toPrint.getName() + "  -->  (not saved)\n" );
+        for ( Category toPrint : categoryJDBC.getAllNotSavedRoot() ) toReturn.append( " " + toPrint.getID() + ". " + toPrint.getName() + Constants.NOT_SAVED );
 
-        System.out.println( toReturn );
+        this.println( toReturn.toString() );
     }
 
-    public void printAllLeafCategory () throws SQLException
+    public void printAllLeafCategories () throws SQLException
     {
         StringBuffer toReturn = new StringBuffer();
 
@@ -56,9 +56,24 @@ public class PrintService {
             toReturn.append( " " + toPrint.getID() + ". " + Util.padRight( Integer.toString( toPrint.getID() ) , 3 ) + toPrint.getName() + Util.padRight( toPrint.getName() , 50 ) + "  [ " + categoryJDBC.getRootByLeaf( toPrint ).getName() + " ]  " + "\n" );
 
         for ( Category toPrint : categoryJDBC.getAllNotSavedLeaf() )
-            toReturn.append( " " + toPrint.getID() + ". " + Util.padRight( Integer.toString( toPrint.getID() ) , 3 ) + toPrint.getName() + Util.padRight( toPrint.getName() , 50 ) + "  [ " + categoryJDBC.getRootByLeaf( toPrint ).getName() + " ]  " + "  -->  (not saved)\n" );
+            toReturn.append( " " + toPrint.getID() + ". " + Util.padRight( Integer.toString( toPrint.getID() ) , 3 ) + toPrint.getName() + Util.padRight( toPrint.getName() , 50 ) + "  [ " + categoryJDBC.getRootByLeaf( toPrint ).getName() + " ]  " + Constants.NOT_SAVED );
 
-        System.out.println( toReturn );
+        this.println( toReturn.toString() );
+    }
+
+    public void printLeafCategoriesWithout ( Category toRemoved ) throws SQLException
+    {
+        StringBuffer toReturn = new StringBuffer();
+
+        for ( Category toPrint : categoryJDBC.getAllSavedLeaf() )
+            if ( !toPrint.equals( toRemoved ) )
+                toReturn.append( " " + toPrint.getID() + ". " + Util.padRight( Integer.toString( toPrint.getID() ) , 3 ) + toPrint.getName() + Util.padRight( toPrint.getName() , 50 ) + "  [ " + categoryJDBC.getRootByLeaf( toPrint ).getName() + " ]  " + "\n" );
+
+        for ( Category toPrint : categoryJDBC.getAllNotSavedLeaf() )
+            if ( !toPrint.equals( toRemoved ) )
+                toReturn.append( " " + toPrint.getID() + ". " + Util.padRight( Integer.toString( toPrint.getID() ) , 3 ) + toPrint.getName() + Util.padRight( toPrint.getName() , 50 ) + "  [ " + categoryJDBC.getRootByLeaf( toPrint ).getName() + " ]  " + Constants.NOT_SAVED );
+
+        this.println( toReturn.toString() );
     }
 
     public void printAllDistricts () throws SQLException
@@ -69,9 +84,9 @@ public class PrintService {
             toReturn.append( " " + toPrint.getID() + ". " + toPrint.getName() + "\n" );
 
         for ( District toPrint : districtJDBC.getAllNotSavedDistricts() )
-            toReturn.append( " " + toPrint.getID() + ". " + toPrint.getName() + "  -->  (not saved)\n" );
+            toReturn.append( " " + toPrint.getID() + ". " + toPrint.getName() + Constants.NOT_SAVED );
 
-        System.out.println( toReturn );
+        this.println( toReturn.toString() );
     }
 
     public void printAllMunicipalitiesOfDistrict ( District district ) throws SQLException
@@ -80,12 +95,12 @@ public class PrintService {
 
         for ( Municipality toPrint : districtToMunicipalitiesJDBC.selectAllMunicipalityOfDistrict( district ) ) toReturn.append( "  " + toPrint.getCAP() + " " + toPrint.getProvince() + " " + toPrint.getName() + "\n" );
 
-        System.out.println( toReturn );
+        this.println( toReturn.toString() );
     }
 
     public void printHierarchy ( int IDToPrint ) throws SQLException
     {
-        System.out.println( printHierarchy( IDToPrint, new StringBuffer(), new StringBuffer() ) );
+        this.println( printHierarchy( IDToPrint, new StringBuffer(), new StringBuffer() ) );
     }
 
     private String printHierarchy ( int IDToPrint, StringBuffer toReturn, StringBuffer spaces ) throws SQLException
@@ -93,7 +108,7 @@ public class PrintService {
         Category notLeaf = categoryJDBC.getCategoryByID( IDToPrint );
 
         if ( notLeaf.isRoot() ) toReturn.append( notLeaf.getID() + ". " + notLeaf.getName() + "\n\n" );
-        else if ( categoryJDBC.getCategoriesWithoutChild().contains( notLeaf ) ) toReturn.append( spaces.toString() + Constants.RED + "└──── " + notLeaf.getID() + ". " + notLeaf.getName() + " (no child) " + Constants.RESET + "\n\n" );
+        else if ( categoryJDBC.getCategoriesWithoutChild().contains( notLeaf ) ) toReturn.append( spaces.toString() + Constants.RED + "└──── " + notLeaf.getID() + ". " + notLeaf.getName() + Constants.NO_CHILD + Constants.RESET + "\n\n" );
         else toReturn.append( spaces.toString() + "└──── " + notLeaf.getID() + ". " + notLeaf.getName() + "\n\n" );
         
         for ( Integer IDLeaf : relationshipsBetweenCategoriesJDBC.getChildIDsFromParentID( IDToPrint ) ) printHierarchy( IDLeaf, toReturn, spaces.append( "\t" ) );
@@ -104,23 +119,23 @@ public class PrintService {
         return toReturn.toString();
     } 
 
-    public void printInfoCategory( Category toPrint ) throws SQLException
+    public void printInfoCategory ( Category toPrint ) throws SQLException
     {
         StringBuffer toReturn = new StringBuffer();    
 
-        toReturn.append( "name:" + Util.padRight( "name:", 20 ) + Constants.BOLD + toPrint.getName() + Constants.RESET + "\n" );
-        if ( !toPrint.isRoot() ) toReturn.append( "description:" + Util.padRight( "description:", 20 ) + toPrint.getDescription() + "\n" );
+        toReturn.append( Constants.NAME + ":" + Util.padRight( Constants.NAME + ":", 20 ) + Constants.BOLD + toPrint.getName() + Constants.RESET + "\n" );
+        if ( !toPrint.isRoot() ) toReturn.append( Constants.DESCRIPTION + ":" + Util.padRight( Constants.DESCRIPTION + ":", 20 ) + toPrint.getDescription() + "\n" );
 
-        if ( toPrint.getField() == null ) toReturn.append( "value of domain:" + Util.padRight( "value of domain:", 20 ) + relationshipsBetweenCategoriesJDBC.getFieldValueFromChildID( toPrint.getID() ) + "\n" );
+        if ( toPrint.getField() == null ) toReturn.append( Constants.VALUE_OF_DOMAIN + ":" + Util.padRight( Constants.VALUE_OF_DOMAIN + ":", 20 ) + relationshipsBetweenCategoriesJDBC.getFieldValueFromChildID( toPrint.getID() ) + "\n" );
         else 
         {
-            toReturn.append( "field:" + Util.padRight( "field:", 20 ) + toPrint.getField() + " = { " );
+            toReturn.append( Constants.FIELD + ":" + Util.padRight( Constants.FIELD + ":", 20 ) + toPrint.getField() + " = { " );
             for ( String fieldValue : relationshipsBetweenCategoriesJDBC.getFieldValuesFromParentID( toPrint.getID() ) ) toReturn.append( Constants.YELLOW + fieldValue + Constants.RESET + ", " );
             toReturn.deleteCharAt( toReturn.length() - 2 );
             toReturn.append( "}\n" );
         }
 
-        System.out.println( toReturn );
+        this.println( toReturn.toString() );
     }
 
     public void printConversionFactors ( ConversionFactors conversionFactors ) throws SQLException
@@ -138,7 +153,7 @@ public class PrintService {
             toReturn.append( " " + entry.getKey() + ". " + Util.padRight( Integer.toString( entry.getKey() ), 5 ) + entry.getValue().getLeaf_1().getName() + rootLeaf1 + Util.padRight( entry.getValue().getLeaf_1().getName() + rootLeaf1, 70 ) + "-->\t\t" + entry.getValue().getLeaf_2().getName() + rootLeaf2 + Util.padRight( entry.getValue().getLeaf_2().getName() + rootLeaf2, 70 ) + ": " + COLOR + entry.getValue().getValue() + Constants.RESET + "\n" );
         }
 
-        System.out.println( toReturn );
+        this.println( toReturn.toString() );
     } 
 
     public void printConversionFactorsByLeaf ( int IDLeafCategory, ConversionFactors conversionFactors )
@@ -149,7 +164,17 @@ public class PrintService {
             if ( entry.getValue().getLeaf_1().getID() == IDLeafCategory || entry.getValue().getLeaf_2().getID() == IDLeafCategory )
                 toReturn.append( "  " + entry.getValue().toString() + "\n" );
         
-        System.out.println( toReturn );
+        this.println( toReturn.toString() );
     } 
+
+    public void printProposal ( Proposal toPrint )
+    {
+        StringBuffer toReturn = new StringBuffer();
+
+        toReturn.append( "requested:" + Util.padRight( "requested:" ,15 ) + "[ " + toPrint.getRequestedCategory().getName() + Util.padRight( toPrint.getRequestedCategory().getName(), 50 ) + ", " + toPrint.getRequestedHours() + " hours ]" );
+        toReturn.append( "\noffered:" + Util.padRight( "offered:" ,15 ) + "[ " + toPrint.getOfferedCategory().getName() + Util.padRight( toPrint.getOfferedCategory().getName(), 50 ) + ", " + Constants.CYAN + toPrint.getOfferedHours() + " hours" + Constants.RESET +" ]" );
+
+        this.print( toReturn.toString() + "\n" );
+    }
 
 }

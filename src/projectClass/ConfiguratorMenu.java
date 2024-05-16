@@ -181,9 +181,9 @@ public class ConfiguratorMenu {
             {
                 printService.print( Constants.ENTER_FIELD_TYPE );
                 fieldType = scanner.nextLine();
-                if ( Controls.checkPattern( fieldType, 0, 25 ) ) printService.print( Constants.ERROR_PATTERN_FIELD );
+                if ( Controls.checkPattern( fieldType, 0, 25 ) || fieldType.equals( "<" ) ) printService.print( Constants.ERROR_PATTERN_FIELD );
                 if ( Controls.existValueOfField( fieldType, categoryJDBC.getCategoryByID( Integer.parseInt( parentID ) ) ) ) printService.print( Constants.VALUE_ALREADY_PRESENT_MESSAGE );
-            } while ( Controls.checkPattern( fieldType, 0, 25 ) || Controls.existValueOfField( fieldType, categoryJDBC.getCategoryByID( Integer.parseInt( parentID ) ) ) );
+            } while ( Controls.checkPattern( fieldType, 0, 25 ) || fieldType.equals( "<" ) || Controls.existValueOfField( fieldType, categoryJDBC.getCategoryByID( Integer.parseInt( parentID ) ) ) );
 
             newCategory.createRelationship( Integer.parseInt( parentID ), fieldType );
 
@@ -293,7 +293,7 @@ public class ConfiguratorMenu {
             return;
         }
 
-        printService.printAllRoot();
+        printService.printAllRoots();
         printService.print( Constants.ENTER_HIERARCHY_ID );
         String hierarchyID = scanner.nextLine();
 
@@ -354,7 +354,7 @@ public class ConfiguratorMenu {
             return;
         }
 
-        printService.printAllLeafCategory();
+        printService.printAllLeafCategories();
         printService.print( Constants.ENTER_CATEGORY_ID );
         String categoryID = scanner.nextLine();
 

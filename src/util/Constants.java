@@ -42,6 +42,13 @@ public class Constants {
                                                      //"──────────────\n";
                                                      "\n";
 
+    public static final String PROPOSE_PROPOSAL_SCREEN = "\n" +
+                                                         //"──────────────\n" +
+                                                         "\n" +
+                                                         CYAN + BOLD + "PROPOSAL\n" + RESET + 
+                                                         //"──────────────\n";
+                                                         "\n";
+
     public static final String CONFIGURATOR_MENU = "\n" +
                                                    "───────────────────────────────────────────\n" +
                                                    BLUE + BOLD + "\t\t  OPTIONS\n" + RESET +
@@ -62,7 +69,8 @@ public class Constants {
                                            "───────────────────────────────────────────\n" +
                                            BLUE + BOLD + "\t\t  OPTIONS\n" + RESET +
                                            "───────────────────────────────────────────\n" +
-                                           " 1.  navigate hierarchies\n\n" +
+                                           " 1.  navigate hierarchies\n" +
+                                           " 2.  propose proposal\n\n" +
                                            " 9.  logout\n" +
                                            "───────────────────────────────────────────\n" +
                                            "Enter your choice [1-9] --> ";
@@ -114,6 +122,9 @@ public class Constants {
     public static final String ENTER_DISTRICT_OR_EXIT = "Enter district ID (enter 'e' to exit) --> ";
     public static final String ENTER_HIERARCHY_ID = "Enter hierarchy ID --> ";
     public static final String ENTER_CATEGORY_ID = "Enter category ID --> ";
+    public static final String ENTER_REQUESTED_CATEGORY_ID = "Enter ID of requested category --> ";
+    public static final String ENTER_OFFERED_CATEGORY_ID = "Enter ID of offered category --> ";
+    public static final String ENTER_REQUESTED_HOURS = "Enter number of requested hours of ";
     public static final String ENTER_CATEGORY_NAME = "enter category name: ";
     public static final String ENTER_FIELD = "\nenter field: ";
     public static final String ENTER_DESCRIPTION = "\nenter description (enter to skip): ";
@@ -126,11 +137,19 @@ public class Constants {
     public static final String NO_MESSAGE = "n";
     public static final String ENTER_MAIL = "Enter mail: ";
     public static final String ENTER_VALUE_OF_FIELD_MESSAGE = "Enter " + YELLOW + "value of field" + RESET + " ('<' to go back) --> ";
+    public static final String CONFIRM_PROPOSAL = "\nconfirm? (y/n) --> ";
+    public static final String PROPOSAL_SAVED = GREEN + BOLD + "\n --- Proposal saved ✓ --- \n" + RESET;
+    public static final String PROPOSAL_NOT_SAVED = RED + BOLD + "\n --- Proposal NOT saved !!! --- \n" + RESET;
+    public static final String NOT_SAVED = "  -->  (not saved)\n";
+    public static final String NO_CHILD = " (no child) ";
+    public static final String NAME = "name";
+    public static final String DESCRIPTION = "description";
+    public static final String VALUE_OF_DOMAIN = "value of domain";
+    public static final String FIELD = "field";
 
     public static final String BYE_BYE_MESSAGE = YELLOW + "\nBye bye ...\n\n" + RESET;
     public static final String ADDED_SUCCESFULL_MESSAGE = GREEN + "\n --- Added succesfull ✓ --- \n" + RESET;
     public static final String OPERATION_COMPLETED = GREEN + "\n --- Operation completed ✓ --- \n" + RESET;
-    public static final String NOT_SAVED_STRING = "  -->  (not saved)\n";
     public static final String SAVE_COMPLETED = GREEN + "\n --- saved COMPLETED ✓ ---\n" + RESET;
     public static final String LOG_OUT = BLUE + "\nLog out ...\n\n" + RESET;
     public static final String CATEGORY_LIST = " categories:\n\n";
@@ -156,7 +175,7 @@ public class Constants {
     public static final String IMPOSSIBLE_SAVE_CF = RED + BOLD + "\n --- ATTENTION, not all conversion factors have been set !!! --- " + RESET;
     public static final String ERROR_PATTERN_MAIL = RED + "\n --- " + BOLD + "ATTENTION" + RESET + RED + ", parameters not respected! --- \n" + RESET;
     public static final String DENIED_ACCESS = RED + BOLD + "\n --- DENIED ACCESS, %s is working... --- \n" + RESET;
-    public static final String IMPOSSIBLE_TO_GO_BACK = RED + BOLD + " --- Impossible to go back --- \n" + RESET;
+    public static final String ERROR_HOUR = RED + BOLD + "\n --- not integer ot not greater than zero --- \n" + RESET;
 
     public static final String SQL_EXCEPTION_MESSAGE = "Database error: ";
     public static final String GENERIC_EXCEPTION_MESSAGE = "Generic error:";

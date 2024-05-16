@@ -12,7 +12,7 @@ public class ConversionFactors {
     private ConversionFactorsJDBC conversionFactorsJDBC;
     private CategoryJDBC categoryJDBC;
 
-    public ConversionFactors() 
+    public ConversionFactors () 
     {
         this.index = 0;
         this.list = new HashMap<>();
@@ -90,7 +90,7 @@ public class ConversionFactors {
         return;
     }
 
-    public double[] calculateRange( int index )
+    public double[] calculateRange ( int index )
     {
         int ID_leaf1 = this.getList().get(index).getLeaf_1().getID();
         int ID_leaf2 = this.getList().get(index).getLeaf_2().getID();
@@ -112,8 +112,8 @@ public class ConversionFactors {
             }
             max = ( Constants.MAX_VALUES_CONVERSION_FACTOR / max >= Constants.MAX_VALUES_CONVERSION_FACTOR ) ? Constants.MAX_VALUES_CONVERSION_FACTOR : ( Constants.MAX_VALUES_CONVERSION_FACTOR / max );
             min = ( Constants.MIN_VALUES_CONVERSION_FACTOR / min <= Constants.MIN_VALUES_CONVERSION_FACTOR ) ? Constants.MIN_VALUES_CONVERSION_FACTOR : ( Constants.MIN_VALUES_CONVERSION_FACTOR / min );
-            max = ( ( int ) ( max * 100.0 ) ) / 100.0;
-            min = Math.round( min * 100.0 ) / 100.0;
+            max = Math.floor( max * 100.0 ) / 100.0;
+            min = Math.ceil( min * 100.0 ) / 100.0;
             return new double[]{ min, max };
         }
     }

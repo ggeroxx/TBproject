@@ -8,6 +8,8 @@ public class UserMenu {
     
     private static PrintService printService = new PrintService();
     private static CategoryJDBC categoryJDBC = new CategoryJDBCImpl();
+    private static UserJDBC userJDBC = new UserJDBCImpl();
+    private static ConversionFactorsJDBC conversionFactorsJDBC = new ConversionFactorsJDBCImpl();
     private static RelationshipsBetweenCategoriesJDBC relationshipsBetweenCategoriesJDBC = new RelationshipsBetweenCategoriesJDBCImpl();
     private static Scanner scanner = new Scanner( System.in );
 
@@ -24,6 +26,10 @@ public class UserMenu {
             {
                 case "1":
                         caseOne();
+                    break;
+
+                case "2":
+                        caseTwo( session );
                     break;
 
                 case "9":
@@ -52,7 +58,7 @@ public class UserMenu {
             return;
         }
 
-        printService.printAllRoot();
+        printService.printAllRoots();
         printService.print( Constants.ENTER_HIERARCHY_ID );
         String hierarchyID = scanner.nextLine();
 
@@ -100,6 +106,81 @@ public class UserMenu {
         scanner.nextLine();
         Util.clearConsole( Constants.TIME_SWITCH_MENU );
         return;
+    }
+
+    private static void caseTwo ( Session session ) throws SQLException, Exception
+    {
+        if ( categoryJDBC.getAllLeaf().isEmpty() || categoryJDBC.getAllLeaf().size() == 1 )
+        {
+            Util.clearConsole( Constants.TIME_SWITCH_MENU );
+            printService.print( Constants.PROPOSE_PROPOSAL_SCREEN );
+            printService.println( Constants.NOT_EXIST_MESSAGE + "\n" );
+            Util.clearConsole( Constants.TIME_ERROR_MESSAGE );
+            return;
+        }
+
+        String requestedCategoryID;
+        do
+        {
+            Util.clearConsole( Constants.TIME_SWITCH_MENU );
+            printService.print( Constants.PROPOSE_PROPOSAL_SCREEN );
+            printService.printAllLeafCategories();
+            printService.print( Constants.ENTER_REQUESTED_CATEGORY_ID );
+            requestedCategoryID = scanner.nextLine();
+
+            if ( requestedCategoryID.isEmpty() || !Controls.isInt( requestedCategoryID ) || ( categoryJDBC.getCategoryByID( Integer.parseInt( requestedCategoryID ) ) ) == null || !( categoryJDBC.getCategoryByID( Integer.parseInt( requestedCategoryID ) ) ).isLeaf() )
+            {
+                printService.println( Constants.NOT_EXIST_MESSAGE );
+                Util.clearConsole( Constants.TIME_ERROR_MESSAGE );
+                continue;
+            }
+        } while ( requestedCategoryID.isEmpty() || !Controls.isInt( requestedCategoryID ) || ( categoryJDBC.getCategoryByID( Integer.parseInt( requestedCategoryID ) ) ) == null || !( categoryJDBC.getCategoryByID( Integer.parseInt( requestedCategoryID ) ) ).isLeaf() );
+        Category requestedCategory = categoryJDBC.getCategoryByID( Integer.parseInt( requestedCategoryID ) );
+
+        Util.clearConsole( Constants.TIME_SWITCH_MENU );
+
+        String offeredCategoryID;
+        do
+        {
+            printService.print( Constants.PROPOSE_PROPOSAL_SCREEN );
+            printService.printLeafCategoriesWithout( categoryJDBC.getCategoryByID( Integer.parseInt( requestedCategoryID ) ) );
+            printService.print( Constants.ENTER_OFFERED_CATEGORY_ID );
+            offeredCategoryID = scanner.nextLine();
+
+            if ( offeredCategoryID.isEmpty() || !Controls.isInt( offeredCategoryID ) || offeredCategoryID.equals( requestedCategoryID ) || ( categoryJDBC.getCategoryByID( Integer.parseInt( offeredCategoryID ) ) ) == null || !( categoryJDBC.getCategoryByID( Integer.parseInt( offeredCategoryID ) ) ).isLeaf() )
+            {
+                printService.println( Constants.NOT_EXIST_MESSAGE );
+                Util.clearConsole( Constants.TIME_ERROR_MESSAGE );
+                continue;
+            }
+        } while ( offeredCategoryID.isEmpty() || !Controls.isInt( offeredCategoryID ) || offeredCategoryID.equals( requestedCategoryID ) || ( categoryJDBC.getCategoryByID( Integer.parseInt( offeredCategoryID ) ) ) == null || !( categoryJDBC.getCategoryByID( Integer.parseInt( offeredCategoryID ) ) ).isLeaf() );
+        Category offeredCategory = categoryJDBC.getCategoryByID( Integer.parseInt( offeredCategoryID ) );
+
+        Util.clearConsole( Constants.TIME_SWITCH_MENU );
+        printService.print( Constants.PROPOSE_PROPOSAL_SCREEN );
+        String requestedHours = Util.insertWithCheck( Constants.ENTER_REQUESTED_HOURS + Constants.CYAN + categoryJDBC.getCategoryByID( Integer.parseInt( requestedCategoryID ) ).getName() + Constants.RESET + ": ", Constants.ERROR_HOUR, ( input ) -> input.isEmpty() || !Controls.isInt( input ) || Integer.parseInt( input ) <= 0 );
+        
+        Util.clearConsole( Constants.TIME_SWITCH_MENU );
+        printService.print( Constants.PROPOSE_PROPOSAL_SCREEN );
+
+        int offeredHours = (int) Math.round( conversionFactorsJDBC.getConversionFactor( requestedCategory, offeredCategory ).getValue() * Integer.parseInt( requestedHours ) );
+        Proposal newProposal = new Proposal( null, requestedCategory, offeredCategory, (Integer.parseInt( requestedHours )), offeredHours, userJDBC.getUserByUsername( session.getUsername() ), "open" );
+        printService.printProposal( newProposal );
+
+        String saveOrNot = Util.insertWithCheck( Constants.CONFIRM_PROPOSAL, Constants.NOT_EXIST_MESSAGE, ( input ) -> !input.equals(Constants.NO_MESSAGE) && !input.equals(Constants.YES_MESSAGE) );
+
+        if ( saveOrNot.equals( Constants.YES_MESSAGE ) )
+        {
+            printService.print( Constants.PROPOSAL_SAVED );
+            Util.clearConsole( Constants.TIME_MESSAGE );
+            newProposal.save();
+        }
+        else
+        {
+            printService.print( Constants.PROPOSAL_NOT_SAVED );
+            Util.clearConsole( Constants.TIME_ERROR_MESSAGE );
+        }
+
     }
 
 }

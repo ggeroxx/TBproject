@@ -27,4 +27,11 @@ public class ConversionFactorsJDBCImpl implements ConversionFactorsJDBC {
         Conn.queryUpdate( Queries.SAVE_CONVERSION_FACTORS_QUERY, new ArrayList<>( Arrays.asList( conversionFactor.getLeaf_1().getID(), conversionFactor.getLeaf_2().getID(), conversionFactor.getValue() ) ) );
     }
 
+    @Override
+    public ConversionFactor getConversionFactor ( Category c1, Category c2 ) throws SQLException 
+    {
+        ResultSet rs = Conn.exQuery( Queries.GET_CONVERSION_FACTOR_QUERY, new ArrayList<>( Arrays.asList( c1.getID(), c2.getID() ) ) );
+        return rs.next() ? new ConversionFactor( c1, c2, rs.getDouble( 3 ) ) : null;
+    }
+
 }

@@ -9,4 +9,6 @@ public interface ConversionFactorsJDBC {
 
     void saveAll ( ConversionFactors conversionFactors ) throws SQLException;
 
+    ConversionFactor getConversionFactor ( Category c1, Category c2 ) throws SQLException;
+    
 }
