@@ -1,5 +1,7 @@
 package projectClass;
 
+import java.sql.SQLException;
+
 public class User {
     
     private Integer ID;
@@ -7,6 +9,7 @@ public class User {
     private String password;
     private int districtID;
     private String mail;
+    private ProposalJDBC proposalJDBC = new ProposalJDBCImpl();
 
     public User ( Integer ID, String username, String password, int districtID, String mail )
     {
@@ -42,4 +45,13 @@ public class User {
         return this.mail;
     }
 
+    public void insertProposal ( Proposal toInsert ) throws SQLException
+    {
+        proposalJDBC.insertProposal( toInsert.getRequestedCategory(), toInsert.getOfferedCategory(), toInsert.getRequestedHours(), toInsert.getOfferedHours(), toInsert.getUser(), toInsert.getState() );
+    }
+
+    public void retireProposal ( Proposal toRetire ) throws SQLException
+    {
+        proposalJDBC.retireProposal( toRetire );
+    }
 }

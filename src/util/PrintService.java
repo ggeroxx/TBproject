@@ -1,6 +1,7 @@
 package util;
 
 import java.sql.*;
+import java.util.*;
 import java.util.Map.Entry;
 import projectClass.*;
 
@@ -96,7 +97,7 @@ public class PrintService {
         for ( Municipality toPrint : districtToMunicipalitiesJDBC.selectAllMunicipalityOfDistrict( district ) ) toReturn.append( "  " + toPrint.getCAP() + " " + toPrint.getProvince() + " " + toPrint.getName() + "\n" );
 
         this.println( toReturn.toString() );
-    }
+    }  
 
     public void printHierarchy ( int IDToPrint ) throws SQLException
     {
@@ -172,9 +173,24 @@ public class PrintService {
         StringBuffer toReturn = new StringBuffer();
 
         toReturn.append( "requested:" + Util.padRight( "requested:" ,15 ) + "[ " + toPrint.getRequestedCategory().getName() + Util.padRight( toPrint.getRequestedCategory().getName(), 50 ) + ", " + toPrint.getRequestedHours() + " hours ]" );
-        toReturn.append( "\noffered:" + Util.padRight( "offered:" ,15 ) + "[ " + toPrint.getOfferedCategory().getName() + Util.padRight( toPrint.getOfferedCategory().getName(), 50 ) + ", " + Constants.CYAN + toPrint.getOfferedHours() + " hours" + Constants.RESET +" ]" );
+        toReturn.append( "\n" );
+        toReturn.append( "offered:" + Util.padRight( "offered:" ,15 ) + "[ " + toPrint.getOfferedCategory().getName() + Util.padRight( toPrint.getOfferedCategory().getName(), 50 ) + ", " + Constants.CYAN + toPrint.getOfferedHours() + " hours" + Constants.RESET +" ]" );
 
         this.print( toReturn.toString() + "\n" );
+    }
+
+    public void printProposals ( List<Proposal> toPrints )
+    {
+        StringBuffer toReturn = new StringBuffer();
+
+        for( Proposal toPrint : toPrints )
+        {
+            String color = toPrint.getState().equals( "open" ) ? Constants.GREEN : toPrint.getState().equals( "close" ) ? Constants.RED : Constants.YELLOW;
+            toReturn.append( " " + toPrint.getID() + ". " + Constants.RESET + "requested:" + Util.padRight( "requested:" ,15 ) + "[ " + toPrint.getRequestedCategory().getName() + Util.padRight( toPrint.getRequestedCategory().getName(), 50 ) + ", " + toPrint.getRequestedHours() + " hours ]\n" );
+            toReturn.append( Util.padRight( "", ( " " + toPrint.getID() + ". " ).length() ) + "offered:" + Util.padRight( "offered:" ,15 ) + "[ " + toPrint.getOfferedCategory().getName() + Util.padRight( toPrint.getOfferedCategory().getName(), 50 ) + ", " + toPrint.getOfferedHours() + " hours ] : " + color + Constants.BOLD + toPrint.getState() + Constants.RESET + "\n\n" );
+        }
+        
+        this.print( toReturn.toString() );
     }
 
 }

@@ -11,6 +11,7 @@ public class ConfiguratorMenu {
     private static DistrictJDBC districtJDBC = new DistrictJDBCImpl();
     private static CategoryJDBC categoryJDBC = new CategoryJDBCImpl();
     private static ConversionFactors conversionFactors = new ConversionFactors();
+    private static ProposalJDBC proposalJDBC = new ProposalJDBCImpl();
     private static Scanner scanner = new Scanner( System.in );
 
     public static void menu ( Configurator conf, Session session ) throws SQLException, Exception
@@ -58,6 +59,10 @@ public class ConfiguratorMenu {
                     break;
 
                 case "9":
+                        caseNine();
+                    break;
+
+                case "10":
                         session.logout();
                         conversionFactors = new ConversionFactors();
                         printService.println( Constants.LOG_OUT );
@@ -69,7 +74,7 @@ public class ConfiguratorMenu {
                         Util.clearConsole( Constants.TIME_ERROR_MESSAGE);
                     break;
             }
-        } while ( !choice.equals( "9" ) );
+        } while ( !choice.equals( "10" ) );
     }
 
     public static void caseOne ( Configurator conf ) throws SQLException, Exception
@@ -368,6 +373,39 @@ public class ConfiguratorMenu {
         Util.clearConsole( Constants.TIME_SWITCH_MENU );
         printService.println( "\n" );
         printService.printConversionFactorsByLeaf( Integer.parseInt( categoryID ), conversionFactors );
+
+        printService.print( "\n" + Constants.ENTER_TO_EXIT );
+        scanner.nextLine();
+        Util.clearConsole( Constants.TIME_SWITCH_MENU );
+        return;
+    }
+
+    public static void caseNine() throws Exception
+    {
+        Util.clearConsole( Constants.TIME_SWITCH_MENU );
+        printService.print( Constants.LEAF_CATEGORY_LIST );
+
+        if ( categoryJDBC.getAllLeaf().isEmpty() )
+        {
+            printService.println( Constants.NOT_EXIST_MESSAGE + "\n" );
+            Util.clearConsole( Constants.TIME_ERROR_MESSAGE );
+            return;
+        }
+
+        printService.printAllLeafCategories();
+        printService.print( Constants.ENTER_CATEGORY_ID );
+        String categoryID = scanner.nextLine();
+
+        if ( categoryID.isEmpty() || !Controls.isInt( categoryID ) || ( categoryJDBC.getCategoryByID( Integer.parseInt( categoryID ) ) ) == null || !( categoryJDBC.getCategoryByID( Integer.parseInt( categoryID ) ) ).isLeaf() )
+        {
+            printService.println( Constants.NOT_EXIST_MESSAGE );
+            Util.clearConsole( Constants.TIME_ERROR_MESSAGE );
+            return;
+        }
+
+        Util.clearConsole( Constants.TIME_SWITCH_MENU );
+        printService.print( Constants.PROPOSAL_LIST );
+        printService.printProposals( proposalJDBC.getAllProposalsByLeaf( categoryJDBC.getCategoryByID( Integer.parseInt( categoryID ) ) ) );
 
         printService.print( "\n" + Constants.ENTER_TO_EXIT );
         scanner.nextLine();

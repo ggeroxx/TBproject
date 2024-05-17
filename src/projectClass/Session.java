@@ -7,7 +7,6 @@ public class Session {
     
     private Boolean status;
     private Character subject;
-    private String username;
     private ConfiguratorJDBC configuratorJDBC = new ConfiguratorJDBCImpl();
     private UserJDBC userJDBC = new UserJDBCImpl();
     private DistrictJDBC districtJDBC = new DistrictJDBCImpl();
@@ -24,11 +23,6 @@ public class Session {
     public Character getSubject() 
     {
         return this.subject;
-    }
-
-    public String getUsername()
-    {
-        return this.username;
     }
 
     public void login ( String usernameToCheck, String passwordToCheck ) throws SQLException
@@ -61,7 +55,6 @@ public class Session {
                 else
                 {
                     this.status = true;
-                    this.username = usernameToCheck;
                     Integer max_id;
 
                     max_id = districtJDBC.getMaxID();
@@ -87,7 +80,6 @@ public class Session {
             else 
             {
                 this.status = true;
-                this.username = usernameToCheck;
             }
         }
     }
@@ -107,7 +99,6 @@ public class Session {
         }
 
         this.subject = null;
-        this.username = null;
     }
 
 }

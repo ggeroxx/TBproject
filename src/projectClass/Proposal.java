@@ -1,7 +1,5 @@
 package projectClass;
 
-import java.sql.SQLException;
-
 public class Proposal {
     
     private Integer ID;
@@ -11,7 +9,6 @@ public class Proposal {
     private int offeredHours;
     private User user;
     private String state;
-    private static ProposalJDBC proposalJDBC = new ProposalJDBCImpl();
 
     public Proposal ( Integer ID, Category requestedCategory, Category offeredCategory, int requestedHours, int offeredHours, User user, String state )
     {
@@ -22,6 +19,11 @@ public class Proposal {
         this.offeredHours = offeredHours;
         this.user = user;
         this.state = state;
+    }
+
+    public Integer getID() 
+    {
+        return this.ID;
     }
 
     public Category getRequestedCategory() 
@@ -44,9 +46,14 @@ public class Proposal {
         return this.offeredHours;
     }
 
-    public void save () throws SQLException
+    public User getUser() 
     {
-        proposalJDBC.insertProposal( this.requestedCategory, this.offeredCategory, this.requestedHours, this.offeredHours, this.user, this.state );
+        return this.user;
+    }
+
+    public String getState() 
+    {
+        return this.state;
     }
 
 }

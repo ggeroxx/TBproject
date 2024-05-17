@@ -322,6 +322,10 @@ public class Queries {
                                                             "FROM users " +
                                                             "WHERE username = ?";
 
+    public static final String GET_USER_BY_ID_QUERY = "SELECT * " +
+                                                      "FROM users " +
+                                                      "WHERE id = ?";
+
     public static final String INSERT_USER_QUERY = "INSERT INTO users ( username, password, districtid, mail ) " +
                                                    "VALUES ( ?, ?, ?, ? )";
 
@@ -343,5 +347,21 @@ public class Queries {
 
     public static final String INSERT_PROPOSAL_QUERY = "INSERT INTO proposals ( requestedcategoryid, offeredcategoryid, requestedhours, offeredhours, userid, state ) " + 
                                                        "VALUES ( ?, ?, ?, ?, ?, ? )";
+
+    public static final String GET_ALL_OPEN_PROPOSALS_BY_USER_QUERY = "SELECT * " +
+                                                                      "FROM proposals " +
+                                                                      "WHERE userid = ? AND state = 'open'";
+
+    public static final String GET_ALL_PROPOSALS_BY_USER_QUERY = "SELECT * " +
+                                                                 "FROM proposals " +
+                                                                 "WHERE userid = ?";
+                                                                
+    public static final String RETIRE_PROPOSAL_QUERY = "UPDATE proposals " +
+                                                       "SET state = ? " +
+                                                       "WHERE id = ?";
+
+    public static final String GET_ALL_PROPOSALS_BY_LEAF_QUERY = "SELECT * " +
+                                                                 "FROM proposals " +
+                                                                 "WHERE requestedcategoryid = ? OR offeredcategoryid = ?";
 
 }

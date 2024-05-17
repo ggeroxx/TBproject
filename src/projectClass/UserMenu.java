@@ -8,9 +8,9 @@ public class UserMenu {
     
     private static PrintService printService = new PrintService();
     private static CategoryJDBC categoryJDBC = new CategoryJDBCImpl();
-    private static UserJDBC userJDBC = new UserJDBCImpl();
     private static ConversionFactorsJDBC conversionFactorsJDBC = new ConversionFactorsJDBCImpl();
     private static RelationshipsBetweenCategoriesJDBC relationshipsBetweenCategoriesJDBC = new RelationshipsBetweenCategoriesJDBCImpl();
+    private static ProposalJDBC proposalJDBC = new ProposalJDBCImpl();
     private static Scanner scanner = new Scanner( System.in );
 
     public static void menu ( User user, Session session ) throws SQLException, Exception
@@ -29,7 +29,15 @@ public class UserMenu {
                     break;
 
                 case "2":
-                        caseTwo( session );
+                        caseTwo( user, session );
+                    break;
+
+                case "3":
+                        caseThree( user, session );
+                    break;
+
+                case "4":
+                        caseFour( user );
                     break;
 
                 case "9":
@@ -108,7 +116,7 @@ public class UserMenu {
         return;
     }
 
-    private static void caseTwo ( Session session ) throws SQLException, Exception
+    private static void caseTwo ( User user, Session session ) throws SQLException, Exception
     {
         if ( categoryJDBC.getAllLeaf().isEmpty() || categoryJDBC.getAllLeaf().size() == 1 )
         {
@@ -119,10 +127,11 @@ public class UserMenu {
             return;
         }
 
+        Util.clearConsole( Constants.TIME_SWITCH_MENU );
+
         String requestedCategoryID;
         do
         {
-            Util.clearConsole( Constants.TIME_SWITCH_MENU );
             printService.print( Constants.PROPOSE_PROPOSAL_SCREEN );
             printService.printAllLeafCategories();
             printService.print( Constants.ENTER_REQUESTED_CATEGORY_ID );
@@ -164,7 +173,7 @@ public class UserMenu {
         printService.print( Constants.PROPOSE_PROPOSAL_SCREEN );
 
         int offeredHours = (int) Math.round( conversionFactorsJDBC.getConversionFactor( requestedCategory, offeredCategory ).getValue() * Integer.parseInt( requestedHours ) );
-        Proposal newProposal = new Proposal( null, requestedCategory, offeredCategory, (Integer.parseInt( requestedHours )), offeredHours, userJDBC.getUserByUsername( session.getUsername() ), "open" );
+        Proposal newProposal = new Proposal( null, requestedCategory, offeredCategory, (Integer.parseInt( requestedHours )), offeredHours, user, "open" );
         printService.printProposal( newProposal );
 
         String saveOrNot = Util.insertWithCheck( Constants.CONFIRM_PROPOSAL, Constants.NOT_EXIST_MESSAGE, ( input ) -> !input.equals(Constants.NO_MESSAGE) && !input.equals(Constants.YES_MESSAGE) );
@@ -173,14 +182,61 @@ public class UserMenu {
         {
             printService.print( Constants.PROPOSAL_SAVED );
             Util.clearConsole( Constants.TIME_MESSAGE );
-            newProposal.save();
+            user.insertProposal( newProposal );
         }
         else
         {
             printService.print( Constants.PROPOSAL_NOT_SAVED );
             Util.clearConsole( Constants.TIME_ERROR_MESSAGE );
         }
+    }
 
+    private static void caseThree ( User user, Session session ) throws SQLException, Exception
+    {
+        Util.clearConsole( Constants.TIME_SWITCH_MENU );
+        printService.print( Constants.PROPOSAL_LIST );
+
+        List<Proposal> openProposalsByUser = proposalJDBC.getAllOpenProposalByUser( user );
+
+        if ( openProposalsByUser.isEmpty() )
+        {
+            printService.println( Constants.NOT_EXIST_MESSAGE + "\n" );
+            Util.clearConsole( Constants.TIME_ERROR_MESSAGE );
+            return;
+        }
+
+        printService.printProposals( openProposalsByUser );
+        printService.print( Constants.ENTER_PROPOSAL_ID );
+        String proposalID = scanner.nextLine();
+
+        List<Integer> IDs = new ArrayList<Integer>();
+        for( Proposal toAdd : openProposalsByUser ) IDs.add( toAdd.getID() );
+
+        if ( proposalID.isEmpty() || !Controls.isInt( proposalID ) || !IDs.contains( Integer.parseInt( proposalID ) ) )
+        {
+            printService.println( Constants.NOT_EXIST_MESSAGE );
+            Util.clearConsole( Constants.TIME_ERROR_MESSAGE );
+            return;
+        }
+
+        user.retireProposal( openProposalsByUser.get( IDs.lastIndexOf( Integer.parseInt( proposalID ) ) ) );
+        printService.println( Constants.OPERATION_COMPLETED );
+        Util.clearConsole( Constants.TIME_MESSAGE );
+    }
+
+    private static void caseFour ( User user ) throws SQLException, Exception
+    {
+        Util.clearConsole( Constants.TIME_SWITCH_MENU );
+        printService.print( Constants.PROPOSAL_LIST );
+
+        List<Proposal> proposalsByUser = proposalJDBC.getAllProposalsByUser( user );
+
+        printService.printProposals( proposalsByUser );
+
+        printService.print( Constants.ENTER_TO_EXIT );
+        scanner.nextLine();
+        Util.clearConsole( Constants.TIME_SWITCH_MENU );
+        return;
     }
 
 }
