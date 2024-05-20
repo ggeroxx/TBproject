@@ -407,7 +407,7 @@ public class ConfiguratorMenu {
         printService.print( Constants.PROPOSAL_LIST );
         printService.printProposals( proposalJDBC.getAllProposalsByLeaf( categoryJDBC.getCategoryByID( Integer.parseInt( categoryID ) ) ) );
 
-        printService.print( "\n" + Constants.ENTER_TO_EXIT );
+        printService.print( Constants.ENTER_TO_EXIT );
         scanner.nextLine();
         Util.clearConsole( Constants.TIME_SWITCH_MENU );
         return;

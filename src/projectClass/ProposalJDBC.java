@@ -15,4 +15,8 @@ public interface ProposalJDBC {
 
     List<Proposal> getAllProposalsByLeaf ( Category leaf ) throws SQLException;
 
+    List<Proposal> getAllCompatibleProposals ( Proposal proposal ) throws SQLException;
+
+    void closeProposal ( Proposal proposal ) throws SQLException;
+
 }

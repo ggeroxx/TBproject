@@ -229,7 +229,7 @@ public class Constants {
 
     // ---------------------------------------- multiple uses constants ----------------------------------------
 
-    public static final String PROPOSAL_LIST = BOLD + "\n\nPROPOSAL LIST\n\n" + RESET;
+    public static final String PROPOSAL_LIST = BOLD + UNDERLINE + ITALIC + "\n\nPROPOSAL LIST\n\n" + RESET;
 
     public static final String HIERARCHY_LIST = PURPLE + BOLD + "\n\nHIERARCHY LIST\n\n" + RESET;
 

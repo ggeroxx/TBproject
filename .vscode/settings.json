@@ -10,5 +10,5 @@
     "lib/**/*.jar"
   ],
   "terminal.integrated.fontFamily": "Menlo, Monaco, 'Courier New', monospace",
-  "terminal.integrated.fontSize": 12
+  "terminal.integrated.fontSize": 13
 }

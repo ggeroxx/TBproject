@@ -364,4 +364,12 @@ public class Queries {
                                                                  "FROM proposals " +
                                                                  "WHERE requestedcategoryid = ? OR offeredcategoryid = ?";
 
+    public static final String GET_ALL_COMPATIBLE_PROPOSALS_QUERY = "SELECT * " +
+                                                                    "FROM proposals " +
+                                                                    "WHERE requestedcategoryid = ? AND requestedhours = ? AND userID <> ? AND ( SELECT districtid FROM users WHERE id = userid ) = ( SELECT districtid FROM users WHERE id = ? ) AND state = 'open'";
+
+    public static final String CLOSE_PROPOSAL_QUERY = "UPDATE proposals " +
+                                                      "SET state = ? " +
+                                                      "WHERE id = ?";
+                                                                    
 }

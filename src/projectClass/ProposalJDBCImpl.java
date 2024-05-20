@@ -50,4 +50,19 @@ public class ProposalJDBCImpl implements ProposalJDBC {
         Conn.queryUpdate( Queries.RETIRE_PROPOSAL_QUERY, new ArrayList<>( Arrays.asList( "retire", proposal.getID() ) ) );   
     }
 
+    @Override
+    public List<Proposal> getAllCompatibleProposals ( Proposal proposal ) throws SQLException 
+    {
+        List<Proposal> toReturn = new ArrayList<Proposal>();
+        ResultSet rs = Conn.exQuery( Queries.GET_ALL_COMPATIBLE_PROPOSALS_QUERY, new ArrayList<>( Arrays.asList( proposal.getOfferedCategory().getID(), proposal.getOfferedHours(), proposal.getUser().getID(), proposal.getUser().getID() ) ) );
+        while( rs.next() ) toReturn.add( new Proposal( rs.getInt( 1 ), categoryJDBC.getCategoryByID( rs.getInt( 2 ) ), categoryJDBC.getCategoryByID( rs.getInt( 3 ) ), rs.getInt( 4 ), rs.getInt( 5 ), userJDBC.getUserByID( rs.getInt( 6 ) ), rs.getString( 7 ) ) );
+        return toReturn;
+    }
+
+    @Override
+    public void closeProposal ( Proposal proposal ) throws SQLException 
+    {
+        Conn.queryUpdate( Queries.CLOSE_PROPOSAL_QUERY, new ArrayList<>( Arrays.asList( "close", proposal.getID() ) ) );
+    }
+
 }

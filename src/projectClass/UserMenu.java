@@ -189,6 +189,8 @@ public class UserMenu {
             printService.print( Constants.PROPOSAL_NOT_SAVED );
             Util.clearConsole( Constants.TIME_ERROR_MESSAGE );
         }
+
+        verifyProposal( newProposal, null, new ArrayList<Proposal>() );
     }
 
     private static void caseThree ( User user, Session session ) throws SQLException, Exception
@@ -237,6 +239,28 @@ public class UserMenu {
         scanner.nextLine();
         Util.clearConsole( Constants.TIME_SWITCH_MENU );
         return;
+    }
+
+    private static void verifyProposal ( Proposal inserted, Proposal toVerify, List<Proposal> toCloses ) throws SQLException, Exception
+    {
+        List<Proposal> compatibleProposals = proposalJDBC.getAllCompatibleProposals( toVerify != null ? toVerify : inserted );
+
+        if ( compatibleProposals.isEmpty() ) return;
+
+        if ( toVerify != null && inserted.getOfferedCategory().getID() == toVerify.getOfferedCategory().getID() && inserted.getRequestedCategory().getID() == toVerify.getRequestedCategory().getID() )
+        {
+            closeProposals( toCloses );
+            return;
+        }
+
+        toCloses.add( compatibleProposals.get( 0 ) );
+        verifyProposal( inserted, compatibleProposals.get( 0 ), toCloses );
+    }
+
+    private static void closeProposals ( List<Proposal> toCloses ) throws SQLException, Exception
+    {
+        for ( Proposal toClose : toCloses )
+            proposalJDBC.closeProposal( toClose );
     }
 
 }
