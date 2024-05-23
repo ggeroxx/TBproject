@@ -67,11 +67,11 @@ public class PrintService {
         StringBuffer toReturn = new StringBuffer();
 
         for ( Category toPrint : categoryJDBC.getAllSavedLeaf() )
-            if ( !toPrint.equals( toRemoved ) )
+            if ( !toPrint.equals( toRemoved ) && !toPrint.getName().equals( toRemoved.getName() ) )
                 toReturn.append( " " + toPrint.getID() + ". " + Util.padRight( Integer.toString( toPrint.getID() ) , 3 ) + toPrint.getName() + Util.padRight( toPrint.getName() , 50 ) + "  [ " + categoryJDBC.getRootByLeaf( toPrint ).getName() + " ]  " + "\n" );
 
         for ( Category toPrint : categoryJDBC.getAllNotSavedLeaf() )
-            if ( !toPrint.equals( toRemoved ) )
+            if ( !toPrint.equals( toRemoved ) && !toPrint.getName().equals( toRemoved.getName() ) )
                 toReturn.append( " " + toPrint.getID() + ". " + Util.padRight( Integer.toString( toPrint.getID() ) , 3 ) + toPrint.getName() + Util.padRight( toPrint.getName() , 50 ) + "  [ " + categoryJDBC.getRootByLeaf( toPrint ).getName() + " ]  " + Constants.NOT_SAVED );
 
         this.println( toReturn.toString() );
