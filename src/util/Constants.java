@@ -38,6 +38,8 @@ public class Constants {
 
     public static final double MAX_VALUES_CONVERSION_FACTOR = 2.0;
 
+    public static final double NEUTRAL_VALUE = 1.0;
+
     // ---------------------------------------- time constants ----------------------------------------
 
     public static final int TIME_ZERO = 0;
@@ -66,9 +68,9 @@ public class Constants {
 
     public static final String REGISTRATION_SCREEN = RED + BOLD + "\n\nREGISTRATION\n\n" + RESET;
 
-    public static final String SQL_EXCEPTION_MESSAGE = "Database error: ";
+    public static final String SQL_EXCEPTION_MESSAGE = "DATABASE EXCEPTION";
 
-    public static final String GENERIC_EXCEPTION_MESSAGE = "Generic error:";
+    public static final String GENERIC_EXCEPTION_MESSAGE = "GENERIC EXCEPTION";
 
     public static final String ENTER_USERNAME = "enter username: ";
 
@@ -78,7 +80,7 @@ public class Constants {
 
     public static final String ENTER_NEW_PASSWORD = "Enter new password (alphanumeric, min 8 max 25 characters): ";
 
-    public static final String ENTER_DISTRICT_OR_EXIT = "Enter district ID (enter 'e' to exit) --> ";
+    public static final String ENTER_DISTRICT_OR_EXIT = "\nEnter district ID (enter '0' to exit) --> ";
 
     public static final String ENTER_MAIL = "Enter mail: ";
 
@@ -163,11 +165,11 @@ public class Constants {
 
     public static final String ENTER_MUNICIPALITY = "\nEnter municipality: ";
 
-    public static final String END_ADD_MESSAGE = "end: (y/n) --> ";
+    public static final String END_ADD_MESSAGE = "\nend: (y/n) --> ";
 
     public static final String ENTER_DISTRICT_TO_VIEW = "Enter district ID --> ";
 
-    public static final String ENTER_CATEGORY_ID = "Enter category ID --> ";
+    public static final String ENTER_CATEGORY_ID = "\nEnter category ID (enter '0' to exit) --> ";
 
     public static final String ENTER_CATEGORY_NAME = "enter category name: ";
 
@@ -177,7 +179,7 @@ public class Constants {
 
     public static final String LEAF_CATEGORY_MESSAGE = "\nleaf category? (y/n) --> ";
 
-    public static final String ENTER_DAD_MESSAGE = " enter parent ID --> ";
+    public static final String ENTER_DAD_MESSAGE = "\n enter parent ID --> ";
 
     public static final String ENTER_FIELD_TYPE = "\nenter field type: ";
 
@@ -197,13 +199,13 @@ public class Constants {
 
     public static final String ERROR_PATTERN_FIELD = RED + "\n --- " + BOLD + "ATTENTION" + RESET + RED + ", parameters not respected! min 1 max 25 characters --- \n" + RESET;
 
+    public static final String ERROR_FIELD_VALUE = RED + "\n --- " + BOLD + "ATTENTION" + RESET + RED + ", parameters not respected or value already present ! --- \n" + RESET;
+
     public static final String ERROR_PATTERN_DESCRIPTION = RED + "\n --- " + BOLD + "ATTENTION" + RESET + RED + ", parameters not respected! min 0 max 100 characters --- \n" + RESET;
 
     public static final String DISTRICT_NAME_ALREADY_PRESENT = RED + "\n --- District name already present --- \n" + RESET;
 
     public static final String MUNICIPALITY_NAME_ALREADY_PRESENT = RED + "\n --- Municipality already present ---" + RESET;
-
-    public static final String VALUE_ALREADY_PRESENT_MESSAGE = RED + "\n --- value already present ! --- \n" + RESET;
 
     public static final String ROOT_CATEGORY_ALREADY_PRESENT = RED + "\n --- Root category already present --- \n" + RESET;
 
@@ -215,7 +217,7 @@ public class Constants {
 
     // ---------------------------------------- PrintService ----------------------------------------
 
-    public static final String NOT_SAVED = "  -->  (not saved)\n";
+    public static final String NOT_SAVED = "  -->  (not saved)";
 
     public static final String NO_CHILD = " (no child) ";
 
@@ -233,9 +235,9 @@ public class Constants {
 
     public static final String HIERARCHY_LIST = PURPLE + BOLD + "\n\nHIERARCHY LIST\n\n" + RESET;
 
-    public static final String ENTER_TO_EXIT = "Press enter to exit ↵  ";
+    public static final String ENTER_TO_EXIT = "\nPress enter to exit ↵  ";
 
-    public static final String ENTER_HIERARCHY_ID = "Enter hierarchy ID --> ";
+    public static final String ENTER_HIERARCHY_ID = "\nEnter hierarchy ID (enter '0' to exit) --> ";
 
     public static final String YES_MESSAGE = "y";
 
@@ -247,6 +249,6 @@ public class Constants {
 
     public static final String INVALID_OPTION = RED + "\n --- Invalid option ! --- \n" + RESET;
 
-    public static final String NOT_EXIST_MESSAGE = RED + "\n --- NOT exist ! --- " + RESET;
+    public static final String NOT_EXIST_MESSAGE = RED + "\n --- NOT exist ! --- \n" + RESET;
 
 }
