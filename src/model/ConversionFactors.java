@@ -67,7 +67,7 @@ public class ConversionFactors {
     public void calculate ( int index, Double value ) throws SQLException
     {
         ConversionFactor AB = this.list.get( index );
-        AB.setValue( Math.round( value * 100000.0 ) / 100000.0 );
+        AB.setValue( Math.round( value * 10000.0 ) / 10000.0 );
         
         for ( Entry<Integer, ConversionFactor> toControl : this.list.entrySet() )
         {
@@ -123,7 +123,7 @@ public class ConversionFactors {
     {
         HashMap<Integer, ConversionFactor> copyCFs = new HashMap<>();
         for (  Entry<Integer, ConversionFactor> cf : this.list.entrySet() )
-        copyCFs.put( cf.getKey(), new ConversionFactor( cf.getValue().getLeaf_1(), cf.getValue().getLeaf_2(), cf.getValue().getValue() ) );
+            copyCFs.put( cf.getKey(), new ConversionFactor( cf.getValue().getLeaf_1(), cf.getValue().getLeaf_2(), cf.getValue().getValue() ) );
 
         List<String> equations = new ArrayList<>();
         calculateEq( index, Constants.NEUTRAL_VALUE, true, copyCFs, equations );
@@ -136,23 +136,27 @@ public class ConversionFactors {
             {
                 eq = eq.replace( "1/x * " , "" );
                 Double tmp = Double.parseDouble( eq );
-                exSX = tmp * Constants.MAX_VALUES_CONVERSION_FACTOR > exSX ? tmp * Constants.MAX_VALUES_CONVERSION_FACTOR : exSX;
-                exDX = tmp * Constants.MIN_VALUES_CONVERSION_FACTOR < exDX ? tmp * Constants.MIN_VALUES_CONVERSION_FACTOR : exDX;
+                exSX = tmp * Constants.MIN_VALUES_CONVERSION_FACTOR > exSX ? tmp * Constants.MIN_VALUES_CONVERSION_FACTOR : exSX;
+                exDX = tmp * Constants.MAX_VALUES_CONVERSION_FACTOR < exDX ? tmp * Constants.MAX_VALUES_CONVERSION_FACTOR : exDX;
             }
             else
             {
                 eq = eq.replace( "x * " , "" );
                 Double tmp = Double.parseDouble( eq );
-                exSX = tmp * Constants.MIN_VALUES_CONVERSION_FACTOR > exSX ? tmp * Constants.MIN_VALUES_CONVERSION_FACTOR : exSX;
-                exDX = tmp * Constants.MAX_VALUES_CONVERSION_FACTOR < exDX ? tmp * Constants.MAX_VALUES_CONVERSION_FACTOR : exDX;
+                exSX = Constants.MIN_VALUES_CONVERSION_FACTOR / tmp > exSX ? Constants.MIN_VALUES_CONVERSION_FACTOR / tmp : exSX;
+                exDX = Constants.MAX_VALUES_CONVERSION_FACTOR / tmp < exDX ? Constants.MAX_VALUES_CONVERSION_FACTOR / tmp : exDX;
             }
         }
+
+        exDX = Math.floor( exDX * 10000.0 ) / 10000.0;
+        exSX = Math.ceil( exSX * 10000.0 ) / 10000.0;
 
         return new double[]{ exSX, exDX };
     }
 
-    public boolean isComplete ()
+    public boolean isComplete () throws SQLException
     {
+        this.populate();
         return this.list.entrySet().stream().allMatch( entry -> entry.getValue().getValue() != null );
     }
 

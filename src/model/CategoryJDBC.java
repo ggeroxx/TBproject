@@ -45,8 +45,6 @@ public interface CategoryJDBC {
 
     Integer getMaxID () throws SQLException;
 
-    void setIDValueAutoIncrement ( int newValue ) throws SQLException;
-
     void setTmpIDValueAutoIncrement ( int newValue ) throws SQLException;
 
 }

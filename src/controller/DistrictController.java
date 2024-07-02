@@ -28,6 +28,7 @@ public class DistrictController extends Controller {
         {
             districtView.printDistrict( toPrint );
             municipalityController.listAll( toPrint );
+            districtView.print( "\n" );
         }
     }
 
@@ -69,7 +70,7 @@ public class DistrictController extends Controller {
     public void viewDistrict () throws SQLException
     {
         super.clearConsole( Constants.TIME_SWITCH_MENU );
-        districtView.print( Constants.DISTRICT_LIST );
+        districtView.print( Constants.DISTRICTS_LIST );
 
         if ( districtJDBC.getAllDistricts().isEmpty() )
         {
@@ -117,7 +118,7 @@ public class DistrictController extends Controller {
                 continue;
             }
             newDistrict.addMunicipality( municipalityToAdd );
-            districtView.println( Constants.ADDED_SUCCESFULL_MESSAGE );
+            districtView.print( Constants.ADDED_SUCCESFULL_MESSAGE );
 
             continueInsert = this.enterYesOrNo( Constants.END_ADD_MESSAGE );
             

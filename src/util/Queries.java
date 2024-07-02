@@ -39,8 +39,8 @@ public class Queries {
 
     public static final String GET_ALL_NOT_SAVED_DISTRICTS = "SELECT id FROM tmp_districts";
 
-    public static final String SAVE_TMP_DISTRICTS_QUERY = "INSERT INTO districts (name, idconfigurator) " +
-                                                          "SELECT name, idconfigurator " +
+    public static final String SAVE_TMP_DISTRICTS_QUERY = "INSERT INTO districts (id, name, idconfigurator) " +
+                                                          "SELECT id, name, idconfigurator " +
                                                           "FROM tmp_districts";
 
     public static final String DELETE_TMP_DISTRICTS_QUERY = "DELETE FROM tmp_districts";
@@ -235,8 +235,8 @@ public class Queries {
                                                                             "WHERE name = ? " +
                                                                         ")";
     
-    public static final String SAVE_TMP_CATEGORIES_QUERY = "INSERT INTO categories (id, name, field, description ,hierarchyid, idconfigurator,root) " +
-                                                           "SELECT id, name, field, description, hierarchyid,idconfigurator,root " +
+    public static final String SAVE_TMP_CATEGORIES_QUERY = "INSERT INTO categories (id, name, field, description ,hierarchyid, idconfigurator, root) " +
+                                                           "SELECT id, name, field, description, hierarchyid, idconfigurator, root " +
                                                            "FROM tmp_categories";
 
     public static final String DELETE_TMP_CATEGORIES_QUERY = "DELETE FROM tmp_categories";

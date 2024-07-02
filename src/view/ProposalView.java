@@ -7,7 +7,7 @@ public class ProposalView extends View {
     
     public void printState ( Proposal proposal, String COLOR )
     {
-        super.println( " : " + COLOR + proposal.getState() + Constants.RESET );
+        super.println( " : " + COLOR + Constants.BOLD + proposal.getState() + Constants.RESET + "\n" );
     }
 
 }

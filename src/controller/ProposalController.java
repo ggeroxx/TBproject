@@ -37,6 +37,17 @@ public class ProposalController extends Controller {
         }
     }
 
+    public void listProposalsWithID ( List<Proposal> proposals )
+    {
+        for( Proposal proposal : proposals )
+        {
+            String COLOR = proposal.getState().equals( "open" ) ? Constants.GREEN : proposal.getState().equals( "close" ) ? Constants.RED : Constants.YELLOW;
+            proposalView.println( proposal.getID() + "." + super.padRight( proposal.getID() + ".", 5) + "requested:" + super.padRight( "requested:" ,15 ) + "[ " + proposal.getRequestedCategory().getName() + super.padRight( proposal.getRequestedCategory().getName(), 50 ) + ", " + proposal.getRequestedHours() + " hours ]" );
+            proposalView.print( super.padRight( "", 5 ) + "offered:" + super.padRight( "offered:" ,15 ) + "[ " + proposal.getOfferedCategory().getName() + super.padRight( proposal.getOfferedCategory().getName(), 50 ) + ", " + proposal.getOfferedHours() + " hours ] " );
+            proposalView.printState( proposal, COLOR );
+        }
+    }
+
     public void verifyProposal ( Proposal inserted, Proposal toVerify, List<Proposal> toCloses ) throws SQLException
     {
         List<Proposal> compatibleProposals = proposalJDBC.getAllCompatibleProposals( toVerify != null ? toVerify : inserted );
@@ -99,7 +110,7 @@ public class ProposalController extends Controller {
         List<Integer> IDs = new ArrayList<Integer>();
         for( Proposal toAdd : openProposalsByUser ) IDs.add( toAdd.getID() );
 
-        this.listProposals( openProposalsByUser );
+        this.listProposalsWithID( openProposalsByUser );
         int proposalID = this.enterProposalID( openProposalsByUser, IDs );
 
         user.retireProposal( openProposalsByUser.get( IDs.lastIndexOf( proposalID ) ) );
@@ -134,6 +145,7 @@ public class ProposalController extends Controller {
 
         categoryController.listAllLeafs();
         int leafID = categoryController.enterLeafID();
+        if ( leafID == 0 ) return;
 
         super.clearConsole( Constants.TIME_SWITCH_MENU );
         proposalView.print( Constants.PROPOSAL_LIST );
@@ -170,7 +182,7 @@ public class ProposalController extends Controller {
 
         int offeredHours = (int) Math.round( conversionFactorController.getConversionFactorsJDBC().getConversionFactor( requestedCategory, offeredCategory ).getValue() * requestedHours );
         Proposal newProposal = new Proposal( null, requestedCategory, offeredCategory, requestedHours, offeredHours, user, "open" );
-        this.printProposal( newProposal );
+        this.printProposalWithCyanHours( newProposal );
 
         String saveOrNot = super.readString( Constants.CONFIRM_PROPOSAL, Constants.NOT_EXIST_MESSAGE, ( input ) -> !input.equals( Constants.NO_MESSAGE ) && !input.equals( Constants.YES_MESSAGE ) );
 
@@ -193,6 +205,12 @@ public class ProposalController extends Controller {
     {
         proposalView.println( "requested:" + super.padRight( "requested:" ,15 ) + "[ " + proposal.getRequestedCategory().getName() + super.padRight( proposal.getRequestedCategory().getName(), 50 ) + ", " + proposal.getRequestedHours() + " hours ]" );
         proposalView.print( "offered:" + super.padRight( "offered:" ,15 ) + "[ " + proposal.getOfferedCategory().getName() + super.padRight( proposal.getOfferedCategory().getName(), 50 ) + ", " + proposal.getOfferedHours() + " hours ] " );
+    }
+
+    public void printProposalWithCyanHours ( Proposal proposal )
+    {
+        proposalView.println( "requested:" + super.padRight( "requested:" ,15 ) + "[ " + proposal.getRequestedCategory().getName() + super.padRight( proposal.getRequestedCategory().getName(), 50 ) + ", " + proposal.getRequestedHours() + " hours ]" );
+        proposalView.print( "offered:" + super.padRight( "offered:" ,15 ) + "[ " + proposal.getOfferedCategory().getName() + super.padRight( proposal.getOfferedCategory().getName(), 50 ) + ", " + Constants.CYAN + proposal.getOfferedHours() + " hours " + Constants.RESET + "] " );
     }
 
 }

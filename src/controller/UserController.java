@@ -20,6 +20,7 @@ public class UserController extends SubjectController {
         this.userView = userView;
         this.session = session;
         this.userJDBC = userJDBC;
+        this.categoryController = categoryController;
         this.proposalController = proposalController;
     }
 
@@ -41,7 +42,7 @@ public class UserController extends SubjectController {
         {
             try
             {
-                super.clearConsole( Constants.TIME_MESSAGE );
+                super.clearConsole( Constants.TIME_SWITCH_MENU );
                 choice = userView.viewUserMenu();
 
                 switch ( choice ) 

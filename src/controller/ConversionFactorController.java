@@ -51,7 +51,7 @@ public class ConversionFactorController extends Controller {
 
             COLOR = entry.getValue().getValue() == null ? Constants.RED : Constants.BOLD + Constants.GREEN;
 
-            conversionFactorView.println( " " + entry.getKey() + ". " + super.padRight( Integer.toString( entry.getKey() ), 5 ) + entry.getValue().getLeaf_1().getName() + rootLeaf1 + super.padRight( entry.getValue().getLeaf_1().getName() + rootLeaf1, 70 ) + "-->\t\t" + entry.getValue().getLeaf_2().getName() + rootLeaf2 + super.padRight( entry.getValue().getLeaf_2().getName() + rootLeaf2, 70 ) + ": " + COLOR + entry.getValue().getValue() + Constants.RESET );
+            conversionFactorView.println( " " + entry.getKey() + ". " + super.padRight( Integer.toString( entry.getKey() ), 5 ) + entry.getValue().getLeaf_1().getName() + rootLeaf1 + super.padRight( entry.getValue().getLeaf_1().getName() + rootLeaf1, 70 ) + "-->\t\t" + entry.getValue().getLeaf_2().getName() + rootLeaf2 + super.padRight( entry.getValue().getLeaf_2().getName() + rootLeaf2, 70 ) + ": " + COLOR + String.format( java.util.Locale.US, "%.4f", entry.getValue().getValue() ) + Constants.RESET );
         }
 
         conversionFactorView.print( "\n" );
@@ -83,7 +83,8 @@ public class ConversionFactorController extends Controller {
         if ( leafID == 0 ) return;
 
         super.clearConsole( Constants.TIME_SWITCH_MENU );
-        conversionFactorView.println( "\n" );
+        conversionFactorView.println( Constants.CONVERSION_FACTORS_LIST );
+
         this.listConversionFactorsByLeaf( categoryController.getCategoryJDBC().getCategoryByID( leafID ) );
 
         conversionFactorView.enterString( "\n" + Constants.ENTER_TO_EXIT );
@@ -129,7 +130,7 @@ public class ConversionFactorController extends Controller {
             }
             catch ( InputMismatchException e )
             {
-                conversionFactorView.print( Constants.INVALID_OPTION );
+                conversionFactorView.println( Constants.INVALID_OPTION );
                 hasExceptionOccured = true;
             }
         } while ( hasExceptionOccured || value < range[ 0 ] || value > range[ 1 ] );
@@ -140,7 +141,16 @@ public class ConversionFactorController extends Controller {
     public void listAllConversionFactors () throws SQLException
     {
         conversionFactors.populate();
+
         super.clearConsole( Constants.TIME_SWITCH_MENU );
+        conversionFactorView.print( Constants.CONVERSION_FACTORS_LIST );
+
+        if ( conversionFactors.getList().isEmpty() )
+        {
+            conversionFactorView.println( Constants.NOT_EXIST_MESSAGE + "\n" );
+            super.clearConsole( Constants.TIME_ERROR_MESSAGE );
+            return;
+        }
 
         this.listAll();
 

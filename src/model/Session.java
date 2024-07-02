@@ -55,15 +55,9 @@ public class Session {
                 else
                 {
                     this.status = true;
-                    Integer max_id;
 
-                    max_id = districtJDBC.getMaxID();
-                    if( max_id == null ) districtJDBC.setIDValueAutoIncrement( 1 );
-                    districtJDBC.setTmpIDValueAutoIncrement( max_id );
-
-                    max_id = categoryJDBC.getMaxID();
-                    if( max_id == null ) categoryJDBC.setIDValueAutoIncrement( 1 );
-                    categoryJDBC.setTmpIDValueAutoIncrement( max_id );
+                    districtJDBC.setTmpIDValueAutoIncrement( districtJDBC.getMaxID());
+                    categoryJDBC.setTmpIDValueAutoIncrement( categoryJDBC.getMaxID() );
 
                     accessJDBC.denyPermission( conf );
                 }

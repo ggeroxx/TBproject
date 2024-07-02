@@ -124,7 +124,7 @@ public class Constants {
 
     public static final String ENTER_VALUE_OF_FIELD_MESSAGE = "Enter " + YELLOW + "value of field" + RESET + " ('<' to go back) --> ";
     
-    public static final String CONFIRM_PROPOSAL = "\nconfirm? (y/n) --> ";
+    public static final String CONFIRM_PROPOSAL = "\n\nconfirm? (y/n) --> ";
 
     public static final String PROPOSAL_SAVED = GREEN + "\n --- " + BOLD + "Proposal saved ✓" + RESET + GREEN + " --- \n" + RESET;
 
@@ -155,7 +155,7 @@ public class Constants {
                                                    "───────────────────────────────────────────\n" +
                                                    "Enter your choice [1-10] --> ";
 
-    public static final String DISTRICT_LIST = PURPLE + BOLD + "\n\nDISTRICT LIST\n\n" + RESET;
+    public static final String DISTRICTS_LIST = PURPLE + BOLD + "\n\nDISTRICTS LIST\n\n" + RESET;
 
     public static final String LEAF_CATEGORY_LIST = PURPLE + BOLD + "\n\nLEAF CATEGORY LIST\n\n" + RESET;
 
@@ -169,7 +169,9 @@ public class Constants {
 
     public static final String ENTER_DISTRICT_TO_VIEW = "Enter district ID --> ";
 
-    public static final String ENTER_CATEGORY_ID = "\nEnter category ID (enter '0' to exit) --> ";
+    public static final String ENTER_CATEGORY_ID = "\nEnter category ID --> ";
+
+    public static final String ENTER_CATEGORY_ID_WITH_EXIT = "\nEnter category ID (enter '0' to exit) --> ";
 
     public static final String ENTER_CATEGORY_NAME = "enter category name: ";
 
@@ -211,7 +213,7 @@ public class Constants {
 
     public static final String INTERNAL_CATEGORY_ALREADY_PRESENT = RED + "\n --- Category already present --- \n" + RESET;
 
-    public static final String OUT_OF_RANGE_ERROR = RED + "\n --- Invalid or out of range !!! --- \n" + RESET;
+    public static final String OUT_OF_RANGE_ERROR = RED + "\n --- Invalid or out of range !!! --- \n\n" + RESET;
 
     public static final String IMPOSSIBLE_SAVE_CF = RED + BOLD + "\n --- ATTENTION, not all conversion factors have been set !!! --- " + RESET;
 
@@ -231,9 +233,9 @@ public class Constants {
 
     // ---------------------------------------- multiple uses constants ----------------------------------------
 
-    public static final String PROPOSAL_LIST = BOLD + UNDERLINE + ITALIC + "\n\nPROPOSAL LIST\n\n" + RESET;
+    public static final String PROPOSAL_LIST = BOLD + PURPLE + "\n\nPROPOSAL LIST\n\n" + RESET;
 
-    public static final String HIERARCHY_LIST = PURPLE + BOLD + "\n\nHIERARCHY LIST\n\n" + RESET;
+    public static final String HIERARCHIES_LIST = PURPLE + BOLD + "\n\nHIERARCHIES LIST\n\n" + RESET;
 
     public static final String ENTER_TO_EXIT = "\nPress enter to exit ↵  ";
 
@@ -250,5 +252,8 @@ public class Constants {
     public static final String INVALID_OPTION = RED + "\n --- Invalid option ! --- \n" + RESET;
 
     public static final String NOT_EXIST_MESSAGE = RED + "\n --- NOT exist ! --- \n" + RESET;
+
+
+    public static final String CONVERSION_FACTORS_LIST = PURPLE + BOLD + "\n\nCONVERSION FACTORS LIST\n\n" + RESET;
 
 }

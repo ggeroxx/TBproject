@@ -74,12 +74,6 @@ public class DistrictJDBCImpl implements DistrictJDBC {
     }
 
     @Override
-    public void setIDValueAutoIncrement ( int newValue ) throws SQLException 
-    {
-        Conn.exQuery( Queries.SET_DISTRICT_ID_VALUE_AUTO_INCREMENT_QUERY, new ArrayList<>( Arrays.asList( newValue ) ) );
-    }
-
-    @Override
     public void setTmpIDValueAutoIncrement ( int newValue ) throws SQLException 
     {
         Conn.queryUpdate( Queries.SET_DISTRICT_TMP_ID_VALUE_AUTO_INCREMENT_QUERY, new ArrayList<>( Arrays.asList( newValue ) ) );

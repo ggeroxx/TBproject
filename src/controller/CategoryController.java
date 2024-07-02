@@ -28,7 +28,7 @@ public class CategoryController extends Controller {
     public void viewHierarchy () throws SQLException
     {
         super.clearConsole( Constants.TIME_SWITCH_MENU );
-        categoryView.print( Constants.HIERARCHY_LIST );
+        categoryView.print( Constants.HIERARCHIES_LIST );
 
         if ( categoryJDBC.getAllRoot().isEmpty() )
         {
@@ -116,11 +116,11 @@ public class CategoryController extends Controller {
     {
         for ( Category toPrint : categoryJDBC.getAllSavedLeaf() ) 
             if ( !toPrint.equals( toRemoved ) && !toPrint.getName().equals( toRemoved.getName() ) )
-                categoryView.print( " " + toPrint.getID() + ". " + super.padRight( Integer.toString( toPrint.getID() ) , 3 ) + toPrint.getName() + super.padRight( toPrint.getName() , 50 ) + "  [ " + categoryJDBC.getRootByLeaf( toPrint ).getName() + " ]  " );
+                categoryView.println( " " + toPrint.getID() + ". " + super.padRight( Integer.toString( toPrint.getID() ) , 3 ) + toPrint.getName() + super.padRight( toPrint.getName() , 50 ) + "  [ " + categoryJDBC.getRootByLeaf( toPrint ).getName() + " ]  " );
 
         for ( Category toPrint : categoryJDBC.getAllNotSavedLeaf() ) 
             if ( !toPrint.equals( toRemoved ) && !toPrint.getName().equals( toRemoved.getName() ) )
-                categoryView.print( " " + toPrint.getID() + ". " + super.padRight( Integer.toString( toPrint.getID() ) , 3 ) + toPrint.getName() + super.padRight( toPrint.getName() , 50 ) + "  [ " + categoryJDBC.getRootByLeaf( toPrint ).getName() + " ]  " + Constants.NOT_SAVED );
+                categoryView.println( " " + toPrint.getID() + ". " + super.padRight( Integer.toString( toPrint.getID() ) , 3 ) + toPrint.getName() + super.padRight( toPrint.getName() , 50 ) + "  [ " + categoryJDBC.getRootByLeaf( toPrint ).getName() + " ]  " + Constants.NOT_SAVED );
     }
 
     public void viewInfo ( Category category ) throws SQLException
@@ -176,7 +176,7 @@ public class CategoryController extends Controller {
             hasExceptionOccured = false;
             try
             {
-                leafID = categoryView.enterInt( Constants.ENTER_CATEGORY_ID );
+                leafID = categoryView.enterInt( Constants.ENTER_CATEGORY_ID_WITH_EXIT );
                 if ( leafID == 0 ) return 0;
                 if ( ( categoryJDBC.getCategoryByID( leafID ) ) == null || !( categoryJDBC.getCategoryByID( leafID ) ).isLeaf() ) categoryView.print( Constants.NOT_EXIST_MESSAGE );
             }
@@ -229,14 +229,14 @@ public class CategoryController extends Controller {
             try
             {
                 requestedID = categoryView.enterInt( "\n" + Constants.ENTER_REQUESTED_CATEGORY_ID );
-                if ( ( categoryJDBC.getCategoryByID( requestedID ) ) == null || ( categoryJDBC.getCategoryByID( requestedID ) ).getHierarchyID() != requestedID ) categoryView.print( Constants.NOT_EXIST_MESSAGE );
+                if ( ( categoryJDBC.getCategoryByID( requestedID ) ) == null || !( categoryJDBC.getCategoryByID( requestedID ).isLeaf() ) ) categoryView.print( Constants.NOT_EXIST_MESSAGE );
             }
             catch ( InputMismatchException e )
             {
                 categoryView.print( Constants.INVALID_OPTION );
                 hasExceptionOccured = true;
             }
-        } while ( hasExceptionOccured || ( categoryJDBC.getCategoryByID( requestedID ) ) == null || ( categoryJDBC.getCategoryByID( requestedID ) ).getHierarchyID() != requestedID );
+        } while ( hasExceptionOccured || ( categoryJDBC.getCategoryByID( requestedID ) ) == null || !( categoryJDBC.getCategoryByID( requestedID ).isLeaf() ) );
 
         return categoryJDBC.getCategoryByID( requestedID );
     }
@@ -280,14 +280,14 @@ public class CategoryController extends Controller {
             try
             {
                 offeredID = categoryView.enterInt( "\n" + Constants.ENTER_OFFERED_CATEGORY_ID );
-                if ( offeredID == requestedCategory.getID() || ( categoryJDBC.getCategoryByID( offeredID ) ) == null || ( categoryJDBC.getCategoryByID( offeredID ) ).getHierarchyID() != offeredID ) categoryView.print( Constants.NOT_EXIST_MESSAGE );
+                if ( offeredID == requestedCategory.getID() || ( categoryJDBC.getCategoryByID( offeredID ) ) == null || !( categoryJDBC.getCategoryByID( offeredID ).isLeaf() ) ) categoryView.print( Constants.NOT_EXIST_MESSAGE );
             }
             catch ( InputMismatchException e )
             {
                 categoryView.print( Constants.INVALID_OPTION );
                 hasExceptionOccured = true;
             }
-        } while ( hasExceptionOccured || offeredID == requestedCategory.getID() || ( categoryJDBC.getCategoryByID( offeredID ) ) == null || ( categoryJDBC.getCategoryByID( offeredID ) ).getHierarchyID() != offeredID );
+        } while ( hasExceptionOccured || offeredID == requestedCategory.getID() || ( categoryJDBC.getCategoryByID( offeredID ) ) == null || !( categoryJDBC.getCategoryByID( offeredID ).isLeaf() ) );
 
         return categoryJDBC.getCategoryByID( offeredID );
     }
@@ -332,7 +332,7 @@ public class CategoryController extends Controller {
     public void navigateHierarchy () throws SQLException
     {
         super.clearConsole( Constants.TIME_SWITCH_MENU );
-        categoryView.print( Constants.HIERARCHY_LIST );
+        categoryView.print( Constants.HIERARCHIES_LIST );
 
         if ( categoryJDBC.getAllRoot().isEmpty() )
         {
@@ -343,6 +343,7 @@ public class CategoryController extends Controller {
 
         this.listAllRoots();
         int hierarchyID = this.enterRootID();
+        if ( hierarchyID == 0 ) return;
 
         super.clearConsole( Constants.TIME_SWITCH_MENU );
         categoryView.print( Constants.CATEGORY_INFO );
