@@ -1,8 +1,5 @@
 package util;
 
-import java.sql.*;
-import model.*;
-
 public class Controls {
 
     public static boolean checkPattern ( String strToCheck, int minLength, int maxLength )

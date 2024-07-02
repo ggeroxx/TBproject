@@ -1,7 +1,5 @@
 package model;
 
-import util.*;
-
 public class ConversionFactor {
 
     private Category leaf_1;
