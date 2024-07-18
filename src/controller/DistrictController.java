@@ -10,6 +10,7 @@ public class DistrictController extends Controller {
     
     private DistrictView districtView;
     private DistrictJDBC districtJDBC;
+    private District district;
     private DistrictToMunicipalitiesJDBC districtToMunicipalitiesJDBC;
     private MunicipalityController municipalityController;
 
@@ -20,6 +21,16 @@ public class DistrictController extends Controller {
         this.districtJDBC = districtJDBC;
         this.districtToMunicipalitiesJDBC = districtToMunicipalitiesJDBC;
         this.municipalityController = municipalityController;
+    }
+
+    public DistrictJDBC getDistrictJDBC ()
+    {
+        return this.districtJDBC;
+    }
+
+    public void setDistrict ( District district )
+    {
+        this.district = district;
     }
 
     public void listAllWithMunicipalities () throws SQLException, Exception
@@ -92,7 +103,7 @@ public class DistrictController extends Controller {
         super.clearConsole( Constants.TIME_SWITCH_MENU );
     }
 
-    public void enterDistrict ( Configurator configurator ) throws SQLException
+    public void enterDistrict ( ConfiguratorController configuratorController ) throws SQLException
     {
         super.clearConsole( Constants.TIME_SWITCH_MENU );
         String districtName = this.enterName();
@@ -103,7 +114,7 @@ public class DistrictController extends Controller {
             super.clearConsole( Constants.TIME_ERROR_MESSAGE );
             return;
         } 
-        District newDistrict = configurator.createDistrict( districtName );
+        configuratorController.createDistrict( districtName );
 
         String municipalityName, continueInsert = Constants.NO_MESSAGE;
         do
@@ -112,12 +123,12 @@ public class DistrictController extends Controller {
 
             Municipality municipalityToAdd = municipalityController.getMunicipalityJDBC().getMunicipalityByName( municipalityName );
 
-            if ( newDistrict.isPresentMunicipalityInDistrict( municipalityToAdd ) )
+            if ( this.isPresentMunicipalityInDistrict( municipalityToAdd ) )
             {
                 districtView.println( Constants.MUNICIPALITY_NAME_ALREADY_PRESENT );
                 continue;
             }
-            newDistrict.addMunicipality( municipalityToAdd );
+            this.addMunicipality( municipalityToAdd );
             districtView.print( Constants.ADDED_SUCCESFULL_MESSAGE );
 
             continueInsert = this.enterYesOrNo( Constants.END_ADD_MESSAGE );
@@ -142,6 +153,16 @@ public class DistrictController extends Controller {
         districtToMunicipalitiesJDBC.deleteTmpDistrictToMunicipalities();
 
         districtJDBC.deleteTmpDistricts();
+    }
+
+    public boolean isPresentMunicipalityInDistrict ( Municipality municipalityToCheck ) throws SQLException
+    {
+        return districtToMunicipalitiesJDBC.isPresentMunicipalityInDistrict( this.district.getID(), municipalityToCheck.getID() );
+    }
+
+    public void addMunicipality ( Municipality municipalityToAdd ) throws SQLException
+    {
+        districtToMunicipalitiesJDBC.addMunicipality( this.district.getID(), municipalityToAdd.getID() );
     }
 
 }

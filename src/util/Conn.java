@@ -11,12 +11,12 @@ public class Conn
     private static final String PASS = "";
     private static Connection conn;
 
-    public static void openConnection () throws SQLException
+    public static void openConnection () throws SQLException 
     {
         conn = DriverManager.getConnection( URL, USER, PASS );
     }
 
-    public static ResultSet exQuery ( String query ) throws SQLException
+    public static ResultSet exQuery ( String query ) throws SQLException 
     {
         Statement stmt = conn.createStatement();
         
@@ -25,7 +25,7 @@ public class Conn
         return rs;
     }
 
-    public static <T> ResultSet exQuery ( String query, List<T> parameters ) throws SQLException
+    public static <T> ResultSet exQuery ( String query, List<T> parameters ) throws SQLException 
     {
         int i = 1;
         
@@ -42,14 +42,14 @@ public class Conn
         return rs;
     }
 
-    public static void queryUpdate ( String query ) throws SQLException
+    public static void queryUpdate ( String query ) throws SQLException 
     {
         Statement stmt = conn.createStatement();
         
         stmt.executeUpdate( query );
     }
 
-    public static <T> void queryUpdate ( String query, List<T> parameters ) throws SQLException
+    public static <T> void queryUpdate ( String query, List<T> parameters ) throws SQLException 
     {
         int i = 1;
         
@@ -64,7 +64,7 @@ public class Conn
         stmt.executeUpdate();
     }
 
-    public static void closeConnection () throws SQLException
+    public static void closeConnection () throws SQLException 
     {
         conn.close();
     }

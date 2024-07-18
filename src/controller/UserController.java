@@ -1,5 +1,6 @@
 package controller;
 
+import java.sql.SQLException;
 import java.util.*;
 import view.*;
 import model.*;
@@ -24,12 +25,17 @@ public class UserController extends SubjectController {
         this.proposalController = proposalController;
     }
 
-    public void setUser ( User user ) 
+    public User getUser ()
+    {
+        return this.user;
+    }
+
+    public void setUser ( User user )
     {
         this.user = user;
     }
 
-    public UserJDBC getUserJDBC () 
+    public UserJDBC getUserJDBC ()
     {
         return this.userJDBC;
     }
@@ -52,18 +58,18 @@ public class UserController extends SubjectController {
                         break;
 
                     case 2:
-                            proposalController.proposeProposal( this.user );
+                            proposalController.proposeProposal( this );
                         break;
 
                     case 3:
-                            proposalController.retireProposal( this.user );
+                            proposalController.retireProposal( this );
                         break;
 
                     case 4:
                             proposalController.listProposalsByUser( this.user );
                         break;
 
-                    case 9:
+                    case 5:
                             session.logout();
                             userView.println( Constants.LOG_OUT );
                             super.clearConsole( Constants.TIME_LOGOUT );
@@ -87,7 +93,17 @@ public class UserController extends SubjectController {
                 e.printStackTrace();
                 continue;
             }
-        } while ( choice != 9 );
+        } while ( choice != 5 );
+    }
+
+    public void insertProposal ( Proposal toInsert ) throws SQLException
+    {
+        proposalController.getProposalJDBC().insertProposal( toInsert.getRequestedCategory(), toInsert.getOfferedCategory(), toInsert.getRequestedHours(), toInsert.getOfferedHours(), toInsert.getUser(), toInsert.getState() );
+    }
+
+    public void retireProposal ( Proposal toRetire ) throws SQLException
+    {
+        proposalController.getProposalJDBC().retireProposal( toRetire );
     }
 
 }

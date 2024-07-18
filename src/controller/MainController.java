@@ -29,7 +29,7 @@ public class MainController extends Controller {
         this.userController = userController;
     }
 
-    public void start ()
+    public void start () 
     {
         int choice = 0;
         super.clearConsole( Constants.TIME_SWITCH_MENU );
@@ -77,7 +77,7 @@ public class MainController extends Controller {
         } while ( choice != 3 );
     }
 
-    private void caseOne () throws SQLException
+    private void caseOne () throws SQLException 
     {
         super.clearConsole( Constants.TIME_SWITCH_MENU );
         mainView.print( Constants.LOGIN_SCREEN );
@@ -102,6 +102,7 @@ public class MainController extends Controller {
         if ( session.getSubject() == 'c' ) 
         {
             Configurator conf = configuratorController.getConfiguratorJDBC().getConfiguratorByUsername( username );
+            configuratorController.setConfigurator( conf );
 
             if ( conf.getFirstAccess() )
             {
@@ -111,9 +112,9 @@ public class MainController extends Controller {
                 String newUsername = configuratorController.enterNewUsername();
                 String newPassword = configuratorController.enterNewPassword();
                 
-                conf.changeCredentials( newUsername, newPassword );
+                configuratorController.changeCredentials( newUsername, newPassword );
             }
-            configuratorController.setConfigurator( conf );
+            
             configuratorController.start();
             return;
         }
@@ -125,7 +126,7 @@ public class MainController extends Controller {
         
     }
 
-    private void caseTwo() throws Exception
+    private void caseTwo () throws Exception 
     {
         super.clearConsole( Constants.TIME_SWITCH_MENU );
         mainView.print( Constants.REGISTRATION_SCREEN );

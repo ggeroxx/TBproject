@@ -108,9 +108,9 @@ public class Constants {
                                            " 2.  propose proposal\n" +
                                            " 3.  retire proposal\n" +
                                            " 4.  view all proposals\n\n" +
-                                           " 9.  logout\n" +
+                                           " 5.  logout\n" +
                                            "─────────────────────────────\n" +
-                                           "Enter your choice [1-9] --> ";
+                                           "Enter your choice [1-5] --> ";
 
     public static final String PROPOSE_PROPOSAL_SCREEN = CYAN + BOLD + "\n\nPROPOSAL\n\n" + RESET;
 

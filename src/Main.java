@@ -12,6 +12,7 @@ public class Main {
         ConfiguratorView configuratorView = new ConfiguratorView();
         CategoryView categoryView = new CategoryView();
         ConversionFactorView conversionFactorView = new ConversionFactorView();
+        ConversionFactorsView conversionFactorsView = new ConversionFactorsView();
         ProposalView proposalView = new ProposalView();
         UserView userView = new UserView();
         SubjectView subjectView = new SubjectView();
@@ -32,10 +33,11 @@ public class Main {
         MunicipalityController municipalityController = new MunicipalityController( municipalityView, municipalityJDBC, districtToMunicipalitiesJDBC );
         DistrictController districtController = new DistrictController( districtView, districtJDBC, districtToMunicipalitiesJDBC, municipalityController );
         CategoryController categoryController = new CategoryController( categoryView, categoryJDBC, relationshipsBetweenCategoriesJDBC );
-        ConversionFactorController conversionFactorController = new ConversionFactorController( conversionFactorView, conversionFactorsJDBC, categoryController );
-        ProposalController proposalController = new ProposalController( proposalView, proposalJDBC, categoryController, conversionFactorController );
+        ConversionFactorController conversionFactorController = new ConversionFactorController( conversionFactorView, categoryController );
+        ConversionFactorsController conversionFactorsController = new ConversionFactorsController( conversionFactorsView, conversionFactorsJDBC, conversionFactorController, categoryController );
+        ProposalController proposalController = new ProposalController( proposalView, proposalJDBC, categoryController, conversionFactorsController );
         UserController userController = new UserController( userView, session, userJDBC, categoryController, proposalController );
-        ConfiguratorController configuratorController = new ConfiguratorController( configuratorView, session, configuratorJDBC, districtController, categoryController, conversionFactorController, proposalController );
+        ConfiguratorController configuratorController = new ConfiguratorController( configuratorView, session, configuratorJDBC, districtController, categoryController, conversionFactorsController, proposalController );
         MainController MainController = new MainController( mainView, session, accessJDBC, districtController, subjectController, configuratorController, userController );
 
         MainController.start();

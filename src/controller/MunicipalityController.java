@@ -19,12 +19,12 @@ public class MunicipalityController extends Controller {
         this.districtToMunicipalitiesJDBC = districtToMunicipalitiesJDBC;
     }
 
-    public MunicipalityJDBC getMunicipalityJDBC () 
+    public MunicipalityJDBC getMunicipalityJDBC ()
     {
         return this.municipalityJDBC;
     }
 
-    public DistrictToMunicipalitiesJDBC getDistrictToMunicipalitiesJDBC () 
+    public DistrictToMunicipalitiesJDBC getDistrictToMunicipalitiesJDBC ()
     {
         return this.districtToMunicipalitiesJDBC;
     }

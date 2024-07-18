@@ -21,37 +21,37 @@ public class Proposal {
         this.state = state;
     }
 
-    public Integer getID() 
+    public Integer getID () 
     {
         return this.ID;
     }
 
-    public Category getRequestedCategory() 
+    public Category getRequestedCategory () 
     {
         return this.requestedCategory;
     }
 
-    public Category getOfferedCategory() 
+    public Category getOfferedCategory () 
     {
         return this.offeredCategory;
     }
 
-    public int getRequestedHours() 
+    public int getRequestedHours () 
     {
         return this.requestedHours;
     }
 
-    public int getOfferedHours() 
+    public int getOfferedHours () 
     {
         return this.offeredHours;
     }
 
-    public User getUser() 
+    public User getUser () 
     {
         return this.user;
     }
 
-    public String getState() 
+    public String getState () 
     {
         return this.state;
     }

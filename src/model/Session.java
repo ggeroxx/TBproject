@@ -25,7 +25,7 @@ public class Session {
         return this.subject;
     }
 
-    public void login ( String usernameToCheck, String passwordToCheck ) throws SQLException
+    public void login ( String usernameToCheck, String passwordToCheck ) throws SQLException 
     {
         Configurator conf = configuratorJDBC.getConfiguratorByUsername( usernameToCheck );
         User user = userJDBC.getUserByUsername( usernameToCheck );
@@ -78,7 +78,7 @@ public class Session {
         }
     }
 
-    public void logout () throws SQLException
+    public void logout () throws SQLException 
     {
         this.status = false;
 

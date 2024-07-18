@@ -5,8 +5,13 @@ import java.util.*;
 
 public class View {
     
-    public Scanner scanner = new Scanner( System.in );
-    public Console console = System.console();
+    private Scanner scanner = new Scanner( System.in );
+    private Console console = System.console();
+
+    public Console getConsole ()
+    {
+        return this.console;
+    }
 
     public void print ( String msg )
     {

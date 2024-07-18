@@ -2,6 +2,9 @@ package controller;
 
 import java.sql.*;
 import java.util.*;
+
+import org.mindrot.jbcrypt.BCrypt;
+
 import model.*;
 import util.*;
 import view.*;
@@ -14,10 +17,10 @@ public class ConfiguratorController extends SubjectController {
     private ConfiguratorJDBC configuratorJDBC;
     private DistrictController districtController;
     private CategoryController categoryController;
-    private ConversionFactorController conversionFactorController;
+    private ConversionFactorsController conversionFactorsController;
     private ProposalController proposalController;
 
-    public ConfiguratorController ( ConfiguratorView configuratorView, Session session, ConfiguratorJDBC configuratorJDBC, DistrictController districtController, CategoryController categoryController, ConversionFactorController conversionFactorController, ProposalController proposalController )
+    public ConfiguratorController ( ConfiguratorView configuratorView, Session session, ConfiguratorJDBC configuratorJDBC, DistrictController districtController, CategoryController categoryController, ConversionFactorsController conversionFactorsController, ProposalController proposalController )
     {
         super( configuratorView );
         this.configuratorView = configuratorView;
@@ -25,7 +28,7 @@ public class ConfiguratorController extends SubjectController {
         this.configuratorJDBC = configuratorJDBC;
         this.districtController = districtController;
         this.categoryController = categoryController;
-        this.conversionFactorController = conversionFactorController;
+        this.conversionFactorsController = conversionFactorsController;
         this.proposalController = proposalController;
     }
 
@@ -53,15 +56,15 @@ public class ConfiguratorController extends SubjectController {
                 switch ( choice ) 
                 {
                     case 1:
-                            districtController.enterDistrict( this.configurator );
+                            districtController.enterDistrict( this );
                         break;
 
                     case 2:
-                            categoryController.enterHierarchy( this.configurator );
+                            categoryController.enterHierarchy( this );
                         break;
 
                     case 3:
-                            conversionFactorController.enterConversionFactors();
+                            conversionFactorsController.enterConversionFactors();
                         break;
 
                     case 4:
@@ -77,11 +80,11 @@ public class ConfiguratorController extends SubjectController {
                         break;
 
                     case 7:
-                            conversionFactorController.listAllConversionFactors();
+                            conversionFactorsController.listAllConversionFactors();
                         break;
 
                     case 8:
-                            conversionFactorController.listConversionFactorsOfLeaf();
+                            conversionFactorsController.listConversionFactorsOfLeaf();
                         break;
 
                     case 9:
@@ -90,7 +93,7 @@ public class ConfiguratorController extends SubjectController {
 
                     case 10:
                             session.logout();
-                            conversionFactorController.resetConversionFactors();
+                            conversionFactorsController.resetConversionFactors();
                             configuratorView.println( Constants.LOG_OUT );
                             super.clearConsole( Constants.TIME_LOGOUT );
                         break;
@@ -116,7 +119,7 @@ public class ConfiguratorController extends SubjectController {
 
     public void saveAll () throws SQLException
     {
-        if ( !conversionFactorController.getConversionFactors().isComplete() )
+        if ( !conversionFactorsController.isComplete() )
         {
             configuratorView.println( Constants.IMPOSSIBLE_SAVE_CF );
             super.clearConsole( Constants.TIME_ERROR_MESSAGE );
@@ -124,9 +127,28 @@ public class ConfiguratorController extends SubjectController {
         }
         categoryController.saveCategories();
         districtController.saveDistricts();
-        conversionFactorController.saveConversionFactors();
+        conversionFactorsController.saveConversionFactors();
         configuratorView.println( Constants.SAVE_COMPLETED );
         super.clearConsole( Constants.TIME_MESSAGE );
+    }
+
+    public void changeCredentials ( String approvedUsername, String newPassword ) throws SQLException
+    {
+        configuratorJDBC.changeCredentials( configurator.getUsername(), approvedUsername, BCrypt.hashpw( newPassword, BCrypt.gensalt() ) );
+
+        configurator.setUsername( approvedUsername );
+        configurator.setPassword( newPassword );
+        configurator.setFirstAccess( false );
+    }
+
+    public void createDistrict ( String districtName ) throws SQLException
+    {
+        districtController.setDistrict( districtController.getDistrictJDBC().createDistrict( districtName , configurator.getID() ) );
+    }
+
+    public void createCategory ( String name, String field, String description, boolean isRoot, Integer hierarchyID ) throws SQLException
+    {
+        categoryController.setCategory( categoryController.getCategoryJDBC().createCategory( name, field, description, isRoot, hierarchyID, configurator.getID() ) );
     }
 
 }

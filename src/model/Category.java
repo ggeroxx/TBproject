@@ -1,7 +1,5 @@
 package model;
 
-import java.sql.SQLException;
-
 public class Category {
     
     private int ID;
@@ -11,8 +9,6 @@ public class Category {
     private boolean root;
     private int hierarchyID;
     private int IDConfigurator;
-    private CategoryJDBC categoryJDBC;
-    private RelationshipsBetweenCategoriesJDBC relationshipsBetweenCategoriesJDBC;
 
     public Category ( int ID, String name, String field, String description, boolean root, int hierarchyID, int IDConfigurator )
     {
@@ -23,8 +19,6 @@ public class Category {
         this.root = root;
         this.hierarchyID = hierarchyID;
         this.IDConfigurator = IDConfigurator;
-        this.categoryJDBC = new CategoryJDBCImpl();
-        this.relationshipsBetweenCategoriesJDBC = new RelationshipsBetweenCategoriesJDBCImpl();
     }
 
     public int getID() 
@@ -52,6 +46,11 @@ public class Category {
         return this.hierarchyID;
     }
 
+    public int getIDConfigurator ()
+    {
+        return this.IDConfigurator;
+    }
+
     public boolean isRoot ()
     {
         return this.root;
@@ -62,25 +61,10 @@ public class Category {
         return this.field == null;
     }
 
-    public void createRelationship ( int parentID, String fieldType ) throws SQLException
-    {
-        relationshipsBetweenCategoriesJDBC.createRelationship( parentID, this.ID, fieldType );
-    }
-
-    public boolean isPresentInternalCategory ( String nameToCheck ) throws SQLException
-    {
-        return categoryJDBC.isPresentInternalCategory( this.hierarchyID, nameToCheck );
-    }
-
-    public boolean isValidParentID ( int IDToCheck ) throws SQLException
-    {
-        return categoryJDBC.isValidParentID( this.hierarchyID, IDToCheck );
-    }
-
     @Override
     public boolean equals ( Object obj ) 
     {
-        return this.ID == ( ( Category ) obj ).ID;
+        return this.ID == ( ( Category )obj ).ID;
     }
 
 }

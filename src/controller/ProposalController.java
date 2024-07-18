@@ -11,15 +11,15 @@ public class ProposalController extends Controller {
     private ProposalView proposalView;
     private ProposalJDBC proposalJDBC;
     private CategoryController categoryController;
-    private ConversionFactorController conversionFactorController;
+    private ConversionFactorsController conversionFactorsController;
 
-    public ProposalController ( ProposalView proposalView, ProposalJDBC proposalJDBC, CategoryController categoryController, ConversionFactorController conversionFactorController )
+    public ProposalController ( ProposalView proposalView, ProposalJDBC proposalJDBC, CategoryController categoryController, ConversionFactorsController conversionFactorsController )
     {
         super( proposalView );
         this.proposalView = proposalView;
         this.proposalJDBC = proposalJDBC;
         this.categoryController = categoryController;
-        this.conversionFactorController = conversionFactorController;
+        this.conversionFactorsController = conversionFactorsController;
     }
 
     public ProposalJDBC getProposalJDBC () 
@@ -93,12 +93,12 @@ public class ProposalController extends Controller {
         return proposalID;
     }
 
-    public void retireProposal ( User user ) throws SQLException
+    public void retireProposal ( UserController userController ) throws SQLException
     {
         super.clearConsole( Constants.TIME_SWITCH_MENU );
         proposalView.print( Constants.PROPOSAL_LIST );
 
-        List<Proposal> openProposalsByUser = this.proposalJDBC.getAllOpenProposalByUser( user );
+        List<Proposal> openProposalsByUser = this.proposalJDBC.getAllOpenProposalByUser( userController.getUser() );
 
         if ( openProposalsByUser.isEmpty() )
         {
@@ -113,7 +113,7 @@ public class ProposalController extends Controller {
         this.listProposalsWithID( openProposalsByUser );
         int proposalID = this.enterProposalID( openProposalsByUser, IDs );
 
-        user.retireProposal( openProposalsByUser.get( IDs.lastIndexOf( proposalID ) ) );
+        userController.retireProposal( openProposalsByUser.get( IDs.lastIndexOf( proposalID ) ) );
         proposalView.println( Constants.OPERATION_COMPLETED );
         super.clearConsole( Constants.TIME_MESSAGE );
     }
@@ -155,7 +155,7 @@ public class ProposalController extends Controller {
         super.clearConsole( Constants.TIME_SWITCH_MENU );
     }
 
-    public void proposeProposal ( User user ) throws SQLException
+    public void proposeProposal ( UserController userController ) throws SQLException
     {
         if ( categoryController.getCategoryJDBC().getAllLeaf().isEmpty() || categoryController.getCategoryJDBC().getAllLeaf().size() == 1 )
         {
@@ -180,8 +180,8 @@ public class ProposalController extends Controller {
         super.clearConsole( Constants.TIME_SWITCH_MENU );
         proposalView.print( Constants.PROPOSE_PROPOSAL_SCREEN );
 
-        int offeredHours = (int) Math.round( conversionFactorController.getConversionFactorsJDBC().getConversionFactor( requestedCategory, offeredCategory ).getValue() * requestedHours );
-        Proposal newProposal = new Proposal( null, requestedCategory, offeredCategory, requestedHours, offeredHours, user, "open" );
+        int offeredHours = (int) Math.round( conversionFactorsController.getConversionFactorsJDBC().getConversionFactor( requestedCategory, offeredCategory ).getValue() * requestedHours );
+        Proposal newProposal = new Proposal( null, requestedCategory, offeredCategory, requestedHours, offeredHours, userController.getUser(), "open" );
         this.printProposalWithCyanHours( newProposal );
 
         String saveOrNot = super.readString( Constants.CONFIRM_PROPOSAL, Constants.NOT_EXIST_MESSAGE, ( input ) -> !input.equals( Constants.NO_MESSAGE ) && !input.equals( Constants.YES_MESSAGE ) );
@@ -190,7 +190,7 @@ public class ProposalController extends Controller {
         {
             proposalView.print( Constants.PROPOSAL_SAVED );
             super.clearConsole( Constants.TIME_MESSAGE );
-            user.insertProposal( newProposal );
+            userController.insertProposal( newProposal );
         }
         else
         {

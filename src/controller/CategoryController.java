@@ -10,6 +10,7 @@ public class CategoryController extends Controller {
     
     private CategoryView categoryView;
     private CategoryJDBC categoryJDBC;
+    private Category category;
     private RelationshipsBetweenCategoriesJDBC relationshipsBetweenCategoriesJDBC;
 
     public CategoryController ( CategoryView categoryView, CategoryJDBC categoryJDBC, RelationshipsBetweenCategoriesJDBC relationshipsBetweenCategoriesJDBC )
@@ -20,7 +21,12 @@ public class CategoryController extends Controller {
         this.relationshipsBetweenCategoriesJDBC = relationshipsBetweenCategoriesJDBC;
     }
 
-    public CategoryJDBC getCategoryJDBC () 
+    public void setCategory ( Category category ) 
+    {
+        this.category = category;
+    }
+
+    public CategoryJDBC getCategoryJDBC ()
     {
         return this.categoryJDBC;
     }
@@ -190,7 +196,7 @@ public class CategoryController extends Controller {
         return leafID;
     }
 
-    public int enterParentID ( Category category, Category root ) throws SQLException
+    public int enterParentID ( Category root ) throws SQLException
     {
         int parentID = 0;
 
@@ -203,14 +209,14 @@ public class CategoryController extends Controller {
                 categoryView.print( "\n" + Constants.CATEGORY_LIST );
                 listAllPossibleDad( category );
                 parentID = categoryView.enterInt( Constants.ENTER_DAD_MESSAGE );
-                if ( !root.isValidParentID( parentID ) ) categoryView.print( Constants.NOT_EXIST_MESSAGE );
+                if ( !isValidParentID( root, parentID ) ) categoryView.print( Constants.NOT_EXIST_MESSAGE );
             }
             catch ( InputMismatchException e )
             {
                 categoryView.print( Constants.INVALID_OPTION );
                 hasExceptionOccured = true;
             }
-        } while ( hasExceptionOccured || !root.isValidParentID( parentID ) );
+        } while ( hasExceptionOccured || !isValidParentID( root, parentID ) );
 
         return parentID;
     }
@@ -388,7 +394,7 @@ public class CategoryController extends Controller {
         return relationshipsBetweenCategoriesJDBC.getChildCategoryByFieldAndParentID( field, parent ) != null;
     }
 
-    public void enterHierarchy ( Configurator configurator ) throws SQLException
+    public void enterHierarchy ( ConfiguratorController configuratorController ) throws SQLException
     {
         super.clearConsole( Constants.TIME_SWITCH_MENU );
         categoryView.print( Constants.HIERARCHY_SCREEN );
@@ -415,7 +421,7 @@ public class CategoryController extends Controller {
                 super.clearConsole( Constants.TIME_ERROR_MESSAGE );
                 return;
             }
-            if ( notFirstIteration && root.isPresentInternalCategory( categoryName ) )
+            if ( notFirstIteration && isPresentInternalCategory( root, categoryName ) )
             {
                 categoryView.print( Constants.INTERNAL_CATEGORY_ALREADY_PRESENT );
                 super.clearConsole( Constants.TIME_ERROR_MESSAGE );
@@ -429,22 +435,26 @@ public class CategoryController extends Controller {
             String description = null;
             if ( leafCategory.equals( Constants.NO_MESSAGE ) ) field = this.enterField();
             if ( notFirstIteration ) description = this.enterDescription();
-            Category newCategory = isRoot ? ( configurator.createCategory( categoryName, field, description, isRoot, null ) ) : ( configurator.createCategory( categoryName, field, description, isRoot, root.getHierarchyID() ) );
+
+            if ( isRoot )
+                configuratorController.createCategory( categoryName, field, description, isRoot, null );
+            else
+                configuratorController.createCategory( categoryName, field, description, isRoot, root.getHierarchyID() );
 
             notFirstIteration = true;
 
             if ( isRoot ) 
             {
                 isRoot = false;
-                root = newCategory;
+                root = this.category;
                 continue;
             }
 
-            int parentID = this.enterParentID( newCategory, root );
+            int parentID = this.enterParentID( root );
             
             String fieldType = this.enterFieldType( parentID );
 
-            newCategory.createRelationship( parentID, fieldType );
+            createRelationship( parentID, fieldType );
 
             if ( leafCategory.equals( Constants.NO_MESSAGE ) || categoryJDBC.getCategoriesWithoutChild().size() > 0 ) continue;
 
@@ -468,6 +478,21 @@ public class CategoryController extends Controller {
         relationshipsBetweenCategoriesJDBC.deleteTmpRelationshipsBetweenCategories();
 
         categoryJDBC.deleteTmpCategories();
+    }
+
+    public void createRelationship ( int parentID, String fieldType ) throws SQLException
+    {
+        relationshipsBetweenCategoriesJDBC.createRelationship( parentID, this.category.getID(), fieldType );
+    }
+
+    public boolean isPresentInternalCategory ( Category root, String nameToCheck ) throws SQLException
+    {
+        return categoryJDBC.isPresentInternalCategory( root.getHierarchyID(), nameToCheck );
+    }
+
+    public boolean isValidParentID ( Category root, int IDToCheck ) throws SQLException
+    {
+        return categoryJDBC.isValidParentID( root.getHierarchyID(), IDToCheck );
     }
 
 }

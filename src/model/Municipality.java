@@ -1,7 +1,5 @@
 package model;
 
-import java.sql.*;
-
 public class Municipality {
     
     private int ID;
@@ -9,7 +7,7 @@ public class Municipality {
     private String CAP;
     private String province;
 
-    public Municipality ( int ID, String name, String CAP, String province ) throws SQLException
+    public Municipality ( int ID, String name, String CAP, String province )
     {
         this.ID = ID;
         this.name = name;
@@ -35,12 +33,6 @@ public class Municipality {
     public String getProvince () 
     {
         return this.province;
-    }
-
-    @Override
-    public String toString () 
-    {
-        return new StringBuffer().append( "  " + this.CAP + "  " + this.province + "  " + this.name + "\n" ).toString();
     }
 
 }
