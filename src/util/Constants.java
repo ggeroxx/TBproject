@@ -94,7 +94,7 @@ public class Constants {
 
     public static final String ERROR_PATTERN_PASSWORD = RED + "\n --- " + BOLD + "ATTENTION" + RESET + RED + ", parameters not respected! min 8 max 25 characters, at least one digit and one character required --- \n" + RESET;
 
-    public static final String ERROR_PATTERN_MAIL = RED + "\n --- " + BOLD + "ATTENTION" + RESET + RED + ", parameters not respected! --- \n" + RESET;
+    public static final String ERROR_PATTERN_MAIL = RED + "\n --- " + BOLD + "ATTENTION" + RESET + RED + ", parameters not respected! --- \n\n" + RESET;
 
     public static final String DENIED_ACCESS = RED + BOLD + "\n --- DENIED ACCESS, %s is working... --- \n" + RESET;
 
@@ -120,7 +120,7 @@ public class Constants {
 
     public static final String ENTER_OFFERED_CATEGORY_ID = "Enter ID of offered category --> ";
 
-    public static final String ENTER_REQUESTED_HOURS = "Enter number of requested hours of ";
+    public static final String ENTER_REQUESTED_HOURS = "\nEnter number of requested hours of ";
 
     public static final String ENTER_VALUE_OF_FIELD_MESSAGE = "Enter " + YELLOW + "value of field" + RESET + " ('<' to go back) --> ";
     
@@ -130,7 +130,7 @@ public class Constants {
 
     public static final String PROPOSAL_NOT_SAVED = RED + "\n --- " + BOLD + "Proposal NOT saved !!!" + RESET + RED + " --- \n" + RESET;
 
-    public static final String ENTER_PROPOSAL_ID = "Enter proposal ID to " + RED + BOLD + "retire" + RESET + " --> ";
+    public static final String ENTER_PROPOSAL_ID = "\nEnter proposal ID to " + RED + BOLD + "retire" + RESET + " --> ";
 
     public static final String NOT_EXIST_FIELD_MESSAGE = RED + BOLD + " --- NOT exist field ! --- \n" + RESET;
 
@@ -185,7 +185,7 @@ public class Constants {
 
     public static final String ENTER_FIELD_TYPE = "\nenter field type: ";
 
-    public static final String ENTER_CHOICE_PAIR = "Enter your choice: ";
+    public static final String ENTER_CHOICE_PAIR = "\nEnter your choice: ";
 
     public static final String ENTER_VALUE_CONVERSION_FACTOR = "Enter value of conversion factor ";
 

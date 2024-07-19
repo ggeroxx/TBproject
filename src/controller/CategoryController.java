@@ -148,52 +148,32 @@ public class CategoryController extends Controller {
         categoryView.println( sb.toString() );
     }
 
-    public int enterRootID () throws SQLException
+    public int enterRootID ()
     {
-        int rootID = 0;
-
-        boolean hasExceptionOccured; 
-        do
-        {
-            hasExceptionOccured = false;
-            try
+        return super.readIntWithExit( Constants.ENTER_HIERARCHY_ID, Constants.NOT_EXIST_MESSAGE, ( input ) -> {
+            try 
             {
-                rootID = categoryView.enterInt( Constants.ENTER_HIERARCHY_ID );
-                if ( rootID == 0 ) return 0;
-                if ( categoryJDBC.getRootCategoryByID( rootID ) == null ) categoryView.print( Constants.NOT_EXIST_MESSAGE );
-            }
-            catch ( InputMismatchException e )
+                return categoryJDBC.getRootCategoryByID( (Integer) input ) == null;
+            } 
+            catch ( SQLException e ) 
             {
-                categoryView.print( Constants.INVALID_OPTION );
-                hasExceptionOccured = true;
+                return false;
             }
-        } while ( hasExceptionOccured || categoryJDBC.getRootCategoryByID( rootID ) == null );
-
-        return rootID;
+        } );
     }
         
-    public int enterLeafID () throws SQLException
+    public int enterLeafID ()
     {
-        int leafID = 0;
-
-        boolean hasExceptionOccured; 
-        do
-        {
-            hasExceptionOccured = false;
-            try
+        return super.readIntWithExit( Constants.ENTER_CATEGORY_ID_WITH_EXIT, Constants.NOT_EXIST_MESSAGE, ( input ) -> {
+            try 
             {
-                leafID = categoryView.enterInt( Constants.ENTER_CATEGORY_ID_WITH_EXIT );
-                if ( leafID == 0 ) return 0;
-                if ( ( categoryJDBC.getCategoryByID( leafID ) ) == null || !( categoryJDBC.getCategoryByID( leafID ) ).isLeaf() ) categoryView.print( Constants.NOT_EXIST_MESSAGE );
-            }
-            catch ( InputMismatchException e )
+                return ( categoryJDBC.getCategoryByID( (Integer) input ) ) == null || !( categoryJDBC.getCategoryByID( (Integer) input ) ).isLeaf();
+            } 
+            catch ( SQLException e ) 
             {
-                categoryView.print( Constants.INVALID_OPTION );
-                hasExceptionOccured = true;
+                return false;
             }
-        } while ( hasExceptionOccured || ( categoryJDBC.getCategoryByID( leafID ) ) == null || !( categoryJDBC.getCategoryByID( leafID ) ).isLeaf() );
-
-        return leafID;
+        } );
     }
 
     public int enterParentID ( Category root ) throws SQLException
@@ -226,50 +206,22 @@ public class CategoryController extends Controller {
         categoryView.print( Constants.PROPOSE_PROPOSAL_SCREEN );
         this.listAllLeafs();
 
-        int requestedID = 0;
-
-        boolean hasExceptionOccured; 
-        do
-        {
-            hasExceptionOccured = false;
-            try
+        return categoryJDBC.getCategoryByID( super.readInt( "\n" + Constants.ENTER_REQUESTED_CATEGORY_ID, Constants.NOT_EXIST_MESSAGE, ( input ) -> {
+            try 
             {
-                requestedID = categoryView.enterInt( "\n" + Constants.ENTER_REQUESTED_CATEGORY_ID );
-                if ( ( categoryJDBC.getCategoryByID( requestedID ) ) == null || !( categoryJDBC.getCategoryByID( requestedID ).isLeaf() ) ) categoryView.print( Constants.NOT_EXIST_MESSAGE );
-            }
-            catch ( InputMismatchException e )
+                return ( categoryJDBC.getCategoryByID( (Integer) input ) ) == null || !( categoryJDBC.getCategoryByID( (Integer) input ).isLeaf() );
+            } catch ( SQLException e ) 
             {
-                categoryView.print( Constants.INVALID_OPTION );
-                hasExceptionOccured = true;
+                return false;
             }
-        } while ( hasExceptionOccured || ( categoryJDBC.getCategoryByID( requestedID ) ) == null || !( categoryJDBC.getCategoryByID( requestedID ).isLeaf() ) );
-
-        return categoryJDBC.getCategoryByID( requestedID );
+        } ) );
     }
 
     public int enterRequestedHours ( Category requestedCategory )
     {
         categoryView.print( Constants.PROPOSE_PROPOSAL_SCREEN );
         
-        int requestedHours = 0;
-
-        boolean hasExceptionOccured; 
-        do
-        {
-            hasExceptionOccured = false;
-            try
-            {
-                requestedHours = categoryView.enterInt( Constants.ENTER_REQUESTED_HOURS + Constants.CYAN + requestedCategory.getName() + Constants.RESET + ": " );
-                if ( requestedHours <= 0 ) categoryView.print( Constants.ERROR_HOUR );
-            }
-            catch ( InputMismatchException e )
-            {
-                categoryView.print( Constants.INVALID_OPTION );
-                hasExceptionOccured = true;
-            }
-        } while ( hasExceptionOccured || requestedHours <= 0 );
-
-        return requestedHours;
+        return super.readInt( Constants.ENTER_REQUESTED_HOURS + Constants.CYAN + requestedCategory.getName() + Constants.RESET + ": ", Constants.ERROR_HOUR, ( input ) -> (Integer) input <= 0 );
     }
 
     public Category enterOfferedCategory ( Category requestedCategory ) throws SQLException
@@ -277,48 +229,30 @@ public class CategoryController extends Controller {
         categoryView.print( Constants.PROPOSE_PROPOSAL_SCREEN );
         this.listAllLeafsWithout( requestedCategory );
 
-        int offeredID = 0;
-
-        boolean hasExceptionOccured; 
-        do
-        {
-            hasExceptionOccured = false;
-            try
+        return categoryJDBC.getCategoryByID( super.readInt( "\n" + Constants.ENTER_OFFERED_CATEGORY_ID, Constants.NOT_EXIST_MESSAGE, ( input ) -> {
+            try 
             {
-                offeredID = categoryView.enterInt( "\n" + Constants.ENTER_OFFERED_CATEGORY_ID );
-                if ( offeredID == requestedCategory.getID() || ( categoryJDBC.getCategoryByID( offeredID ) ) == null || !( categoryJDBC.getCategoryByID( offeredID ).isLeaf() ) ) categoryView.print( Constants.NOT_EXIST_MESSAGE );
-            }
-            catch ( InputMismatchException e )
+                return (Integer) input == requestedCategory.getID() || ( categoryJDBC.getCategoryByID( (Integer) input ) ) == null || !( categoryJDBC.getCategoryByID( (Integer) input ) ).isLeaf();
+            } 
+            catch ( SQLException e ) 
             {
-                categoryView.print( Constants.INVALID_OPTION );
-                hasExceptionOccured = true;
+                return false;
             }
-        } while ( hasExceptionOccured || offeredID == requestedCategory.getID() || ( categoryJDBC.getCategoryByID( offeredID ) ) == null || !( categoryJDBC.getCategoryByID( offeredID ).isLeaf() ) );
-
-        return categoryJDBC.getCategoryByID( offeredID );
+        } ) );
     }
 
-    public int enterID ( int hierarchyID ) throws SQLException
+    public int enterID ( int hierarchyID )
     {
-        int ID = 0;
-
-        boolean hasExceptionOccured; 
-        do
-        {
-            hasExceptionOccured = false;
-            try
+        return super.readInt( Constants.ENTER_CATEGORY_ID, Constants.NOT_EXIST_MESSAGE, ( input ) -> {
+            try 
             {
-                ID = categoryView.enterInt( Constants.ENTER_CATEGORY_ID );
-                if ( ( categoryJDBC.getCategoryByID( ID ) ) == null || ( categoryJDBC.getCategoryByID( ID ) ).getHierarchyID() != hierarchyID ) categoryView.print( Constants.NOT_EXIST_MESSAGE );
-            }
-            catch ( InputMismatchException e )
+                return ( categoryJDBC.getCategoryByID( (Integer) input ) ) == null || ( categoryJDBC.getCategoryByID( (Integer) input ) ).getHierarchyID() != hierarchyID;
+            } 
+            catch ( SQLException e ) 
             {
-                categoryView.print( Constants.INVALID_OPTION );
-                hasExceptionOccured = true;
+                return false;
             }
-        } while ( hasExceptionOccured || ( categoryJDBC.getCategoryByID( ID ) ) == null || ( categoryJDBC.getCategoryByID( ID ) ).getHierarchyID() != hierarchyID );
-
-        return ID;
+        } );
     }
 
     public String enterFieldType ( int parentID )

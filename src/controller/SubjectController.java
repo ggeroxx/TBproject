@@ -63,17 +63,7 @@ public class SubjectController extends Controller {
 
     public String enterMail ()
     {
-        String mail;
-        boolean checkMail;
-
-        do
-        {   
-            mail = subjectView.enterString( Constants.ENTER_MAIL );
-            checkMail = Controls.checkPatternMail( mail, 4, 51 );
-            if ( !checkMail ) subjectView.println( Constants.ERROR_PATTERN_MAIL );
-        } while ( !checkMail );
-
-        return mail;
+        return super.readString( Constants.ENTER_MAIL, Constants.ERROR_PATTERN_MAIL, ( input ) -> !Controls.checkPatternMail( input, 4, 51 ) );
     }
 
     public boolean isPresentUsername ( String usernameToCheck ) throws SQLException

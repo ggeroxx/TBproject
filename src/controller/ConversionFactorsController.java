@@ -91,27 +91,9 @@ public class ConversionFactorsController extends Controller {
         super.clearConsole( Constants.TIME_SWITCH_MENU );
     }
 
-    public int enterID () throws SQLException
+    public int enterID ()
     {
-        int ID = 0;
-
-        boolean hasExceptionOccured; 
-        do
-        {
-            hasExceptionOccured = false;
-            try
-            {
-                ID = conversionFactorsView.enterInt( Constants.ENTER_CHOICE_PAIR );
-                if ( !conversionFactors.getList().containsKey( ID ) || !( conversionFactors.getList().get( ID ).getValue() == null ) ) conversionFactorsView.print( "\n" + Constants.NOT_EXIST_MESSAGE );
-            }
-            catch ( InputMismatchException e )
-            {
-                conversionFactorsView.print( Constants.INVALID_OPTION );
-                hasExceptionOccured = true;
-            }
-        } while ( hasExceptionOccured || !conversionFactors.getList().containsKey( ID ) || !( conversionFactors.getList().get( ID ).getValue() == null ) );
-
-        return ID;
+        return super.readInt( Constants.ENTER_CHOICE_PAIR, Constants.NOT_EXIST_MESSAGE, ( input ) -> !conversionFactors.getList().containsKey( (Integer) input ) || !( conversionFactors.getList().get( (Integer) input ).getValue() == null ) );
     }
 
     public Double enterValue ( double[] range )
@@ -172,8 +154,7 @@ public class ConversionFactorsController extends Controller {
         {
             super.clearConsole( Constants.TIME_SWITCH_MENU );
             conversionFactorsView.print( "\n" );
-            this.listAll(); 
-            conversionFactorsView.print("\n" );
+            this.listAll();
 
             int index = this.enterID();
             double[] range = calculateRange( index );

@@ -33,12 +33,12 @@ public class View {
         return string;
     }
 
-    public int enterInt ( String msg )
+    public Integer enterInt ( String msg )
     {
         scanner = new Scanner( System.in );
 
         print( msg );
-        int integer = scanner.nextInt();
+        Integer integer = scanner.nextInt();
 
         return integer;
     }

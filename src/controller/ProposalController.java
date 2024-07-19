@@ -72,25 +72,7 @@ public class ProposalController extends Controller {
 
     private int enterProposalID ( List<Proposal> openProposalsByUser, List<Integer> IDs )
     {
-        int proposalID = 0;
-
-        boolean hasExceptionOccured; 
-        do
-        {
-            hasExceptionOccured = false;
-            try
-            {
-                proposalID = proposalView.enterInt( Constants.ENTER_PROPOSAL_ID );
-                if ( !IDs.contains( proposalID ) ) proposalView.print( Constants.NOT_EXIST_MESSAGE );
-            }
-            catch ( InputMismatchException e )
-            {
-                proposalView.print( Constants.INVALID_OPTION );
-                hasExceptionOccured = true;
-            }
-        } while ( hasExceptionOccured || !IDs.contains( proposalID ) );
-
-        return proposalID;
+        return super.readInt( Constants.ENTER_PROPOSAL_ID, Constants.NOT_EXIST_MESSAGE, ( input ) -> !IDs.contains( (Integer) input ) );
     }
 
     public void retireProposal ( UserController userController ) throws SQLException

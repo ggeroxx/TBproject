@@ -1,6 +1,9 @@
 package controller;
 
+import java.sql.SQLException;
+import java.util.*;
 import java.util.function.*;
+import model.*;
 import util.*;
 import view.*;
 
@@ -24,6 +27,53 @@ public class Controller {
         } while ( condition.test( (T) string ) );
 
         return string;
+    }
+
+    public <T> Integer readIntWithExit ( String msg, String error, Predicate<T> condition )
+    {
+        Integer ID = 0;
+
+        boolean hasExceptionOccured; 
+        do
+        {
+            hasExceptionOccured = false;
+            try
+            {
+                ID = view.enterInt( msg );
+                if ( ID == 0 ) return ID;
+                if ( condition.test( (T) ID ) ) view.print( error );
+            }
+            catch ( InputMismatchException e )
+            {
+                view.print( Constants.INVALID_OPTION );
+                hasExceptionOccured = true;
+            }
+        } while ( hasExceptionOccured || condition.test( (T) ID ) );
+
+        return ID;
+    }
+
+    public <T> Integer readInt ( String msg, String error, Predicate<T> condition )
+    {
+        Integer ID = 0;
+
+        boolean hasExceptionOccured; 
+        do
+        {
+            hasExceptionOccured = false;
+            try
+            {
+                ID = view.enterInt( msg );
+                if ( condition.test( (T) ID ) ) view.print( error );
+            }
+            catch ( InputMismatchException e )
+            {
+                view.print( Constants.INVALID_OPTION );
+                hasExceptionOccured = true;
+            }
+        } while ( hasExceptionOccured || condition.test( (T) ID ) );
+
+        return ID;
     }
 
     public void clearConsole ( int millis )
@@ -50,6 +100,22 @@ public class Controller {
         for ( int i = str.length(); i < maxLenght; i++) toReturn += " ";
 
         return toReturn;
+    }
+
+    public void forcedClosure ( String msg, Session session )
+    {
+        Runtime.getRuntime().addShutdownHook( new Thread ( () -> {
+            
+            try 
+            {
+                if ( session != null ) session.logout();
+                view.println( msg );
+            } 
+            catch ( SQLException e ) 
+            {
+                e.printStackTrace();
+            }
+        } ) );
     }
 
 }

@@ -1,7 +1,6 @@
 package controller;
 
 import java.sql.*;
-import java.util.*;
 import model.*;
 import util.*;
 import view.*;
@@ -49,28 +48,18 @@ public class DistrictController extends Controller {
         for ( District toPrint : districtJDBC.getAllNotSavedDistricts() ) districtView.println( " " + toPrint.getID() + ". " + toPrint.getName() + Constants.NOT_SAVED );
     }
 
-    public int chooseDistrict () throws SQLException
+    public int chooseDistrict ()
     {
-        int districtID = 0;
-
-        boolean hasExceptionOccured; 
-        do
-        {
-            hasExceptionOccured = false;
-            try
+        return super.readIntWithExit( Constants.ENTER_DISTRICT_OR_EXIT, Constants.NOT_EXIST_MESSAGE, ( input ) -> {
+            try 
             {
-                districtID = districtView.enterInt( Constants.ENTER_DISTRICT_OR_EXIT );
-                if ( districtID == 0 ) return 0;
-                if ( districtJDBC.getDistrictByID( districtID ) == null ) districtView.print( Constants.NOT_EXIST_MESSAGE );
-            }
-            catch ( InputMismatchException e )
+                return districtJDBC.getDistrictByID( (Integer) input ) == null;
+            } 
+            catch ( SQLException e ) 
             {
-                districtView.print( Constants.INVALID_OPTION );
-                hasExceptionOccured = true;
+                return false;
             }
-        } while ( hasExceptionOccured || districtJDBC.getDistrictByID( districtID ) == null );
-
-        return districtID;
+        } );
     }
 
     public String enterName ()
