@@ -52,7 +52,7 @@ public class Constants {
 
     public static final int TIME_LOGOUT = 1000;
 
-    // ---------------------------------------- Main ----------------------------------------
+    // ---------------------------------------- MainView ----------------------------------------
     
     public static final String MAIN_MENU = "\n" +
                                             "─────────────────────────────\n" + 
@@ -64,29 +64,31 @@ public class Constants {
                                             "─────────────────────────────\n" +
                                             "Enter yout choice [1-3] --> ";
 
+    // ---------------------------------------- MainController ----------------------------------------
+
     public static final String LOGIN_SCREEN = RED + BOLD + "\n\nLOGIN\n\n" + RESET;
 
     public static final String REGISTRATION_SCREEN = RED + BOLD + "\n\nREGISTRATION\n\n" + RESET;
 
-    public static final String SQL_EXCEPTION_MESSAGE = "DATABASE EXCEPTION";
-
-    public static final String GENERIC_EXCEPTION_MESSAGE = "GENERIC EXCEPTION";
-
     public static final String ENTER_USERNAME = "enter username: ";
 
-    public static final String ENTER_NEW_USERNAME = "Enter new username (min 3 max 20 characters): ";
+    public static final String BYE_BYE_MESSAGE = YELLOW + "\nBye bye ...\n\n" + RESET;
+
+    public static final String LOGIN_ERROR = RED + "\n --- " + BOLD + "ATTENTION" + RESET + RED + ", invalid username a/o password! Try again! ---" + RESET;
+
+    public static final String DENIED_ACCESS = RED + BOLD + "\n --- DENIED ACCESS, %s is working... --- \n" + RESET;
+
+    // ---------------------------------------- SubjectView ----------------------------------------
 
     public static final String ENTER_PASSWORD = "enter password: ";
 
     public static final String ENTER_NEW_PASSWORD = "Enter new password (alphanumeric, min 8 max 25 characters): ";
 
-    public static final String ENTER_DISTRICT_OR_EXIT = "\nEnter district ID (enter '0' to exit) --> ";
+    // ---------------------------------------- SubjectController ----------------------------------------
+
+    public static final String ENTER_NEW_USERNAME = "Enter new username (min 3 max 20 characters): ";
 
     public static final String ENTER_MAIL = "Enter mail: ";
-
-    public static final String BYE_BYE_MESSAGE = YELLOW + "\nBye bye ...\n\n" + RESET;
-
-    public static final String LOGIN_ERROR = RED + "\n --- " + BOLD + "ATTENTION" + RESET + RED + ", invalid username a/o password! Try again! ---" + RESET;
 
     public static final String USERNAME_NOT_AVAILABLE = RED + "\n --- username NOT available ! --- \n" + RESET;
 
@@ -96,9 +98,21 @@ public class Constants {
 
     public static final String ERROR_PATTERN_MAIL = RED + "\n --- " + BOLD + "ATTENTION" + RESET + RED + ", parameters not respected! --- \n\n" + RESET;
 
-    public static final String DENIED_ACCESS = RED + BOLD + "\n --- DENIED ACCESS, %s is working... --- \n" + RESET;
+    // ---------------------------------------- DistrictController ----------------------------------------
 
-    // ---------------------------------------- UserMenu ----------------------------------------
+    public static final String ENTER_DISTRICT_OR_EXIT = "\nEnter district ID (enter '0' to exit) --> ";
+
+    public static final String DISTRICTS_LIST = PURPLE + BOLD + "\n\nDISTRICTS LIST\n\n" + RESET;
+
+    public static final String ADDED_SUCCESFULL_MESSAGE = GREEN + "\n --- Added succesfull ✓ --- \n" + RESET;
+
+    public static final String DISTRICT_NAME_ALREADY_PRESENT = RED + "\n --- District name already present --- \n" + RESET;
+
+    public static final String MUNICIPALITY_NAME_ALREADY_PRESENT = RED + "\n --- Municipality already present ---" + RESET;
+
+    public static final String ENTER_DISTRICT_NAME = "\nenter district name: ";
+
+    // ---------------------------------------- UserView ----------------------------------------
 
     public static final String USER_MENU = "\n" +
                                            "─────────────────────────────\n" +
@@ -112,7 +126,7 @@ public class Constants {
                                            "─────────────────────────────\n" +
                                            "Enter your choice [1-5] --> ";
 
-    public static final String PROPOSE_PROPOSAL_SCREEN = CYAN + BOLD + "\n\nPROPOSAL\n\n" + RESET;
+    // ---------------------------------------- CategoryController ----------------------------------------
 
     public static final String CATEGORY_INFO = PURPLE + BOLD + "\n\nCATEGORY INFO\n\n" + RESET;
 
@@ -123,7 +137,59 @@ public class Constants {
     public static final String ENTER_REQUESTED_HOURS = "\nEnter number of requested hours of ";
 
     public static final String ENTER_VALUE_OF_FIELD_MESSAGE = "Enter " + YELLOW + "value of field" + RESET + " ('<' to go back) --> ";
+
+    public static final String NOT_EXIST_FIELD_MESSAGE = RED + BOLD + " --- NOT exist field ! --- \n" + RESET;
+
+    public static final String ERROR_HOUR = RED + BOLD + "\n --- not integer ot not greater than zero --- \n" + RESET;
+
+    public static final String HIERARCHY_SCREEN = CYAN + BOLD + "\n\nHIERARCHY INSERTION\n\n" + RESET;
+
+    public static final String ENTER_CATEGORY_ID = "\nEnter category ID --> ";
+
+    public static final String ENTER_CATEGORY_ID_WITH_EXIT = "\nEnter category ID (enter '0' to exit) --> ";
+
+    public static final String ENTER_CATEGORY_NAME = "enter category name: ";
+
+    public static final String ENTER_FIELD = "\nenter field: ";
+
+    public static final String ENTER_DESCRIPTION = "\nenter description (enter to skip): ";
+
+    public static final String LEAF_CATEGORY_MESSAGE = "\nleaf category? (y/n) --> ";
+
+    public static final String ENTER_DAD_MESSAGE = "\n enter parent ID --> ";
+
+    public static final String ENTER_FIELD_TYPE = "\nenter field type: ";
+
+    public static final String CATEGORY_LIST = " categories:\n\n";
+
+    public static final String LINE = GREY + "────────────────────\n" + RESET;
+
+    public static final String ERROR_PATTERN_FIELD = RED + "\n --- " + BOLD + "ATTENTION" + RESET + RED + ", parameters not respected! min 1 max 25 characters --- \n" + RESET;
+
+    public static final String ERROR_FIELD_VALUE = RED + "\n --- " + BOLD + "ATTENTION" + RESET + RED + ", parameters not respected or value already present ! --- \n" + RESET;
+
+    public static final String ERROR_PATTERN_DESCRIPTION = RED + "\n --- " + BOLD + "ATTENTION" + RESET + RED + ", parameters not respected! min 0 max 100 characters --- \n" + RESET;
+
+    public static final String ROOT_CATEGORY_ALREADY_PRESENT = RED + "\n --- Root category already present --- \n" + RESET;
+
+    public static final String INTERNAL_CATEGORY_ALREADY_PRESENT = RED + "\n --- Category already present --- \n" + RESET;
+
+    public static final String NO_CHILD = " (no child) ";
+
+    public static final String NAME = "name";
+
+    public static final String DESCRIPTION = "description";
+
+    public static final String VALUE_OF_DOMAIN = "value of domain";
+
+    public static final String FIELD = "field";
+
+    public static final String HIERARCHIES_LIST = PURPLE + BOLD + "\n\nHIERARCHIES LIST\n\n" + RESET;
+
+    public static final String ENTER_HIERARCHY_ID = "\nEnter hierarchy ID (enter '0' to exit) --> ";
     
+    // ---------------------------------------- ProposalController ----------------------------------------
+
     public static final String CONFIRM_PROPOSAL = "\n\nconfirm? (y/n) --> ";
 
     public static final String PROPOSAL_SAVED = GREEN + "\n --- " + BOLD + "Proposal saved ✓" + RESET + GREEN + " --- \n" + RESET;
@@ -132,11 +198,9 @@ public class Constants {
 
     public static final String ENTER_PROPOSAL_ID = "\nEnter proposal ID to " + RED + BOLD + "retire" + RESET + " --> ";
 
-    public static final String NOT_EXIST_FIELD_MESSAGE = RED + BOLD + " --- NOT exist field ! --- \n" + RESET;
+    public static final String PROPOSAL_LIST = BOLD + PURPLE + "\n\nPROPOSAL LIST\n\n" + RESET;
 
-    public static final String ERROR_HOUR = RED + BOLD + "\n --- not integer ot not greater than zero --- \n" + RESET;
-
-    // ---------------------------------------- ConfiguratorMenu ----------------------------------------
+    // ---------------------------------------- ConfiguratorView ----------------------------------------
 
     public static final String CONFIGURATOR_MENU = "\n" +
                                                    "───────────────────────────────────────────\n" +
@@ -155,91 +219,29 @@ public class Constants {
                                                    "───────────────────────────────────────────\n" +
                                                    "Enter your choice [1-10] --> ";
 
-    public static final String DISTRICTS_LIST = PURPLE + BOLD + "\n\nDISTRICTS LIST\n\n" + RESET;
-
-    public static final String LEAF_CATEGORY_LIST = PURPLE + BOLD + "\n\nLEAF CATEGORY LIST\n\n" + RESET;
-
-    public static final String HIERARCHY_SCREEN = CYAN + BOLD + "\n\nHIERARCHY INSERTION\n\n" + RESET;
-
-    public static final String ENTER_DISTRICT_NAME = "\nenter district name: ";
+    // ---------------------------------------- MunicipalityController ----------------------------------------
 
     public static final String ENTER_MUNICIPALITY = "\nEnter municipality: ";
 
-    public static final String END_ADD_MESSAGE = "\nend: (y/n) --> ";
-
-    public static final String ENTER_DISTRICT_TO_VIEW = "Enter district ID --> ";
-
-    public static final String ENTER_CATEGORY_ID = "\nEnter category ID --> ";
-
-    public static final String ENTER_CATEGORY_ID_WITH_EXIT = "\nEnter category ID (enter '0' to exit) --> ";
-
-    public static final String ENTER_CATEGORY_NAME = "enter category name: ";
-
-    public static final String ENTER_FIELD = "\nenter field: ";
-
-    public static final String ENTER_DESCRIPTION = "\nenter description (enter to skip): ";
-
-    public static final String LEAF_CATEGORY_MESSAGE = "\nleaf category? (y/n) --> ";
-
-    public static final String ENTER_DAD_MESSAGE = "\n enter parent ID --> ";
-
-    public static final String ENTER_FIELD_TYPE = "\nenter field type: ";
+    // ---------------------------------------- ConversionFactorsController ----------------------------------------
 
     public static final String ENTER_CHOICE_PAIR = "\nEnter your choice: ";
 
     public static final String ENTER_VALUE_CONVERSION_FACTOR = "Enter value of conversion factor ";
 
-    public static final String ADDED_SUCCESFULL_MESSAGE = GREEN + "\n --- Added succesfull ✓ --- \n" + RESET;
+    public static final String OUT_OF_RANGE_ERROR = RED + "\n --- Invalid or out of range !!! --- \n\n" + RESET;
+
+    public static final String CONVERSION_FACTORS_LIST = PURPLE + BOLD + "\n\nCONVERSION FACTORS LIST\n\n" + RESET;
+
+    // ---------------------------------------- ConfiguratorController ----------------------------------------
 
     public static final String SAVE_COMPLETED = GREEN + "\n --- saved COMPLETED ✓ ---\n" + RESET;
-    
-    public static final String CATEGORY_LIST = " categories:\n\n";
-
-    public static final String LINE = GREY + "────────────────────\n" + RESET;
-
-    public static final String ERROR_PATTERN_NAME = RED + "\n --- " + BOLD + "ATTENTION" + RESET + RED + ", parameters not respected! min 1 max 50 characters --- \n" + RESET;
-
-    public static final String ERROR_PATTERN_FIELD = RED + "\n --- " + BOLD + "ATTENTION" + RESET + RED + ", parameters not respected! min 1 max 25 characters --- \n" + RESET;
-
-    public static final String ERROR_FIELD_VALUE = RED + "\n --- " + BOLD + "ATTENTION" + RESET + RED + ", parameters not respected or value already present ! --- \n" + RESET;
-
-    public static final String ERROR_PATTERN_DESCRIPTION = RED + "\n --- " + BOLD + "ATTENTION" + RESET + RED + ", parameters not respected! min 0 max 100 characters --- \n" + RESET;
-
-    public static final String DISTRICT_NAME_ALREADY_PRESENT = RED + "\n --- District name already present --- \n" + RESET;
-
-    public static final String MUNICIPALITY_NAME_ALREADY_PRESENT = RED + "\n --- Municipality already present ---" + RESET;
-
-    public static final String ROOT_CATEGORY_ALREADY_PRESENT = RED + "\n --- Root category already present --- \n" + RESET;
-
-    public static final String INTERNAL_CATEGORY_ALREADY_PRESENT = RED + "\n --- Category already present --- \n" + RESET;
-
-    public static final String OUT_OF_RANGE_ERROR = RED + "\n --- Invalid or out of range !!! --- \n\n" + RESET;
 
     public static final String IMPOSSIBLE_SAVE_CF = RED + BOLD + "\n --- ATTENTION, not all conversion factors have been set !!! --- " + RESET;
 
-    // ---------------------------------------- PrintService ----------------------------------------
-
-    public static final String NOT_SAVED = "  -->  (not saved)";
-
-    public static final String NO_CHILD = " (no child) ";
-
-    public static final String NAME = "name";
-
-    public static final String DESCRIPTION = "description";
-
-    public static final String VALUE_OF_DOMAIN = "value of domain";
-
-    public static final String FIELD = "field";
-
     // ---------------------------------------- multiple uses constants ----------------------------------------
 
-    public static final String PROPOSAL_LIST = BOLD + PURPLE + "\n\nPROPOSAL LIST\n\n" + RESET;
-
-    public static final String HIERARCHIES_LIST = PURPLE + BOLD + "\n\nHIERARCHIES LIST\n\n" + RESET;
-
     public static final String ENTER_TO_EXIT = "\nPress enter to exit ↵  ";
-
-    public static final String ENTER_HIERARCHY_ID = "\nEnter hierarchy ID (enter '0' to exit) --> ";
 
     public static final String YES_MESSAGE = "y";
 
@@ -253,7 +255,16 @@ public class Constants {
 
     public static final String NOT_EXIST_MESSAGE = RED + "\n --- NOT exist ! --- \n" + RESET;
 
+    public static final String GENERIC_EXCEPTION_MESSAGE = "GENERIC EXCEPTION";
 
-    public static final String CONVERSION_FACTORS_LIST = PURPLE + BOLD + "\n\nCONVERSION FACTORS LIST\n\n" + RESET;
+    public static final String PROPOSE_PROPOSAL_SCREEN = CYAN + BOLD + "\n\nPROPOSAL\n\n" + RESET;
+
+    public static final String LEAF_CATEGORY_LIST = PURPLE + BOLD + "\n\nLEAF CATEGORY LIST\n\n" + RESET;
+
+    public static final String END_ADD_MESSAGE = "\nend: (y/n) --> ";
+
+    public static final String ERROR_PATTERN_NAME = RED + "\n --- " + BOLD + "ATTENTION" + RESET + RED + ", parameters not respected! min 1 max 50 characters --- \n" + RESET;
+
+    public static final String NOT_SAVED = "  -->  (not saved)";
 
 }

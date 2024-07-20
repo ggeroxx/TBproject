@@ -53,8 +53,6 @@ public class Queries {
                                                                 "SELECT id FROM tmp_districts " +
                                                            ") AS merged_table";
 
-    public static final String SET_DISTRICT_ID_VALUE_AUTO_INCREMENT_QUERY = "ALTER TABLE districts AUTO_INCREMENT = ?";
-
     public static final String SET_DISTRICT_TMP_ID_VALUE_AUTO_INCREMENT_QUERY = "ALTER TABLE tmp_districts AUTO_INCREMENT = ?";
     
     // ---------------------------------------- DistrictToMunicipalitiesJDBCImpl ----------------------------------------
@@ -248,8 +246,6 @@ public class Queries {
                                                                 "UNION ALL " +
                                                                 "SELECT id FROM tmp_categories " +
                                                            ") AS merged_table";
-
-    public static final String SET_CATEGORY_ID_VALUE_AUTO_INCREMENT_QUERY = "ALTER TABLE categories AUTO_INCREMENT = ?";
 
     public static final String SET_CATEGORY_TMP_ID_VALUE_AUTO_INCREMENT_QUERY = "ALTER TABLE tmp_categories AUTO_INCREMENT = ?";
 
