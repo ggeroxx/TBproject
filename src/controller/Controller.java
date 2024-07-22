@@ -102,14 +102,13 @@ public class Controller {
         return toReturn;
     }
 
-    public void forcedClosure ( String msg, Session session )
+    public void forcedClosure ( Session session )
     {
         Runtime.getRuntime().addShutdownHook( new Thread ( () -> {
-            
             try 
             {
                 if ( session != null ) session.logout();
-                view.println( msg );
+                view.print( "\n" );
             } 
             catch ( SQLException e ) 
             {

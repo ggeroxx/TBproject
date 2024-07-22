@@ -46,7 +46,7 @@ public class ConfiguratorController extends SubjectController {
     {
         int choice = 0;
 
-        super.forcedClosure( Constants.LOG_OUT, session );
+        super.forcedClosure( session );
 
         do
         {

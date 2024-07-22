@@ -34,7 +34,7 @@ public class MainController extends Controller {
         int choice = 0;
         super.clearConsole( Constants.TIME_SWITCH_MENU );
 
-        super.forcedClosure( "\n", null );
+        super.forcedClosure( null );
 
         do
         {
