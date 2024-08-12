@@ -14,10 +14,17 @@ public class Session {
     private CategoryJDBC categoryJDBC = new CategoryJDBCImpl();
     private RelationshipsBetweenCategoriesJDBC relationshipsBetweenCategoriesJDBC = new RelationshipsBetweenCategoriesJDBCImpl();
     private AccessJDBC accessJDBC = new AccessJDBDImpl();
+    private AuthenticationService_PureFabrication authenticationService = new AuthenticationService_PureFabrication( configuratorJDBC, userJDBC, accessJDBC );
+    private TemporaryOperationsManager_PureFabrication tempOpsManager = new TemporaryOperationsManager_PureFabrication( districtJDBC, categoryJDBC, districtToMunicipalitiesJDBC, relationshipsBetweenCategoriesJDBC );
 
     public Boolean getStatus () 
     {
         return this.status;
+    }
+
+    public void setStatus (Boolean val) 
+    {
+        this.status = val;
     }
 
     public Character getSubject () 
@@ -25,7 +32,7 @@ public class Session {
         return this.subject;
     }
 
-    public void login ( String usernameToCheck, String passwordToCheck ) throws SQLException 
+    /*public void login ( String usernameToCheck, String passwordToCheck ) throws SQLException 
     {
         Configurator conf = configuratorJDBC.getConfiguratorByUsername( usernameToCheck );
         User user = userJDBC.getUserByUsername( usernameToCheck );
@@ -76,9 +83,18 @@ public class Session {
                 this.status = true;
             }
         }
+    }*/
+
+    public void login( String usernameToCheck, String passwordToCheck ) throws SQLException 
+    {
+        this.subject = authenticationService.authenticate (usernameToCheck, passwordToCheck, this );
+        if (this.status && this.subject == 'c') 
+        {
+            tempOpsManager.prepareTemporaryData();
+        }
     }
 
-    public void logout () throws SQLException 
+    /*public void logout () throws SQLException 
     {
         this.status = false;
 
@@ -90,6 +106,18 @@ public class Session {
             categoryJDBC.deleteTmpCategories();
 
             accessJDBC.allowPermission();
+        }
+
+        this.subject = null;
+    }*/
+
+    public void logout() throws SQLException {
+        this.status = false;
+
+        if (this.subject != null && this.subject == 'c') 
+        {
+            tempOpsManager.clearTemporaryData();
+            authenticationService.getAccessJDBC().allowPermission();
         }
 
         this.subject = null;
