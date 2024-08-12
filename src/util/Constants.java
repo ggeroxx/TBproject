@@ -62,7 +62,7 @@ public class Constants {
                                             " 2.  sign in\n\n" +
                                             " 3.  exit\n" +
                                             "─────────────────────────────\n" +
-                                            "Enter yout choice [1-3] --> ";
+                                            "Enter your choice [1-3] --> ";
 
     // ---------------------------------------- MainController ----------------------------------------
 
