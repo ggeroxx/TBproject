@@ -3,8 +3,6 @@ package controller;
 import java.sql.*;
 import java.util.*;
 
-import org.mindrot.jbcrypt.BCrypt;
-
 import model.*;
 import util.*;
 import view.*;
@@ -19,6 +17,7 @@ public class ConfiguratorController extends SubjectController {
     private CategoryController categoryController;
     private ConversionFactorsController conversionFactorsController;
     private ProposalController proposalController;
+    private ConfiguratorGRASPController businessController;
 
     public ConfiguratorController ( ConfiguratorView configuratorView, Session session, ConfiguratorJDBC configuratorJDBC, DistrictController districtController, CategoryController categoryController, ConversionFactorsController conversionFactorsController, ProposalController proposalController )
     {
@@ -35,6 +34,7 @@ public class ConfiguratorController extends SubjectController {
     public void setConfigurator ( Configurator configurator ) 
     {
         this.configurator = configurator;
+        this.businessController = new ConfiguratorGRASPController( configurator, configuratorJDBC, districtController, categoryController, conversionFactorsController );
     }
 
     public ConfiguratorJDBC getConfiguratorJDBC () 
@@ -70,7 +70,20 @@ public class ConfiguratorController extends SubjectController {
                         break;
 
                     case 4:
-                            this.saveAll();
+
+                            try
+                            {
+                                businessController.saveAll();
+                            }
+                            catch( IllegalStateException e )
+                            {
+                                configuratorView.println( Constants.IMPOSSIBLE_SAVE_CF );
+                                super.clearConsole( Constants.TIME_ERROR_MESSAGE );
+                                break;
+                            }
+
+                            configuratorView.println( Constants.SAVE_COMPLETED );
+                            super.clearConsole( Constants.TIME_MESSAGE );
                         break;
 
                     case 5:
@@ -119,7 +132,7 @@ public class ConfiguratorController extends SubjectController {
         } while ( choice != 10 );
     }
 
-    public void saveAll () throws SQLException
+    /*public void saveAll () throws SQLException
     {
         if ( !conversionFactorsController.isComplete() )
         {
@@ -132,25 +145,28 @@ public class ConfiguratorController extends SubjectController {
         conversionFactorsController.saveConversionFactors();
         configuratorView.println( Constants.SAVE_COMPLETED );
         super.clearConsole( Constants.TIME_MESSAGE );
-    }
+    }*/
 
     public void changeCredentials ( String approvedUsername, String newPassword ) throws SQLException
     {
-        configuratorJDBC.changeCredentials( configurator.getUsername(), approvedUsername, BCrypt.hashpw( newPassword, BCrypt.gensalt() ) );
+        businessController.changeCredentials(approvedUsername, newPassword);
+        /*configuratorJDBC.changeCredentials( configurator.getUsername(), approvedUsername, BCrypt.hashpw( newPassword, BCrypt.gensalt() ) );
 
         configurator.setUsername( approvedUsername );
         configurator.setPassword( newPassword );
-        configurator.setFirstAccess( false );
+        configurator.setFirstAccess( false );*/
     }
 
     public void createDistrict ( String districtName ) throws SQLException
     {
-        districtController.setDistrict( districtController.getDistrictJDBC().createDistrict( districtName , configurator.getID() ) );
+        businessController.createDistrict(districtName);
+        //districtController.setDistrict( districtController.getDistrictJDBC().createDistrict( districtName , configurator.getID() ) );
     }
 
     public void createCategory ( String name, String field, String description, boolean isRoot, Integer hierarchyID ) throws SQLException
     {
-        categoryController.setCategory( categoryController.getCategoryJDBC().createCategory( name, field, description, isRoot, hierarchyID, configurator.getID() ) );
+        businessController.createCategory(name, field, description, isRoot, hierarchyID);
+        //categoryController.setCategory( categoryController.getCategoryJDBC().createCategory( name, field, description, isRoot, hierarchyID, configurator.getID() ) );
     }
 
 }
