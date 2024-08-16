@@ -3,30 +3,30 @@ package model;
 import java.sql.*;
 
 public class TemporaryOperationsManager_PureFabrication {
-    private DistrictJDBC districtJDBC;
-    private CategoryJDBC categoryJDBC;
-    private DistrictToMunicipalitiesJDBC districtToMunicipalitiesJDBC;
-    private RelationshipsBetweenCategoriesJDBC relationshipsBetweenCategoriesJDBC;
+    private DistrictRepository districtRepository;
+    private CategoryRepository categoryRepository;
+    private DistrictToMunicipalitiesRepository districtToMunicipalitiesRepository;
+    private RelationshipsBetweenCategoriesRepository relationshipsBetweenCategoriesRepository;
 
-    public TemporaryOperationsManager_PureFabrication ( DistrictJDBC districtJDBC, CategoryJDBC categoryJDBC, DistrictToMunicipalitiesJDBC districtToMunicipalitiesJDBC, RelationshipsBetweenCategoriesJDBC relationshipsBetweenCategoriesJDBC ) 
+    public TemporaryOperationsManager_PureFabrication ( DistrictRepository districtRepository, CategoryRepository categoryRepository, DistrictToMunicipalitiesRepository districtToMunicipalitiesRepository, RelationshipsBetweenCategoriesRepository relationshipsBetweenCategoriesRepository ) 
     {
-        this.districtJDBC = districtJDBC;
-        this.categoryJDBC = categoryJDBC;
-        this.districtToMunicipalitiesJDBC = districtToMunicipalitiesJDBC;
-        this.relationshipsBetweenCategoriesJDBC = relationshipsBetweenCategoriesJDBC;
+        this.districtRepository = districtRepository;
+        this.categoryRepository = categoryRepository;
+        this.districtToMunicipalitiesRepository = districtToMunicipalitiesRepository;
+        this.relationshipsBetweenCategoriesRepository = relationshipsBetweenCategoriesRepository;
     }
 
     public void prepareTemporaryData() throws SQLException 
     {
-        districtJDBC.setTmpIDValueAutoIncrement( districtJDBC.getMaxID() );
-        categoryJDBC.setTmpIDValueAutoIncrement( categoryJDBC.getMaxID() );
+        districtRepository.setTmpIDValueAutoIncrement( districtRepository.getMaxID() );
+        categoryRepository.setTmpIDValueAutoIncrement( categoryRepository.getMaxID() );
     }
 
     public void clearTemporaryData() throws SQLException 
     {
-        districtToMunicipalitiesJDBC.deleteTmpDistrictToMunicipalities();
-        districtJDBC.deleteTmpDistricts();
-        relationshipsBetweenCategoriesJDBC.deleteTmpRelationshipsBetweenCategories();
-        categoryJDBC.deleteTmpCategories();
+        districtToMunicipalitiesRepository.deleteTmpDistrictToMunicipalities();
+        districtRepository.deleteTmpDistricts();
+        relationshipsBetweenCategoriesRepository.deleteTmpRelationshipsBetweenCategories();
+        categoryRepository.deleteTmpCategories();
     }
 }

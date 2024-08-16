@@ -4,43 +4,37 @@ import java.sql.*;
 import org.mindrot.jbcrypt.BCrypt;
 
 public class AuthenticationService_PureFabrication {
-    private ConfiguratorJDBC configuratorJDBC;
-    private UserJDBC userJDBC;
-    private AccessJDBC accessJDBC;
+    private ConfiguratorRepository configuratorRepository;
+    private UserRepository userRepository;
+    private AccessRepository accessRepository;
 
-    public AuthenticationService_PureFabrication( ConfiguratorJDBC configuratorJDBC, UserJDBC userJDBC, AccessJDBC accessJDBC ) 
+    public AuthenticationService_PureFabrication( ConfiguratorRepository configuratorRepository, UserRepository userRepository, AccessRepository accessRepository ) 
     {
-        this.configuratorJDBC = configuratorJDBC;
-        this.userJDBC = userJDBC;
-        this.accessJDBC = accessJDBC;
+        this.configuratorRepository = configuratorRepository;
+        this.userRepository = userRepository;
+        this.accessRepository = accessRepository;
     }
 
-    public AccessJDBC getAccessJDBC() 
+    public AccessRepository getAccessJDBC() 
     {
-        return this.accessJDBC;
+        return this.accessRepository;
     }
 
-    /**
-     * @param username
-     * @param password
-     * @param session
-     * @return
-     * @throws SQLException
-     */
     public Character authenticate( String username, String password, Session session ) throws SQLException 
     {
-        Configurator conf = configuratorJDBC.getConfiguratorByUsername( username );
-        User user = userJDBC.getUserByUsername( username );
+        Configurator conf = configuratorRepository.getConfiguratorByUsername( username );
+        User user = userRepository.getUserByUsername( username );
 
         if ( conf != null && BCrypt.checkpw(password, conf.getPassword()) ) 
         {
-            if ( accessJDBC.getPermission() == null ) 
+            if ( accessRepository.getPermission() == null ) 
             {
                 session.setStatus(true);
-                accessJDBC.denyPermission( conf );
-                return 'c';
+                accessRepository.denyPermission( conf );
             }
             else session.setStatus(false);
+
+            return 'c';
 
         } else if ( user != null && BCrypt.checkpw( password, user.getPassword() ) )
         {

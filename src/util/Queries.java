@@ -2,13 +2,13 @@ package util;
 
 public class Queries {
     
-    // ---------------------------------------- MunicipalityJDBCImpl ----------------------------------------
+    // ---------------------------------------- municipalityRepositoryImpl ----------------------------------------
 
     public static final String SELECT_QUERY = "SELECT * " + 
                                               "FROM municipalities " + 
                                               "WHERE name = ?";
 
-    // ---------------------------------------- DistrictJDBCImpl ----------------------------------------
+    // ---------------------------------------- districtRepositoryImpl ----------------------------------------
 
     public static final String GET_DISTRICT_BY_NAME_QUERY = "SELECT id, idconfigurator " +
                                                             "FROM districts " +
@@ -55,7 +55,7 @@ public class Queries {
 
     public static final String SET_DISTRICT_TMP_ID_VALUE_AUTO_INCREMENT_QUERY = "ALTER TABLE tmp_districts AUTO_INCREMENT = ?";
     
-    // ---------------------------------------- DistrictToMunicipalitiesJDBCImpl ----------------------------------------
+    // ---------------------------------------- districtToMunicipalitiesRepositoryImpl ----------------------------------------
 
     public static final String ADD_MUNICIPALITY_QUERY = "INSERT INTO tmp_districttomunicipalities (IDDistrict, IDMunicipality)" +
                                                         "VALUES (?, ?)";
@@ -79,7 +79,7 @@ public class Queries {
 
     public static final String DELETE_TMP_DISTRICT_TO_MUNICIPALITIES_QUERY = "DELETE FROM tmp_districttomunicipalities";
 
-    // ---------------------------------------- ConfiguratorJDBCImpl ----------------------------------------
+    // ---------------------------------------- configuratorRepositoryImpl ----------------------------------------
 
     public static final String GET_CONFIGURATOR_BY_USERNAME_QUERY = "SELECT * " +
                                                                     "FROM configurators " +
@@ -93,7 +93,7 @@ public class Queries {
                                                           "SET username = ?, password = ?, firstAccess = 0 " +
                                                           "WHERE username = ?";
 
-    // ---------------------------------------- CategoryJDBCImpl ----------------------------------------
+    // ---------------------------------------- categoryRepositoryImpl ----------------------------------------
 
     public static final String GET_CATEGORY_BY_ID_QUERY = "SELECT * FROM categories " +
                                                           "WHERE id = ? " +
@@ -254,7 +254,7 @@ public class Queries {
                                                                   "WHERE field IS NOT NULL " +
                                                                   "AND id NOT IN (" + Queries.GET_PARENTID_QUERY + ")";
 
-    // ---------------------------------------- RelationshipsBetweenCategoriesJDBCImpl ----------------------------------------
+    // ---------------------------------------- relationshipsBetweenCategoriesRepositoryImpl ----------------------------------------
 
     public static final String CREATE_RELATIONSHIP_QUERY = "INSERT INTO tmp_relationshipsBetweenCategories (parentid, childid, fieldtype) " +
                                                            "VALUES (?, ?, ?)";
@@ -312,7 +312,7 @@ public class Queries {
                                                              "FROM conversionfactors " +
                                                              "WHERE id_leaf_1 = ? AND id_leaf_2 = ?";
 
-    // ---------------------------------------- UserJDBCImpl ----------------------------------------
+    // ---------------------------------------- userRepositoryImpl ----------------------------------------
 
     public static final String GET_USER_BY_USERNAME_QUERY = "SELECT * " +
                                                             "FROM users " +
@@ -339,7 +339,7 @@ public class Queries {
                                                         "SET permit = 1 " +
                                                         "WHERE id = 1";
 
-    // ---------------------------------------- ProposalJDBCImpl ----------------------------------------
+    // ---------------------------------------- proposalRepositoryImpl ----------------------------------------
 
     public static final String INSERT_PROPOSAL_QUERY = "INSERT INTO proposals ( requestedcategoryid, offeredcategoryid, requestedhours, offeredhours, userid, state ) " + 
                                                        "VALUES ( ?, ?, ?, ?, ?, ? )";

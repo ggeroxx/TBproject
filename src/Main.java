@@ -1,5 +1,5 @@
 import view.*;
-import controller.*;
+import controller.MVCController.*;
 import model.*;
 
 public class Main {
@@ -18,27 +18,27 @@ public class Main {
         SubjectView subjectView = new SubjectView();
 
         Session session = new Session();
-        AccessJDBC accessJDBC = new AccessJDBDImpl();
-        ConfiguratorJDBC configuratorJDBC = new ConfiguratorJDBCImpl();
-        UserJDBC userJDBC = new UserJDBCImpl();
-        DistrictJDBC districtJDBC = new DistrictJDBCImpl();
-        MunicipalityJDBC municipalityJDBC = new MunicipalityJDBCImpl();
-        DistrictToMunicipalitiesJDBC districtToMunicipalitiesJDBC = new DistrictToMunicipalitiesJDBCImpl();
-        CategoryJDBC categoryJDBC = new CategoryJDBCImpl();
-        RelationshipsBetweenCategoriesJDBC relationshipsBetweenCategoriesJDBC = new RelationshipsBetweenCategoriesJDBCImpl();
-        ProposalJDBC proposalJDBC = new ProposalJDBCImpl();
-        ConversionFactorsJDBC conversionFactorsJDBC = new ConversionFactorsJDBCImpl();
+        AccessRepository accessRepository = new JDBCAccessRepositoryl();
+        ConfiguratorRepository configuratorRepository = new JDBCConfiguratorRepository();
+        UserRepository userRepository = new JDBCUserRepository();
+        DistrictRepository districtRepository = new JDBCDistrictRepository();
+        MunicipalityRepository municipalityRepository = new JDBCMunicipalityRepository();
+        DistrictToMunicipalitiesRepository districtToMunicipalitiesRepository = new JDBCDistrictToMunicipalitiesRepository();
+        CategoryRepository categoryRepository = new JDBCCategoryRepository();
+        RelationshipsBetweenCategoriesRepository relationshipsBetweenCategoriesRepository = new JDBCRelationshipsBetweenCategoriesRepository();
+        ProposalRepository proposalRepository = new JDBCProposalRepository();
+        ConversionFactorsRepository conversionFactorsRepository = new JDBCConversionFactorsRepository();
 
         SubjectController subjectController = new SubjectController( subjectView );
-        MunicipalityController municipalityController = new MunicipalityController( municipalityView, municipalityJDBC, districtToMunicipalitiesJDBC );
-        DistrictController districtController = new DistrictController( districtView, districtJDBC, districtToMunicipalitiesJDBC, municipalityController );
-        CategoryController categoryController = new CategoryController( categoryView, categoryJDBC, relationshipsBetweenCategoriesJDBC );
+        MunicipalityController municipalityController = new MunicipalityController( municipalityView, municipalityRepository, districtToMunicipalitiesRepository );
+        DistrictController districtController = new DistrictController( districtView, districtRepository, districtToMunicipalitiesRepository, municipalityController );
+        CategoryController categoryController = new CategoryController( categoryView, categoryRepository, relationshipsBetweenCategoriesRepository );
         ConversionFactorController conversionFactorController = new ConversionFactorController( conversionFactorView, categoryController );
-        ConversionFactorsController conversionFactorsController = new ConversionFactorsController( conversionFactorsView, conversionFactorsJDBC, conversionFactorController, categoryController );
-        ProposalController proposalController = new ProposalController( proposalView, proposalJDBC, categoryController, conversionFactorsController );
-        UserController userController = new UserController( userView, session, userJDBC, categoryController, proposalController );
-        ConfiguratorController configuratorController = new ConfiguratorController( configuratorView, session, configuratorJDBC, districtController, categoryController, conversionFactorsController, proposalController );
-        MainController MainController = new MainController( mainView, session, accessJDBC, districtController, subjectController, configuratorController, userController );
+        ConversionFactorsController conversionFactorsController = new ConversionFactorsController( conversionFactorsView, conversionFactorsRepository, conversionFactorController, categoryController );
+        ProposalController proposalController = new ProposalController( proposalView, proposalRepository, categoryController, conversionFactorsController );
+        UserController userController = new UserController( userView, session, userRepository, categoryController, proposalController );
+        ConfiguratorController configuratorController = new ConfiguratorController( configuratorView, session, configuratorRepository, districtController, categoryController, conversionFactorsController, proposalController );
+        MainController MainController = new MainController( mainView, session, accessRepository, districtController, subjectController, configuratorController, userController );
 
         MainController.start();
 

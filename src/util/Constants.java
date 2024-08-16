@@ -56,7 +56,7 @@ public class Constants {
     
     public static final String MAIN_MENU = "\n" +
                                             "─────────────────────────────\n" + 
-                                            YELLOW + BOLD + "\t  TIME BANK\n" + RESET +
+                                            YELLOW + BOLD + "\t  TIME BANKaaaa\n" + RESET +
                                             "─────────────────────────────\n" +
                                             " 1.  login\n" +
                                             " 2.  sign in\n\n" +

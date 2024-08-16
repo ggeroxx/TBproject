@@ -6,15 +6,15 @@ public class Session {
     
     private Boolean status;
     private Character subject;
-    private ConfiguratorJDBC configuratorJDBC = new ConfiguratorJDBCImpl();
-    private UserJDBC userJDBC = new UserJDBCImpl();
-    private DistrictJDBC districtJDBC = new DistrictJDBCImpl();
-    private DistrictToMunicipalitiesJDBC districtToMunicipalitiesJDBC = new DistrictToMunicipalitiesJDBCImpl();
-    private CategoryJDBC categoryJDBC = new CategoryJDBCImpl();
-    private RelationshipsBetweenCategoriesJDBC relationshipsBetweenCategoriesJDBC = new RelationshipsBetweenCategoriesJDBCImpl();
-    private AccessJDBC accessJDBC = new AccessJDBDImpl();
-    private AuthenticationService_PureFabrication authenticationService = new AuthenticationService_PureFabrication( configuratorJDBC, userJDBC, accessJDBC );
-    private TemporaryOperationsManager_PureFabrication tempOpsManager = new TemporaryOperationsManager_PureFabrication( districtJDBC, categoryJDBC, districtToMunicipalitiesJDBC, relationshipsBetweenCategoriesJDBC );
+    private ConfiguratorRepository configuratorRepository = new JDBCConfiguratorRepository();
+    private UserRepository userRepository = new JDBCUserRepository();
+    private DistrictRepository districtRepository = new JDBCDistrictRepository();
+    private DistrictToMunicipalitiesRepository districtToMunicipalitiesRepository = new JDBCDistrictToMunicipalitiesRepository();
+    private CategoryRepository categoryRepository = new JDBCCategoryRepository();
+    private RelationshipsBetweenCategoriesRepository relationshipsBetweenCategoriesRepository = new JDBCRelationshipsBetweenCategoriesRepository();
+    private AccessRepository accessRepository = new JDBCAccessRepositoryl();
+    private AuthenticationService_PureFabrication authenticationService = new AuthenticationService_PureFabrication( configuratorRepository, userRepository, accessRepository );
+    private TemporaryOperationsManager_PureFabrication tempOpsManager = new TemporaryOperationsManager_PureFabrication( districtRepository, categoryRepository, districtToMunicipalitiesRepository, relationshipsBetweenCategoriesRepository );
 
     public Boolean getStatus () 
     {
@@ -33,8 +33,8 @@ public class Session {
 
     /*public void login ( String usernameToCheck, String passwordToCheck ) throws SQLException 
     {
-        Configurator conf = configuratorJDBC.getConfiguratorByUsername( usernameToCheck );
-        User user = userJDBC.getUserByUsername( usernameToCheck );
+        Configurator conf = configuratorRepository.getConfiguratorByUsername( usernameToCheck );
+        User user = userRepository.getUserByUsername( usernameToCheck );
 
         subject = ( conf == null && user == null ) ? null : ( conf != null ? 'c' : 'u' );
 
@@ -62,8 +62,8 @@ public class Session {
                 {
                     this.status = true;
 
-                    districtJDBC.setTmpIDValueAutoIncrement( districtJDBC.getMaxID());
-                    categoryJDBC.setTmpIDValueAutoIncrement( categoryJDBC.getMaxID() );
+                    districtRepository.setTmpIDValueAutoIncrement( districtRepository.getMaxID());
+                    categoryRepository.setTmpIDValueAutoIncrement( categoryRepository.getMaxID() );
 
                     accessJDBC.denyPermission( conf );
                 }
@@ -99,10 +99,10 @@ public class Session {
 
         if ( this.subject != null && this.subject == 'c' )
         {
-            districtToMunicipalitiesJDBC.deleteTmpDistrictToMunicipalities();
-            districtJDBC.deleteTmpDistricts();
-            relationshipsBetweenCategoriesJDBC.deleteTmpRelationshipsBetweenCategories();
-            categoryJDBC.deleteTmpCategories();
+            districtToMunicipalitiesRepository.deleteTmpDistrictToMunicipalities();
+            districtRepository.deleteTmpDistricts();
+            relationshipsBetweenCategoriesRepository.deleteTmpRelationshipsBetweenCategories();
+            categoryRepository.deleteTmpCategories();
 
             accessJDBC.allowPermission();
         }
