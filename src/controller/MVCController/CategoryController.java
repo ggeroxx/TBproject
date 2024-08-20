@@ -11,31 +11,29 @@ import view.*;
 public class CategoryController extends Controller {
     
     private CategoryView categoryView;
-    private RelationshipsBetweenCategoriesRepository relationshipsBetweenCategoriesRepository;
-    private CategoryGRASPController businessController;
+    private CategoryGRASPController controllerGRASP;
 
-    public CategoryController ( CategoryView categoryView, CategoryRepository categoryRepository, RelationshipsBetweenCategoriesRepository relationshipsBetweenCategoriesRepository )
+    public CategoryController ( CategoryView categoryView, CategoryGRASPController controllerGRASP)
     {
         super( categoryView );
         this.categoryView = categoryView;
-        this.relationshipsBetweenCategoriesRepository = relationshipsBetweenCategoriesRepository;
-        this.businessController = new CategoryGRASPController( categoryRepository, relationshipsBetweenCategoriesRepository);
+        this.controllerGRASP = controllerGRASP;
     }
 
     public void setCategory ( Category category ) 
     {
-        this.businessController.setCategory(category);
+        this.controllerGRASP.setCategory(category);
     }
 
     public Category getCategory () 
     {
-        return this.businessController.getCategory();
+        return this.controllerGRASP.getCategory();
     }
 
 
     public CategoryRepository getCategoryRepository()
     {
-        return this.businessController.getCategoryRepository();
+        return this.controllerGRASP.getCategoryRepository();
     }
 
     public void viewHierarchy () throws SQLException
@@ -69,7 +67,7 @@ public class CategoryController extends Controller {
     
     public void viewBuiltHierarchy ( int hierarchyID ) throws SQLException
     {
-        categoryView.println( this.businessController.buildHierarchy( hierarchyID, new StringBuffer(), new StringBuffer() ) );
+        categoryView.println( this.controllerGRASP.buildHierarchy( hierarchyID, new StringBuffer(), new StringBuffer() ) );
     }
 
     public String enterName ()
@@ -122,21 +120,7 @@ public class CategoryController extends Controller {
 
     public void viewInfo ( Category category ) throws SQLException
     {
-        StringBuffer sb = new StringBuffer();    
-
-        sb.append( Constants.NAME + ":" + super.padRight( Constants.NAME + ":", 20 ) + Constants.BOLD + category.getName() + Constants.RESET + "\n" );
-        if ( !category.isRoot() ) sb.append( Constants.DESCRIPTION + ":" + super.padRight( Constants.DESCRIPTION + ":", 20 ) + category.getDescription() + "\n" );
-
-        if ( category.getField() == null ) sb.append( Constants.VALUE_OF_DOMAIN + ":" + super.padRight( Constants.VALUE_OF_DOMAIN + ":", 20 ) + relationshipsBetweenCategoriesRepository.getFieldValueFromChildID( category.getID() ) + "\n" );
-        else 
-        {
-            sb.append( Constants.FIELD + ":" + super.padRight( Constants.FIELD + ":", 20 ) + category.getField() + " = { " );
-            for ( String fieldValue : relationshipsBetweenCategoriesRepository.getFieldValuesFromParentID( category.getID() ) ) sb.append( Constants.YELLOW + fieldValue + Constants.RESET + ", " );
-            sb.deleteCharAt( sb.length() - 2 );
-            sb.append( "}\n" );
-        }
-
-        categoryView.println( sb.toString() );
+        categoryView.println( controllerGRASP.info(category));
     }
 
     public int enterRootID ()
@@ -304,7 +288,7 @@ public class CategoryController extends Controller {
                     categoryView.println( Constants.NOT_EXIST_FIELD_MESSAGE );
                     continue;
                 }
-                history.add( relationshipsBetweenCategoriesRepository.getChildCategoryByFieldAndParentID( domainValue, history.get( history.size() - 1 ) ) );
+                history.add( this.controllerGRASP.getRelationshipsBetweenCategoriesRepository().getChildCategoryByFieldAndParentID( domainValue, history.get( history.size() - 1 ) ) );
             }
             this.viewInfo( history.get( history.size() - 1 ) );
         } while ( !history.get( history.size() - 1 ).isLeaf() );
@@ -316,7 +300,7 @@ public class CategoryController extends Controller {
 
     private boolean existValueOfField ( String field, Category parent ) throws SQLException
     {
-        return this.businessController.existValueOfField(field,parent);
+        return this.controllerGRASP.existValueOfField(field,parent);
     }
 
     public void enterHierarchy ( ConfiguratorController configuratorController ) throws SQLException
@@ -396,22 +380,22 @@ public class CategoryController extends Controller {
 
     public void saveCategories () throws SQLException
     {
-        this.businessController.saveCategories();
+        this.controllerGRASP.saveCategories();
     }
 
     public void createRelationship ( int parentID, String fieldType ) throws SQLException
     {
-        this.businessController.createRelationship(parentID, fieldType);
+        this.controllerGRASP.createRelationship(parentID, fieldType);
     }
 
     public boolean isPresentInternalCategory ( Category root, String nameToCheck ) throws SQLException
     {
-        return this.businessController.isPresentInternalCategory(root, nameToCheck);
+        return this.controllerGRASP.isPresentInternalCategory(root, nameToCheck);
     }
 
     public boolean isValidParentID ( Category root, int IDToCheck ) throws SQLException
     {
-        return this.businessController.isValidParentID(root, IDToCheck);
+        return this.controllerGRASP.isValidParentID(root, IDToCheck);
     }
 
 }

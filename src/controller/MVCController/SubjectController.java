@@ -9,13 +9,13 @@ import view.*;
 public class SubjectController extends Controller {
     
     private SubjectView subjectView;
-    private SubjectGRASPController businessController;
+    private SubjectGRASPController controllerGRASP;
 
-    public SubjectController ( SubjectView subjectView ) 
+    public SubjectController ( SubjectView subjectView, SubjectGRASPController controllerGRASP ) 
     {
         super( subjectView );
         this.subjectView = subjectView;
-        this.businessController = new SubjectGRASPController();
+        this.controllerGRASP = controllerGRASP;
     }
 
     public String enterString ( String msg )
@@ -67,7 +67,7 @@ public class SubjectController extends Controller {
 
     public boolean isPresentUsername ( String usernameToCheck ) throws SQLException
     {
-        return this.businessController.isPresentUsername(usernameToCheck);
+        return this.controllerGRASP.isPresentUsername(usernameToCheck);
     }
 
 }

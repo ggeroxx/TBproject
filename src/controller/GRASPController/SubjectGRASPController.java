@@ -1,24 +1,20 @@
 package controller.GRASPController;
 
 import java.sql.*;
-import model.*;
+import service.*;
 
 public class SubjectGRASPController {
     
-    private ConfiguratorRepository configuratorRepository;
-    private UserRepository userRepository;
+    private SubjectService subjectService;
 
-    public SubjectGRASPController ( ) 
+    public SubjectGRASPController ( SubjectService subjectService ) 
     {
-        this.configuratorRepository = new JDBCConfiguratorRepository();
-        this.userRepository = new JDBCUserRepository();
+        this.subjectService = subjectService;
     }
 
     public boolean isPresentUsername ( String usernameToCheck ) throws SQLException
     {
-        Configurator configurator = this.configuratorRepository.getConfiguratorByUsername( usernameToCheck );
-        User user = this.userRepository.getUserByUsername( usernameToCheck );
-        return configurator != null || user != null;
+        return this.subjectService.isPresentUsername(usernameToCheck);
     }
 
 }

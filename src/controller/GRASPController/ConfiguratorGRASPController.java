@@ -2,64 +2,44 @@ package controller.GRASPController;
 
 import java.sql.*;
 
-import org.mindrot.jbcrypt.BCrypt;
-
-import controller.MVCController.*;
 import model.*;
-import util.*;
+import service.ConfiguratorService;
 
 public class ConfiguratorGRASPController {
 
-    private Configurator configurator;
-    private ConfiguratorRepository configuratorRepository;
-    private DistrictController districtController;
-    private CategoryController categoryController;
-    private ConversionFactorsController conversionFactorsController;
+    private ConfiguratorService configuratorService;
 
-    public ConfiguratorGRASPController( ConfiguratorRepository configuratorRepository, DistrictController districtController, CategoryController categoryController, ConversionFactorsController conversionFactorsController ) 
+    public ConfiguratorGRASPController( ConfiguratorService configuratorService ) 
     {
-        this.configuratorRepository = configuratorRepository;
-        this.districtController = districtController;
-        this.categoryController = categoryController;
-        this.conversionFactorsController = conversionFactorsController;
+        this.configuratorService = configuratorService;
     }
     public void setConfigurator ( Configurator configurator ) 
     {
-        this.configurator = configurator;
+        this.configuratorService.setConfigurator(configurator);
     }
 
     public ConfiguratorRepository getconfiguratorRepository () 
     {
-        return this.configuratorRepository;
+        return this.configuratorService.getconfiguratorRepository();
     }
 
     public void saveAll() throws SQLException 
     {
-        if ( !conversionFactorsController.isComplete() ) 
-        {
-            throw new IllegalStateException( Constants.IMPOSSIBLE_SAVE_CF );
-        }
-
-        categoryController.saveCategories();
-        districtController.saveDistricts();
-        conversionFactorsController.saveConversionFactors();
+        this.configuratorService.saveAll();
     }  
 
     public void changeCredentials( String approvedUsername, String newPassword ) throws SQLException 
     {
-        configuratorRepository.changeCredentials( configurator.getUsername(), approvedUsername, BCrypt.hashpw( newPassword, BCrypt.gensalt() ) );
-        configurator.setUsername( approvedUsername );
-        configurator.setPassword( newPassword );
-        configurator.setFirstAccess(false);
+        this.configuratorService.changeCredentials(approvedUsername, newPassword);
     }
 
     public void createDistrict( String districtName ) throws SQLException 
     {
-        districtController.setDistrict(districtController.getdistrictRepository().createDistrict(districtName, configurator.getID()));
+        this.configuratorService.createDistrict(districtName);
     }
 
     public void createCategory( String name, String field, String description, boolean isRoot, Integer hierarchyID ) throws SQLException 
     {
-        categoryController.setCategory( categoryController.getCategoryRepository().createCategory(name, field, description, isRoot, hierarchyID, configurator.getID()) );
+        this.configuratorService.createCategory(name, field, description, isRoot, hierarchyID);
     }
 }

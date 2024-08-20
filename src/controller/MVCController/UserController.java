@@ -11,41 +11,41 @@ import util.*;
 public class UserController extends SubjectController {
     
     private UserView userView;
-    private Session session;
     private CategoryController categoryController;
     private ProposalController proposalController;
-    private UserGRASPController businessController;
+    private UserGRASPController controllerGRASP;
+    private SessionGRASPController sessionGRASPController;
 
-    public UserController ( UserView userView, Session session, UserRepository userRepository, CategoryController categoryController, ProposalController proposalController )
+    public UserController ( UserView userView, SubjectGRASPController subjectGRASPController, SessionGRASPController sessionGRASPController, CategoryController categoryController, ProposalController proposalController, UserGRASPController controllerGRASP )
     {
-        super( userView );
+        super( userView, subjectGRASPController);
         this.userView = userView;
-        this.session = session;
+        this.sessionGRASPController = sessionGRASPController;
         this.categoryController = categoryController;
         this.proposalController = proposalController;
-        this.businessController = new UserGRASPController( userRepository, proposalController );
+        this.controllerGRASP = controllerGRASP;
     }
 
     public User getUser ()
     {
-        return this.businessController.getUser();
+        return this.controllerGRASP.getUser();
     }
 
     public void setUser ( User user )
     {
-        this.businessController.setUser(user);
+        this.controllerGRASP.setUser(user);
     }
 
     public UserRepository getuserRepository ()
     {
-        return this.businessController.getuserRepository();
+        return this.controllerGRASP.getuserRepository();
     }
 
     public void start ()
     {
         int choice = 0;
 
-        super.forcedClosure( session );
+        super.forcedClosure( this.sessionGRASPController.getSession() );
 
         do
         {
@@ -73,7 +73,7 @@ public class UserController extends SubjectController {
                         break;
 
                     case 5:
-                            session.logout();
+                            this.sessionGRASPController.logout();
                             userView.println( Constants.LOG_OUT );
                             super.clearConsole( Constants.TIME_LOGOUT );
                         break;
@@ -101,12 +101,12 @@ public class UserController extends SubjectController {
 
     public void insertProposal ( Proposal toInsert ) throws SQLException
     {
-        this.businessController.insertProposal(toInsert);
+        this.controllerGRASP.insertProposal(toInsert);
     }
 
     public void retireProposal ( Proposal toRetire ) throws SQLException
     {
-        this.businessController.retireProposal(toRetire);
+        this.controllerGRASP.retireProposal(toRetire);
     }
 
 }

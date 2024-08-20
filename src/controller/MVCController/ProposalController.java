@@ -13,20 +13,20 @@ public class ProposalController extends Controller {
     private ProposalView proposalView;
     private CategoryController categoryController;
     private ConversionFactorsController conversionFactorsController;
-    private ProposalGRASPController businessController;
+    private ProposalGRASPController controllerGRASP;
 
-    public ProposalController ( ProposalView proposalView, ProposalRepository proposalRepository, CategoryController categoryController, ConversionFactorsController conversionFactorsController )
+    public ProposalController ( ProposalView proposalView, CategoryController categoryController, ConversionFactorsController conversionFactorsController, ProposalGRASPController controllerGRASP)
     {
         super( proposalView );
         this.proposalView = proposalView;
         this.categoryController = categoryController;
         this.conversionFactorsController = conversionFactorsController;
-        this.businessController = new ProposalGRASPController(proposalRepository);
+        this.controllerGRASP = controllerGRASP;
     }
 
-    public ProposalRepository getproposalRepository () 
+    public ProposalRepository getProposalRepository () 
     {
-        return this.businessController.getproposalRepository();
+        return this.controllerGRASP.getProposalRepository();
     }
 
     public void listProposals ( List<Proposal> proposals )
@@ -52,7 +52,7 @@ public class ProposalController extends Controller {
 
     public void verifyProposal ( Proposal inserted, Proposal toVerify, List<Proposal> toCloses ) throws SQLException
     {
-        this.businessController.verifyProposal(inserted, toVerify, toCloses);
+        this.controllerGRASP.verifyProposal(inserted, toVerify, toCloses);
     }
 
     private int enterProposalID ( List<Proposal> openProposalsByUser, List<Integer> IDs )
@@ -65,7 +65,7 @@ public class ProposalController extends Controller {
         super.clearConsole( Constants.TIME_SWITCH_MENU );
         proposalView.print( Constants.PROPOSAL_LIST );
 
-        List<Proposal> openProposalsByUser = this.getproposalRepository().getAllOpenProposalByUser( userController.getUser() );
+        List<Proposal> openProposalsByUser = this.getProposalRepository().getAllOpenProposalByUser( userController.getUser() );
 
         if ( openProposalsByUser.isEmpty() )
         {
@@ -90,7 +90,7 @@ public class ProposalController extends Controller {
         super.clearConsole( Constants.TIME_SWITCH_MENU );
         proposalView.print( Constants.PROPOSAL_LIST );
 
-        List<Proposal> proposalsByUser = getproposalRepository().getAllProposalsByUser( user );
+        List<Proposal> proposalsByUser = getProposalRepository().getAllProposalsByUser( user );
 
         this.listProposals( proposalsByUser );
 
@@ -116,7 +116,7 @@ public class ProposalController extends Controller {
 
         super.clearConsole( Constants.TIME_SWITCH_MENU );
         proposalView.print( Constants.PROPOSAL_LIST );
-        this.listProposals( getproposalRepository().getAllProposalsByLeaf( categoryController.getCategoryRepository().getCategoryByID( leafID ) ) );
+        this.listProposals( getProposalRepository().getAllProposalsByLeaf( categoryController.getCategoryRepository().getCategoryByID( leafID ) ) );
 
         proposalView.enterString( Constants.ENTER_TO_EXIT );
         super.clearConsole( Constants.TIME_SWITCH_MENU );
@@ -147,7 +147,7 @@ public class ProposalController extends Controller {
         super.clearConsole( Constants.TIME_SWITCH_MENU );
         proposalView.print( Constants.PROPOSE_PROPOSAL_SCREEN );
 
-        int offeredHours = (int) Math.round( conversionFactorsController.getconversionFactorsRepository().getConversionFactor( requestedCategory, offeredCategory ).getValue() * requestedHours );
+        int offeredHours = (int) Math.round( conversionFactorsController.getConversionFactorsRepository().getConversionFactor( requestedCategory, offeredCategory ).getValue() * requestedHours );
         Proposal newProposal = new Proposal( null, requestedCategory, offeredCategory, requestedHours, offeredHours, userController.getUser(), "open" );
         this.printProposalWithCyanHours( newProposal );
 

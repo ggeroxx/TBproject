@@ -10,28 +10,28 @@ import view.*;
 public class MunicipalityController extends Controller {
     
     private MunicipalityView municipalityView;
-    private MunicipalityGRASPController businessController;
+    private MunicipalityGRASPController controllerGRASP;
 
-    public MunicipalityController ( MunicipalityView municipalityView, MunicipalityRepository municipalityRepository, DistrictToMunicipalitiesRepository districtToMunicipalitiesRepository )
+    public MunicipalityController ( MunicipalityView municipalityView, MunicipalityGRASPController controllerGRASP)
     {
         super( municipalityView );
         this.municipalityView = municipalityView;
-        this.businessController = new MunicipalityGRASPController( municipalityRepository, districtToMunicipalitiesRepository);
+        this.controllerGRASP = controllerGRASP;    
     }
 
-    public MunicipalityRepository getmunicipalityRepository ()
+    public MunicipalityRepository getMunicipalityRepository ()
     {
-        return this.businessController.getmunicipalityRepository();
+        return this.controllerGRASP.getMunicipalityRepository();
     }
 
-    public DistrictToMunicipalitiesRepository getdistrictToMunicipalitiesRepository ()
+    public DistrictToMunicipalitiesRepository getDistrictToMunicipalitiesRepository ()
     {
-        return this.businessController.getdistrictToMunicipalitiesRepository();
+        return this.controllerGRASP.getDistrictToMunicipalitiesRepository();
     }
 
     public void listAll ( District district ) throws SQLException
     {
-        for ( Municipality toPrint : getdistrictToMunicipalitiesRepository().selectAllMunicipalityOfDistrict( district ) ) municipalityView.printMunicipality( toPrint );
+        for ( Municipality toPrint : getDistrictToMunicipalitiesRepository().selectAllMunicipalityOfDistrict( district ) ) municipalityView.printMunicipality( toPrint );
     }
 
     public String enterName () throws SQLException
@@ -39,7 +39,7 @@ public class MunicipalityController extends Controller {
         return super.readString( Constants.ENTER_MUNICIPALITY, Constants.NOT_EXIST_MESSAGE, ( str ) -> {
             try 
             {
-                return getmunicipalityRepository().getMunicipalityByName( str ) == null;
+                return getMunicipalityRepository().getMunicipalityByName( str ) == null;
             } 
             catch ( SQLException e ) 
             {

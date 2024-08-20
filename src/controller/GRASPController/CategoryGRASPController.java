@@ -2,81 +2,77 @@ package controller.GRASPController;
 
 import java.sql.*;
 import model.*;
-import util.*;
+import service.CategoryService;
+import service.strategy.BuildHierarchyStrategy;
+import service.strategy.InfoStrategy;
+
 
 
 public class CategoryGRASPController{
     
-    private CategoryRepository categoryRepository;
-    private Category category;
-    private RelationshipsBetweenCategoriesRepository relationshipsBetweenCategoriesRepository;
+    private CategoryService categoryService;
 
-    public CategoryGRASPController (CategoryRepository categoryRepository, RelationshipsBetweenCategoriesRepository relationshipsBetweenCategoriesRepository )
+    public CategoryGRASPController (CategoryService categoryService )
     {
-        this.categoryRepository = categoryRepository;
-        this.relationshipsBetweenCategoriesRepository = relationshipsBetweenCategoriesRepository;
+        this.categoryService = categoryService;
     }
 
     public void setCategory ( Category category ) 
     {
-        this.category = category;
+        this.categoryService.setCategory(category);
     }
 
     public Category getCategory () 
     {
-        return this.category;
+        return this.categoryService.getCategory();
     }
 
     public CategoryRepository getCategoryRepository ()
     {
-        return this.categoryRepository;
+        return this.categoryService.getCategoryRepository();
+    }
+    public RelationshipsBetweenCategoriesRepository getRelationshipsBetweenCategoriesRepository () 
+    {
+        return this.categoryService.getRelationshipsBetweenCategoriesRepository();
     }
 
     public String buildHierarchy ( int IDToPrint, StringBuffer toReturn, StringBuffer spaces ) throws SQLException
     {
-        Category notLeaf = getCategoryRepository().getCategoryByID( IDToPrint );
+        this.categoryService.setStrategy(new BuildHierarchyStrategy());
+        //return this.categoryService.buildHierarchy(IDToPrint, toReturn, spaces);
+        return this.categoryService.execute(getCategory(), IDToPrint, toReturn, spaces);
+    }
 
-        if ( notLeaf.isRoot() ) toReturn.append( notLeaf.getID() + ". " + notLeaf.getName() + "\n\n" );
-        else if ( getCategoryRepository().getCategoriesWithoutChild().contains( notLeaf ) ) toReturn.append( spaces.toString() + Constants.RED + "└──── " + notLeaf.getID() + ". " + notLeaf.getName() + Constants.NO_CHILD + Constants.RESET + "\n\n" );
-        else toReturn.append( spaces.toString() + "└──── " + notLeaf.getID() + ". " + notLeaf.getName() + "\n\n" );
-        
-        for ( Integer IDLeaf : relationshipsBetweenCategoriesRepository.getChildIDsFromParentID( IDToPrint ) ) buildHierarchy( IDLeaf, toReturn, spaces.append( "\t" ) );
-
-        if ( spaces.length() > 1 ) spaces.setLength( spaces.length() - 1 );
-        else spaces.setLength( 0 );
-
-        return toReturn.toString();
+    public String info ( Category category ) throws SQLException
+    {
+        this.categoryService.setStrategy(new InfoStrategy());
+        //return this.categoryService.info(category);
+        return this.categoryService.execute(category, 0, null, null);
     }
 
     public boolean existValueOfField ( String field, Category parent ) throws SQLException
     {
-        return relationshipsBetweenCategoriesRepository.getChildCategoryByFieldAndParentID( field, parent ) != null;
+        return this.categoryService.existValueOfField(field, parent);
     }
 
     public void saveCategories () throws SQLException
     {
-        categoryRepository.saveTmpCategories();
-
-        relationshipsBetweenCategoriesRepository.saveTmpRelationshipsBetweenCategories();     
-
-        relationshipsBetweenCategoriesRepository.deleteTmpRelationshipsBetweenCategories();
-
-        categoryRepository.deleteTmpCategories();
+        this.categoryService.saveCategories();
     }
 
     public void createRelationship ( int parentID, String fieldType ) throws SQLException
     {
-        relationshipsBetweenCategoriesRepository.createRelationship( parentID, this.category.getID(), fieldType );
+        this.categoryService.createRelationship(parentID, fieldType);
     }
 
     public boolean isPresentInternalCategory ( Category root, String nameToCheck ) throws SQLException
     {
-        return categoryRepository.isPresentInternalCategory( root.getHierarchyID(), nameToCheck );
+        return this.categoryService.isPresentInternalCategory(root, nameToCheck);
     }
 
     public boolean isValidParentID ( Category root, int IDToCheck ) throws SQLException
     {
-        return categoryRepository.isValidParentID( root.getHierarchyID(), IDToCheck );
+        return this.categoryService.isValidParentID(root, IDToCheck);
     }
 
 }

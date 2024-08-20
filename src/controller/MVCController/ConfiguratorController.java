@@ -11,40 +11,40 @@ import view.*;
 public class ConfiguratorController extends SubjectController {
 
     private ConfiguratorView configuratorView;
-    private Session session;
+    private SessionGRASPController sessionGRASPController;
     private DistrictController districtController;
     private CategoryController categoryController;
     private ConversionFactorsController conversionFactorsController;
     private ProposalController proposalController;
-    private ConfiguratorGRASPController businessController;
+    private ConfiguratorGRASPController controllerGRASP;
 
-    public ConfiguratorController ( ConfiguratorView configuratorView, Session session, ConfiguratorRepository configuratorRepository, DistrictController districtController, CategoryController categoryController, ConversionFactorsController conversionFactorsController, ProposalController proposalController )
+    public ConfiguratorController ( ConfiguratorView configuratorView, SubjectGRASPController subjectGRASPController, SessionGRASPController sessionGRASPController, DistrictController districtController, CategoryController categoryController, ConversionFactorsController conversionFactorsController, ProposalController proposalController, ConfiguratorGRASPController controllerGRASP )
     {
-        super( configuratorView );
+        super( configuratorView, subjectGRASPController);
         this.configuratorView = configuratorView;
-        this.session = session;
+        this.sessionGRASPController = sessionGRASPController;
         this.districtController = districtController;
         this.categoryController = categoryController;
         this.conversionFactorsController = conversionFactorsController;
         this.proposalController = proposalController;
-        this.businessController = new ConfiguratorGRASPController( configuratorRepository, districtController, categoryController, conversionFactorsController );
+        this.controllerGRASP = controllerGRASP;
     }
 
     public void setConfigurator ( Configurator configurator ) 
     {
-        this.businessController.setConfigurator(configurator);
+        this.controllerGRASP.setConfigurator(configurator);
     }
 
     public ConfiguratorRepository getconfiguratorRepository () 
     {
-        return this.businessController.getconfiguratorRepository();
+        return this.controllerGRASP.getconfiguratorRepository();
     }
 
     public void start () throws SQLException
     {
         int choice = 0;
 
-        super.forcedClosure( session );
+        super.forcedClosure( this.sessionGRASPController.getSession() );
 
         do
         {
@@ -71,7 +71,7 @@ public class ConfiguratorController extends SubjectController {
 
                             try
                             {
-                                businessController.saveAll();
+                                controllerGRASP.saveAll();
                             }
                             catch( IllegalStateException e )
                             {
@@ -105,7 +105,7 @@ public class ConfiguratorController extends SubjectController {
                         break;
 
                     case 10:
-                            session.logout();
+                            this.sessionGRASPController.logout();
                             conversionFactorsController.resetConversionFactors();
                             configuratorView.println( Constants.LOG_OUT );
                             super.clearConsole( Constants.TIME_LOGOUT );
@@ -132,17 +132,17 @@ public class ConfiguratorController extends SubjectController {
 
     public void changeCredentials ( String approvedUsername, String newPassword ) throws SQLException
     {
-        businessController.changeCredentials(approvedUsername, newPassword);
+        this.controllerGRASP.changeCredentials(approvedUsername, newPassword);
     }
 
     public void createDistrict ( String districtName ) throws SQLException
     {
-        businessController.createDistrict(districtName);
+       this.controllerGRASP.createDistrict(districtName);
     }
 
     public void createCategory ( String name, String field, String description, boolean isRoot, Integer hierarchyID ) throws SQLException
     {
-        businessController.createCategory(name, field, description, isRoot, hierarchyID);
+        this.controllerGRASP.createCategory(name, field, description, isRoot, hierarchyID);
     }
 
 }

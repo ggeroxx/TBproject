@@ -1,7 +1,6 @@
 package controller.MVCController;
 
 import java.sql.SQLException;
-//import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.InputMismatchException;
 import java.util.List;
@@ -17,30 +16,30 @@ public class ConversionFactorsController extends Controller {
     private ConversionFactorsView conversionFactorsView;
     private ConversionFactorController conversionFactorController;
     private CategoryController categoryController;
-    private ConversionFactorsGRASPController businessController; 
+    private ConversionFactorsGRASPController controllerGRASP; 
 
-    public ConversionFactorsController ( ConversionFactorsView conversionFactorsView, ConversionFactorsRepository conversionFactorsRepository, ConversionFactorController conversionFactorController, CategoryController categoryController )
+    public ConversionFactorsController ( ConversionFactorsView conversionFactorsView, ConversionFactorController conversionFactorController, CategoryController categoryController, ConversionFactorsGRASPController controllerGRASP)
     {
         super( conversionFactorsView );
         this.conversionFactorsView = conversionFactorsView;
         this.conversionFactorController = conversionFactorController;
         this.categoryController = categoryController;
-        this.businessController = new ConversionFactorsGRASPController(conversionFactorsRepository, categoryController);
+        this.controllerGRASP = controllerGRASP;
     }
 
-    public ConversionFactorsRepository getconversionFactorsRepository () 
+    public ConversionFactorsRepository getConversionFactorsRepository () 
     {
-        return this.businessController.getconversionFactorsRepository();
+        return this.controllerGRASP.getConversionFactorsRepository();
     }
 
     public ConversionFactors getConversionFactors ()
     {
-        return this.businessController.getConversionFactors();
+        return this.controllerGRASP.getConversionFactors();
     }
 
     public void resetConversionFactors ()
     {
-        this.businessController.resetConversionFactors();
+        this.controllerGRASP.resetConversionFactors();
     }
 
     public void listAll () throws SQLException
@@ -172,32 +171,32 @@ public class ConversionFactorsController extends Controller {
     
     public void saveConversionFactors () throws SQLException
     {
-        this.businessController.saveConversionFactors();
+        this.controllerGRASP.saveConversionFactors();
     }
 
     public void populate () throws SQLException
     {
-        this.businessController.populate();
+        this.controllerGRASP.populate();
     }
 
     public void calculate ( int index, Double value ) throws SQLException
     {
-        this.businessController.calculate(index, value);
+        this.controllerGRASP.calculate(index, value);
     }
 
     public void calculateEq ( int index, Double value, boolean check, HashMap<Integer, ConversionFactor> copyCFs, List<String> equations )
     {
-        this.businessController.calculateEq(index, value, check, copyCFs, equations);
+        this.controllerGRASP.calculateEq(index, value, check, copyCFs, equations);
     }
 
     public double[] calculateRange ( int index )
     {
-        return this.businessController.calculateRange(index);
+        return this.controllerGRASP.calculateRange(index);
     }
 
     public boolean isComplete () throws SQLException
     {
-        return this.businessController.isComplete();
+        return this.controllerGRASP.isComplete();
     }
 
 }

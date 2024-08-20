@@ -1,26 +1,25 @@
 package controller.GRASPController;
 
 import model.*;
+import service.MunicipalityService;
 
 public class MunicipalityGRASPController{
     
-    private MunicipalityRepository municipalityRepository;
-    private DistrictToMunicipalitiesRepository districtToMunicipalitiesRepository;
+    private MunicipalityService municipalityService;
 
-    public MunicipalityGRASPController ( MunicipalityRepository municipalityRepository, DistrictToMunicipalitiesRepository districtToMunicipalitiesRepository )
+    public MunicipalityGRASPController ( MunicipalityService municipalityService )
     {
-        this.municipalityRepository = municipalityRepository;
-        this.districtToMunicipalitiesRepository = districtToMunicipalitiesRepository;
+        this.municipalityService = municipalityService;
     }
 
-    public MunicipalityRepository getmunicipalityRepository ()
+    public MunicipalityRepository getMunicipalityRepository ()
     {
-        return this.municipalityRepository;
+        return this.municipalityService.getMunicipalityRepository();
     }
 
-    public DistrictToMunicipalitiesRepository getdistrictToMunicipalitiesRepository ()
+    public DistrictToMunicipalitiesRepository getDistrictToMunicipalitiesRepository ()
     {
-        return this.districtToMunicipalitiesRepository;
+        return this.municipalityService.getDistrictToMunicipalitiesRepository();
     }
 
 }

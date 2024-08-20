@@ -2,48 +2,40 @@ package controller.GRASPController;
 
 import java.sql.*;
 import model.*;
+import service.DistrictService;
 
 public class DistrictGRASPController {
     
-    private DistrictRepository districtRepository;
-    private District district;
-    private DistrictToMunicipalitiesRepository districtToMunicipalitiesRepository;
+    private DistrictService districtService;
 
-    public DistrictGRASPController ( DistrictRepository districtRepository, DistrictToMunicipalitiesRepository districtToMunicipalitiesRepository )
+    public DistrictGRASPController ( DistrictService districtService )
     {
-        this.districtRepository = districtRepository;
-        this.districtToMunicipalitiesRepository = districtToMunicipalitiesRepository;
+        this.districtService = districtService;
     }
 
-    public DistrictRepository getdistrictRepository ()
+    public DistrictRepository getDistrictRepository ()
     {
-        return this.districtRepository;
+        return this.districtService.getDistrictRepository();
     }
 
     public void setDistrict ( District district )
     {
-        this.district = district;
+        this.districtService.setDistrict(district);
     }
 
     public void saveDistricts () throws SQLException
     {
-        districtRepository.saveTmpDistricts();
-
-        districtToMunicipalitiesRepository.saveTmpDistrictToMunicipalities();
-
-        districtToMunicipalitiesRepository.deleteTmpDistrictToMunicipalities();
-
-        districtRepository.deleteTmpDistricts();
+        this.districtService.saveDistricts();
     }
 
     public boolean isPresentMunicipalityInDistrict ( Municipality municipalityToCheck ) throws SQLException
     {
-        return districtToMunicipalitiesRepository.isPresentMunicipalityInDistrict( this.district.getID(), municipalityToCheck.getID() );
+        return this.districtService.isPresentMunicipalityInDistrict(municipalityToCheck);
     }
 
     public void addMunicipality ( Municipality municipalityToAdd ) throws SQLException
     {
-        districtToMunicipalitiesRepository.addMunicipality( this.district.getID(), municipalityToAdd.getID() );
+        this.districtService.addMunicipality(municipalityToAdd);
     }
 
 }

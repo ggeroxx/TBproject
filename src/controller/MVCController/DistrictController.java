@@ -11,29 +11,29 @@ public class DistrictController extends Controller {
     
     private DistrictView districtView;
     private MunicipalityController municipalityController;
-    private DistrictGRASPController businessController;
+    private DistrictGRASPController controllerGRASP;
 
-    public DistrictController ( DistrictView districtView, DistrictRepository districtRepository, DistrictToMunicipalitiesRepository districtToMunicipalitiesRepository, MunicipalityController municipalityController )
+    public DistrictController ( DistrictView districtView,MunicipalityController municipalityController, DistrictGRASPController controllerGRASP )
     {
         super( districtView );
         this.districtView = districtView;
         this.municipalityController = municipalityController;
-        this.businessController = new DistrictGRASPController(districtRepository, districtToMunicipalitiesRepository);
+        this.controllerGRASP = controllerGRASP;
     }
 
-    public DistrictRepository getdistrictRepository ()
+    public DistrictRepository getDistrictRepository ()
     {
-        return this.businessController.getdistrictRepository();
+        return this.controllerGRASP.getDistrictRepository();
     }
 
     public void setDistrict ( District district )
     {
-        this.businessController.setDistrict(district);
+        this.controllerGRASP.setDistrict(district);
     }
 
     public void listAllWithMunicipalities () throws SQLException, Exception
     {
-        for ( District toPrint : getdistrictRepository().getAllDistricts() )
+        for ( District toPrint : getDistrictRepository().getAllDistricts() )
         {
             districtView.printDistrict( toPrint );
             municipalityController.listAll( toPrint );
@@ -43,8 +43,8 @@ public class DistrictController extends Controller {
 
     public void listAll () throws SQLException
     {
-        for ( District toPrint : getdistrictRepository().getAllSavedDistricts() ) districtView.println( " " + toPrint.getID() + ". " + toPrint.getName() );
-        for ( District toPrint : getdistrictRepository().getAllNotSavedDistricts() ) districtView.println( " " + toPrint.getID() + ". " + toPrint.getName() + Constants.NOT_SAVED );
+        for ( District toPrint : getDistrictRepository().getAllSavedDistricts() ) districtView.println( " " + toPrint.getID() + ". " + toPrint.getName() );
+        for ( District toPrint : getDistrictRepository().getAllNotSavedDistricts() ) districtView.println( " " + toPrint.getID() + ". " + toPrint.getName() + Constants.NOT_SAVED );
     }
 
     public int chooseDistrict ()
@@ -52,7 +52,7 @@ public class DistrictController extends Controller {
         return super.readIntWithExit( Constants.ENTER_DISTRICT_OR_EXIT, Constants.NOT_EXIST_MESSAGE, ( input ) -> {
             try 
             {
-                return getdistrictRepository().getDistrictByID( (Integer) input ) == null;
+                return getDistrictRepository().getDistrictByID( (Integer) input ) == null;
             } 
             catch ( SQLException e ) 
             {
@@ -71,7 +71,7 @@ public class DistrictController extends Controller {
         super.clearConsole( Constants.TIME_SWITCH_MENU );
         districtView.print( Constants.DISTRICTS_LIST );
 
-        if ( getdistrictRepository().getAllDistricts().isEmpty() )
+        if ( getDistrictRepository().getAllDistricts().isEmpty() )
         {
             districtView.println( Constants.NOT_EXIST_MESSAGE + "\n" );
             super.clearConsole( Constants.TIME_ERROR_MESSAGE );
@@ -82,7 +82,7 @@ public class DistrictController extends Controller {
         int districtID = this.chooseDistrict();
         if ( districtID == 0 ) return;
 
-        District tmp = getdistrictRepository().getDistrictByID( districtID );
+        District tmp = getDistrictRepository().getDistrictByID( districtID );
         super.clearConsole( Constants.TIME_SWITCH_MENU );
         districtView.println( "\n" + tmp.getName() + ":\n" );
         municipalityController.listAll( tmp );
@@ -96,7 +96,7 @@ public class DistrictController extends Controller {
         super.clearConsole( Constants.TIME_SWITCH_MENU );
         String districtName = this.enterName();
 
-        if ( getdistrictRepository().getDistrictByName( districtName ) != null )
+        if ( getDistrictRepository().getDistrictByName( districtName ) != null )
         {
             districtView.println( Constants.DISTRICT_NAME_ALREADY_PRESENT );
             super.clearConsole( Constants.TIME_ERROR_MESSAGE );
@@ -109,7 +109,7 @@ public class DistrictController extends Controller {
         {
             municipalityName = municipalityController.enterName();
 
-            Municipality municipalityToAdd = municipalityController.getmunicipalityRepository().getMunicipalityByName( municipalityName );
+            Municipality municipalityToAdd = municipalityController.getMunicipalityRepository().getMunicipalityByName( municipalityName );
 
             if ( this.isPresentMunicipalityInDistrict( municipalityToAdd ) )
             {
@@ -134,17 +134,17 @@ public class DistrictController extends Controller {
 
     public void saveDistricts () throws SQLException
     {
-        this.businessController.saveDistricts();
+        this.controllerGRASP.saveDistricts();
     }
 
     public boolean isPresentMunicipalityInDistrict ( Municipality municipalityToCheck ) throws SQLException
     {
-        return this.businessController.isPresentMunicipalityInDistrict( municipalityToCheck );
+        return this.controllerGRASP.isPresentMunicipalityInDistrict( municipalityToCheck );
     }
 
     public void addMunicipality ( Municipality municipalityToAdd ) throws SQLException
     {
-        this.businessController.addMunicipality( municipalityToAdd );
+        this.controllerGRASP.addMunicipality( municipalityToAdd );
     }
 
 }

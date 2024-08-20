@@ -1,20 +1,17 @@
 package controller.GRASPController;
 
 import java.sql.SQLException;
-
-import controller.MVCController.*;
 import model.*;
+import service.*;
 
 public class UserGRASPController {
     
     private User user;
-    private UserRepository userRepository;
-    private ProposalController proposalController;
+    private UserService userService;
 
-    public UserGRASPController ( UserRepository userRepository, ProposalController proposalController )
+    public UserGRASPController ( UserService userService )
     {
-        this.userRepository = userRepository;
-        this.proposalController = proposalController;
+        this.userService = userService;
     }
 
     public User getUser ()
@@ -29,17 +26,17 @@ public class UserGRASPController {
 
     public UserRepository getuserRepository ()
     {
-        return this.userRepository;
+        return this.userService.getuserRepository();
     }
 
     public void insertProposal ( Proposal toInsert ) throws SQLException
     {
-        proposalController.getproposalRepository().insertProposal( toInsert.getRequestedCategory(), toInsert.getOfferedCategory(), toInsert.getRequestedHours(), toInsert.getOfferedHours(), toInsert.getUser(), toInsert.getState() );
+        userService.insertProposal(toInsert);    
     }
 
     public void retireProposal ( Proposal toRetire ) throws SQLException
     {
-        proposalController.getproposalRepository().retireProposal( toRetire );
+        userService.retireProposal(toRetire);
     }
 
 }
