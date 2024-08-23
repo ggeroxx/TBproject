@@ -1,160 +1,70 @@
 package service;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map.Entry;
 
 import model.*;
-import util.Constants;
-public class ConversionFactorsService{
-    
-    private ConversionFactors conversionFactors;
-    private ConversionFactorsRepository conversionFactorsRepository;
+import service.SRP.*;
+
+public class ConversionFactorsService {
+
     private CategoryService categoryService;
+    private ConversionFactorsManager conversionFactorsManager;
+    private ConversionFactorsCalculator conversionFactorsCalculator;
+    private ConversionFactorsPersistenceService conversionFactorsPersistenceService;
 
-
-    public ConversionFactorsService ( ConversionFactorsRepository conversionFactorsRepository, CategoryService categoryService )
+    public ConversionFactorsService(ConversionFactorsRepository conversionFactorsRepository, CategoryService categoryService) 
     {
-        this.conversionFactors = new ConversionFactors();
-        this.conversionFactorsRepository = conversionFactorsRepository;
         this.categoryService = categoryService;
+        this.conversionFactorsManager = new ConversionFactorsManager();
+        this.conversionFactorsCalculator = new ConversionFactorsCalculator(conversionFactorsManager.getConversionFactors());
+        this.conversionFactorsPersistenceService = new ConversionFactorsPersistenceService(conversionFactorsRepository);
     }
 
     public ConversionFactorsRepository getConversionFactorsRepository () 
     {
-        return this.conversionFactorsRepository;
+        return this.conversionFactorsPersistenceService.getConversionFactorsRepository();
     }
 
     public ConversionFactors getConversionFactors ()
     {
-        return this.conversionFactors;
+        return this.conversionFactorsManager.getConversionFactors();
     }
 
-    public void resetConversionFactors ()
+    public void resetConversionFactors() 
     {
-        this.conversionFactors = new ConversionFactors();
+        conversionFactorsManager.resetConversionFactors();
     }
-    
-    public void saveConversionFactors () throws SQLException
+
+    public void populate() throws SQLException 
     {
-        conversionFactorsRepository.saveAll( this.conversionFactors );
+        conversionFactorsManager.populate (conversionFactorsPersistenceService.getConversionFactorsRepository(), categoryService );
     }
 
-    public void populate () throws SQLException
+    public void calculate( int index, Double value ) throws SQLException 
     {
-        for ( ConversionFactor toAdd : conversionFactorsRepository.getAll() )
-            if ( !conversionFactors.contains( toAdd ) && !toAdd.getLeaf_1().getName().equals( toAdd.getLeaf_2().getName() ) )
-                conversionFactors.put( toAdd );
-        
-        for ( Category fixed : this.categoryService.getCategoryRepository().getAllLeaf() ) 
-        {
-            for ( Category mobile : this.categoryService.getCategoryRepository().getAllLeaf() ) 
-            {
-                if ( fixed.getID() != mobile.getID() )
-                {  
-                    ConversionFactor toAdd = new ConversionFactor( this.categoryService.getCategoryRepository().getCategoryByID( fixed.getID() ), this.categoryService.getCategoryRepository().getCategoryByID( mobile.getID() ), null );
-                    if ( !conversionFactors.contains( toAdd ) && !toAdd.getLeaf_1().getName().equals( toAdd.getLeaf_2().getName() ) ) conversionFactors.put( toAdd );
-                }
-            }
-        }
+        conversionFactorsCalculator.calculate( index, value );
     }
 
-    public void calculate ( int index, Double value ) throws SQLException
+    public void calculateEq( int index, Double value, boolean check, HashMap<Integer, ConversionFactor> copyCFs, List<String> equations ) 
     {
-        ConversionFactor AB = conversionFactors.getList().get( index );
-        AB.setValue( Math.round( value * 10000.0 ) / 10000.0 );
-        
-        for ( Entry<Integer, ConversionFactor> toControl : conversionFactors.getList().entrySet() )
-        {
-            ConversionFactor BC = toControl.getValue();
-            if ( AB.getLeaf_2().getID() == BC.getLeaf_1().getID() && BC.getValue() != null && AB.getLeaf_1().getID() != BC.getLeaf_2().getID() )
-            {
-                Integer indexAC = conversionFactors.getIndex( AB.getLeaf_1(), BC.getLeaf_2() );
-                if ( indexAC != null )
-                {
-                    ConversionFactor AC = conversionFactors.getList().get( indexAC );
-                    if ( AC.getValue() == null ) calculate( indexAC, AB.getValue() * BC.getValue() );
-                }
-            }
-        }
-
-        Integer indexBA = conversionFactors.getIndex( AB.getLeaf_2(), AB.getLeaf_1() );
-        ConversionFactor BA = conversionFactors.getList().get( indexBA );
-        if ( BA.getValue() == null ) calculate( indexBA, 1 / value );
-        
-        return;
+        conversionFactorsCalculator.calculateEq(index, value, check, copyCFs, equations);
     }
 
-    public void calculateEq ( int index, Double value, boolean check, HashMap<Integer, ConversionFactor> copyCFs, List<String> equations )
+    public double[] calculateRange( int index ) 
     {
-        ConversionFactor AB = copyCFs.get( index );
-        AB.setValue( Math.round( value * 100000.0 ) / 100000.0 );
-        equations.add( check ? "x * " + AB.getValue().toString() : "1/x * " + AB.getValue().toString() );
-        
-        for ( Entry<Integer, ConversionFactor> toControl : copyCFs.entrySet() )
-        {
-            ConversionFactor BC = toControl.getValue();
-            if ( AB.getLeaf_2().getID() == BC.getLeaf_1().getID() && BC.getValue() != null && AB.getLeaf_1().getID() != BC.getLeaf_2().getID() )
-            {
-                Integer indexAC = conversionFactors.getIndex( AB.getLeaf_1(), BC.getLeaf_2() );
-                if ( indexAC != null )
-                {
-                    ConversionFactor AC = copyCFs.get( indexAC );
-                    if ( AC.getValue() == null )
-                        calculateEq( indexAC, AB.getValue() * BC.getValue(), check, copyCFs, equations );
-                }
-            }
-        }
-
-        Integer indexBA = conversionFactors.getIndex( AB.getLeaf_2(), AB.getLeaf_1() );
-        ConversionFactor BA = copyCFs.get( indexBA );
-        if ( BA.getValue() == null ) 
-            calculateEq( indexBA, 1 / value, check ? false : true, copyCFs, equations );
-        
-        return;
+        return conversionFactorsCalculator.calculateRange( index );
     }
 
-    public double[] calculateRange ( int index )
+    public void saveConversionFactors() throws SQLException 
     {
-        HashMap<Integer, ConversionFactor> copyCFs = new HashMap<>();
-        for (  Entry<Integer, ConversionFactor> cf : conversionFactors.getList().entrySet() )
-            copyCFs.put( cf.getKey(), new ConversionFactor( cf.getValue().getLeaf_1(), cf.getValue().getLeaf_2(), cf.getValue().getValue() ) );
-
-        List<String> equations = new ArrayList<>();
-        calculateEq( index, Constants.NEUTRAL_VALUE, true, copyCFs, equations );
-    
-        double exSX = Constants.MIN_VALUES_CONVERSION_FACTOR, exDX = Constants.MAX_VALUES_CONVERSION_FACTOR;
-
-        for ( String eq : equations )
-        {
-            if ( eq.contains( "1/x" ) )
-            {
-                eq = eq.replace( "1/x * " , "" );
-                Double tmp = Double.parseDouble( eq );
-                exSX = tmp * Constants.MIN_VALUES_CONVERSION_FACTOR > exSX ? tmp * Constants.MIN_VALUES_CONVERSION_FACTOR : exSX;
-                exDX = tmp * Constants.MAX_VALUES_CONVERSION_FACTOR < exDX ? tmp * Constants.MAX_VALUES_CONVERSION_FACTOR : exDX;
-            }
-            else
-            {
-                eq = eq.replace( "x * " , "" );
-                Double tmp = Double.parseDouble( eq );
-                exSX = Constants.MIN_VALUES_CONVERSION_FACTOR / tmp > exSX ? Constants.MIN_VALUES_CONVERSION_FACTOR / tmp : exSX;
-                exDX = Constants.MAX_VALUES_CONVERSION_FACTOR / tmp < exDX ? Constants.MAX_VALUES_CONVERSION_FACTOR / tmp : exDX;
-            }
-        }
-
-        exDX = Math.floor( exDX * 10000.0 ) / 10000.0;
-        exSX = Math.ceil( exSX * 10000.0 ) / 10000.0;
-
-        return new double[]{ exSX, exDX };
+        conversionFactorsPersistenceService.saveConversionFactors( conversionFactorsManager.getConversionFactors() );
     }
 
-    public boolean isComplete () throws SQLException
+    public boolean isComplete() throws SQLException 
     {
         populate();
-        return conversionFactors.getList().entrySet().stream().allMatch( entry -> entry.getValue().getValue() != null );
+        return conversionFactorsManager.getConversionFactors().getList().entrySet().stream().allMatch(entry -> entry.getValue().getValue() != null);
     }
-
 }

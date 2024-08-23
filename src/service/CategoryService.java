@@ -35,16 +35,6 @@ public class CategoryService{
         this.strategy = strategy;
     }
 
-    /*public void setBuildHierarchyStrategy( Strategy buildHierarchyStrategy ) 
-    {
-        this.buildHierarchyStrategy = buildHierarchyStrategy;
-    }
-
-    public void setInfoStrategy( Strategy infoStrategy ) 
-    {
-        this.infoStrategy = infoStrategy;
-    }*/
-
     public RelationshipsBetweenCategoriesRepository getRelationshipsBetweenCategoriesRepository () 
     {
         return this.relationshipsBetweenCategoriesRepository;
@@ -60,26 +50,6 @@ public class CategoryService{
         return strategy.execute(this, category, IDToPrint, toReturn, spaces);
     }
 
-    /*public String buildHierarchy ( int IDToPrint, StringBuffer toReturn, StringBuffer spaces ) throws SQLException
-    {
-        //return strategy.execute(this, IDToPrint, toReturn, spaces);
-
-        Category notLeaf = getCategoryRepository().getCategoryByID( IDToPrint );
-
-        if ( notLeaf.isRoot() ) toReturn.append( notLeaf.getID() + ". " + notLeaf.getName() + "\n\n" );
-        else if ( getCategoryRepository().getCategoriesWithoutChild().contains( notLeaf ) ) toReturn.append( spaces.toString() + Constants.RED + "└──── " + notLeaf.getID() + ". " + notLeaf.getName() + Constants.NO_CHILD + Constants.RESET + "\n\n" );
-        else toReturn.append( spaces.toString() + "└──── " + notLeaf.getID() + ". " + notLeaf.getName() + "\n\n" );
-        
-        for ( Integer IDLeaf : relationshipsBetweenCategoriesRepository.getChildIDsFromParentID( IDToPrint ) ) buildHierarchy( IDLeaf, toReturn, spaces.append( "\t" ) );
-
-        if ( spaces.length() > 1 ) spaces.setLength( spaces.length() - 1 );
-        else spaces.setLength( 0 );
-
-        return toReturn.toString();
-
-
-    }*/
-
     public String padRight ( String str, int maxLenght )
     {
         String toReturn = "";
@@ -88,27 +58,6 @@ public class CategoryService{
 
         return toReturn;
     } 
-
-    /*public String info ( Category category ) throws SQLException
-    {
-        //return strategy.execute(this, category);
-
-        StringBuffer sb = new StringBuffer();    
-
-        sb.append( Constants.NAME + ":" + padRight( Constants.NAME + ":", 20 ) + Constants.BOLD + category.getName() + Constants.RESET + "\n" );
-        if ( !category.isRoot() ) sb.append( Constants.DESCRIPTION + ":" + padRight( Constants.DESCRIPTION + ":", 20 ) + category.getDescription() + "\n" );
-
-        if ( category.getField() == null ) sb.append( Constants.VALUE_OF_DOMAIN + ":" + padRight( Constants.VALUE_OF_DOMAIN + ":", 20 ) + relationshipsBetweenCategoriesRepository.getFieldValueFromChildID( category.getID() ) + "\n" );
-        else 
-        {
-            sb.append( Constants.FIELD + ":" + padRight( Constants.FIELD + ":", 20 ) + category.getField() + " = { " );
-            for ( String fieldValue : relationshipsBetweenCategoriesRepository.getFieldValuesFromParentID( category.getID() ) ) sb.append( Constants.YELLOW + fieldValue + Constants.RESET + ", " );
-            sb.deleteCharAt( sb.length() - 2 );
-            sb.append( "}\n" );
-        }
-
-        return sb.toString();
-    }*/
 
     public boolean existValueOfField ( String field, Category parent ) throws SQLException
     {
