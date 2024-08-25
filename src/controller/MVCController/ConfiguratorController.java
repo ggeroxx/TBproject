@@ -71,7 +71,7 @@ public class ConfiguratorController extends SubjectController {
 
                             try
                             {
-                                controllerGRASP.saveAll();
+                                saveAll();
                             }
                             catch( IllegalStateException e )
                             {
@@ -128,6 +128,11 @@ public class ConfiguratorController extends SubjectController {
                 e.printStackTrace();
             }
         } while ( choice != 10 );
+    }
+
+    public void saveAll ( ) throws SQLException
+    {
+        this.controllerGRASP.saveAll();
     }
 
     public void changeCredentials ( String approvedUsername, String newPassword ) throws SQLException

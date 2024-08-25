@@ -3,6 +3,8 @@ package model;
 import java.sql.*;
 import java.util.*;
 
+import org.mindrot.jbcrypt.BCrypt;
+
 import util.Conn;
 import util.Queries;
 
@@ -28,4 +30,24 @@ public class JDBCConfiguratorRepository implements ConfiguratorRepository {
         Conn.queryUpdate( Queries.CHANGE_CREDENTIALS_QUERY, new ArrayList<>( Arrays.asList( approvedUsername, hashedPassword, oldUsername ) ) );
     }
 
+    @Override
+    public Configurator getOneConfiguratorForTest () throws SQLException 
+    {
+        ResultSet rs = Conn.exQuery( Queries.GET_ONE_CONFIGURATOR, new ArrayList<>( ));
+        return rs.next() ? new Configurator( rs.getInt(1) , rs.getString( 2 ), rs.getString( 3 ), rs.getBoolean( 4 ) ) : null;
+    }
+
+    @Override
+    public Configurator getNewConfiguratorForTest() throws SQLException
+    {
+        String passwordTest = BCrypt.hashpw("PasswordTest", BCrypt.gensalt());
+        Conn.queryUpdate( Queries.INSERT_NEW_CONFIGURATOR, new ArrayList<>( Arrays.asList( "NameTest", passwordTest, 0 ) ) );
+        return getConfiguratorByUsername("NameTest");
+    }
+
+    @Override
+    public void deleteNewConfiguratorForTest ( String userName ) throws SQLException
+    {
+        Conn.queryUpdate( Queries.DELETE_NEW_CONFIGURATOR, new ArrayList<>( Arrays.asList( userName ) ) );
+    }
 }

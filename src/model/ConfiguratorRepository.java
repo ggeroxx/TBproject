@@ -10,4 +10,10 @@ public interface ConfiguratorRepository {
 
     void changeCredentials ( String oldUsername, String approvedUsername, String newPassword ) throws SQLException;
 
+    Configurator getOneConfiguratorForTest () throws SQLException;
+
+    Configurator getNewConfiguratorForTest () throws SQLException;
+
+    void deleteNewConfiguratorForTest (String userName) throws SQLException;
+
 }

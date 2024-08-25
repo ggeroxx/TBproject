@@ -28,4 +28,9 @@ public class JDBCUserRepository implements UserRepository {
         Conn.queryUpdate( Queries.INSERT_USER_QUERY, new ArrayList<>( Arrays.asList( user.getUsername(), user.getPassword(), user.getDistrictID(), user.getMail() ) ) );
     }
 
+    @Override
+    public void deleteNewUserForTest ( String userName ) throws SQLException
+    {
+        Conn.queryUpdate( Queries.DELETE_NEW_USER, new ArrayList<>( Arrays.asList( userName ) ) );
+    }
 }

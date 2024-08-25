@@ -66,4 +66,10 @@ public class JDBCProposalRepository implements ProposalRepository {
         Conn.queryUpdate( Queries.CLOSE_PROPOSAL_QUERY, new ArrayList<>( Arrays.asList( "close", proposal.getID() ) ) );
     }
 
+    @Override
+    public void deleteProposalByUser( int userID ) throws SQLException 
+    {
+        Conn.queryUpdate( Queries.DELETE_PROPOSAL_BY_USER, new ArrayList<>( Arrays.asList( userID ) ) );  
+    }
+
 }

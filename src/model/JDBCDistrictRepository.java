@@ -79,4 +79,11 @@ public class JDBCDistrictRepository implements DistrictRepository {
         Conn.queryUpdate( Queries.SET_DISTRICT_TMP_ID_VALUE_AUTO_INCREMENT_QUERY, new ArrayList<>( Arrays.asList( newValue ) ) );
     }
 
+    @Override
+    public District getOneDistrictForTest () throws SQLException 
+    {
+        ResultSet rs = Conn.exQuery( Queries.GET_ONE_DISTRICT, new ArrayList<>( ));
+        return rs.next() ? new District ( rs.getInt(1) , rs.getString( 2 ), rs.getInt( 3 ) ) : null;
+    }
+
 }

@@ -54,6 +54,10 @@ public class Queries {
                                                            ") AS merged_table";
 
     public static final String SET_DISTRICT_TMP_ID_VALUE_AUTO_INCREMENT_QUERY = "ALTER TABLE tmp_districts AUTO_INCREMENT = ?";
+
+    public static final String GET_ONE_DISTRICT = "SELECT * " +
+                                                  "FROM districts " +
+                                                  "LIMIT 1";
     
     // ---------------------------------------- districtToMunicipalitiesRepositoryImpl ----------------------------------------
 
@@ -92,6 +96,16 @@ public class Queries {
     public static final String CHANGE_CREDENTIALS_QUERY = "UPDATE configurators " +
                                                           "SET username = ?, password = ?, firstAccess = 0 " +
                                                           "WHERE username = ?";
+
+    public static final String GET_ONE_CONFIGURATOR = "SELECT * " +
+                                                      "FROM configurators " +
+                                                      "LIMIT 1";
+
+    public static final String INSERT_NEW_CONFIGURATOR = "INSERT INTO configurators (username, password, firstAccess) " +
+                                                         "VALUES (?, ?, ?)";  
+                                                         
+    public static final String DELETE_NEW_CONFIGURATOR = "DELETE FROM configurators " + 
+                                                         "WHERE username = ?";  
 
     // ---------------------------------------- categoryRepositoryImpl ----------------------------------------
 
@@ -325,6 +339,9 @@ public class Queries {
     public static final String INSERT_USER_QUERY = "INSERT INTO users ( username, password, districtid, mail ) " +
                                                    "VALUES ( ?, ?, ?, ? )";
 
+    public static final String DELETE_NEW_USER = "DELETE FROM users " + 
+                                                 "WHERE username = ?"; 
+
     // ---------------------------------------- AccessJDBCImpl ----------------------------------------
 
     public static final String GET_PERMISSION_QUERY = "SELECT configuratorid " +
@@ -367,5 +384,8 @@ public class Queries {
     public static final String CLOSE_PROPOSAL_QUERY = "UPDATE proposals " +
                                                       "SET state = ? " +
                                                       "WHERE id = ?";
+                                                      
+    public static final String DELETE_PROPOSAL_BY_USER = "DELETE FROM proposals "+
+                                                         "WHERE userID = ?";
                                                                     
 }

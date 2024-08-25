@@ -10,4 +10,6 @@ public interface UserRepository {
 
     void insertUser ( User user ) throws SQLException;
 
+    void deleteNewUserForTest ( String userName ) throws SQLException;
+
 }

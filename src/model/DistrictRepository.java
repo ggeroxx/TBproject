@@ -25,4 +25,6 @@ public interface DistrictRepository {
 
     void setTmpIDValueAutoIncrement ( int newValue ) throws SQLException;
 
+    District getOneDistrictForTest () throws SQLException;
+
 }
