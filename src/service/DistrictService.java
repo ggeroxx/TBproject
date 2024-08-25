@@ -1,7 +1,10 @@
 package service;
 
-import java.sql.*;
-import model.*;
+import java.sql.SQLException;
+import model.District;
+import model.Municipality;
+import repository.DistrictRepository;
+import repository.DistrictToMunicipalitiesRepository;
 
 public class DistrictService {
     

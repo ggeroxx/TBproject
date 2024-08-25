@@ -1,8 +1,10 @@
 package controller.GRASPController;
 
 import java.sql.SQLException;
-import model.*;
-import service.*;
+import model.Proposal;
+import model.User;
+import model.UserRepository;
+import service.UserService;
 
 public class UserGRASPController {
     

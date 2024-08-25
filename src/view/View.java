@@ -1,7 +1,8 @@
 package view;
 
-import java.io.*;
-import java.util.*;
+import java.io.Console;
+import java.util.Locale;
+import java.util.Scanner;
 
 public class View {
     

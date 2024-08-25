@@ -1,6 +1,6 @@
 package model;
 
-import java.sql.*;
+import java.sql.SQLException;
 
 public interface UserRepository {
     

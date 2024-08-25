@@ -1,8 +1,8 @@
 package controller.GRASPController;
 
-import java.sql.*;
-
-import model.*;
+import java.sql.SQLException;
+import model.Configurator;
+import repository.ConfiguratorRepository;
 import service.ConfiguratorService;
 
 public class ConfiguratorGRASPController {

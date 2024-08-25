@@ -1,10 +1,10 @@
 package controller.GRASPController;
 
 import java.sql.SQLException;
-import java.util.*;
-import model.*;
+import java.util.List;
+import model.Proposal;
+import repository.ProposalRepository;
 import service.ProposalService;
-
 
 public class ProposalGRASPController {
     

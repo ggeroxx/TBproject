@@ -1,6 +1,7 @@
 package service;
 
-import model.*;
+import repository.DistrictToMunicipalitiesRepository;
+import repository.MunicipalityRepository;
 
 public class MunicipalityService{
     

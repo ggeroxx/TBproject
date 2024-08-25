@@ -1,8 +1,8 @@
 package service.SRP;
 
 import java.sql.SQLException;
-
-import model.*;
+import model.ConversionFactors;
+import repository.ConversionFactorsRepository;
 
 public class ConversionFactorsPersistenceService {
     

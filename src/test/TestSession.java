@@ -1,14 +1,19 @@
 package test;
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
-
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 import java.sql.SQLException;
-
 import org.junit.Test;
 import org.mindrot.jbcrypt.BCrypt;
-
-import model.*;
+import model.AccessRepository;
+import model.AuthenticationService_PureFabrication;
+import model.Configurator;
+import model.Session;
+import model.User;
 
 public class TestSession extends TestScheme{
     

@@ -1,7 +1,8 @@
 package service;
 
 import java.sql.SQLException;
-import model.*;
+import model.Proposal;
+import model.UserRepository;
 
 public class UserService{
     

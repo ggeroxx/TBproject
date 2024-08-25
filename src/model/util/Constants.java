@@ -1,4 +1,4 @@
-package util;
+package model.util;
 
 public class Constants {
 

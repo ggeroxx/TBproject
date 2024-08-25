@@ -1,6 +1,10 @@
 package model;
 
-import java.sql.*;
+import java.sql.SQLException;
+import repository.CategoryRepository;
+import repository.DistrictRepository;
+import repository.DistrictToMunicipalitiesRepository;
+import repository.RelationshipsBetweenCategoriesRepository;
 
 public class TemporaryOperationsManager_PureFabrication {
     private DistrictRepository districtRepository;

@@ -1,7 +1,10 @@
-package model;
+package repository;
 
-import java.sql.*;
-import java.util.*;
+import java.sql.SQLException;
+import java.util.List;
+import model.Category;
+import model.ConversionFactor;
+import model.ConversionFactors;
 
 public interface ConversionFactorsRepository {
     

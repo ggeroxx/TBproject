@@ -1,9 +1,18 @@
-package model;
+package repository.JDBCRepository;
 
-import java.sql.*;
-import java.util.*;
-
-import util.*;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import model.Category;
+import model.Proposal;
+import model.User;
+import model.UserRepository;
+import model.util.Conn;
+import model.util.Queries;
+import repository.CategoryRepository;
+import repository.ProposalRepository;
 
 public class JDBCProposalRepository implements ProposalRepository {
     

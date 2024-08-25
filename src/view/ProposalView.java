@@ -1,7 +1,7 @@
 package view;
 
-import model.*;
-import util.*;
+import model.Proposal;
+import model.util.Constants;
 
 public class ProposalView extends View {
     

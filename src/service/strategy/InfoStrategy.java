@@ -1,12 +1,9 @@
 package service.strategy;
 
 import java.sql.SQLException;
-
-
-import model.*;
-
+import model.Category;
+import model.util.Constants;
 import service.CategoryService;
-import util.Constants;
 
 public class InfoStrategy implements Strategy {
 

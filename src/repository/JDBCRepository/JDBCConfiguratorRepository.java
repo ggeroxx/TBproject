@@ -1,12 +1,14 @@
-package model;
+package repository.JDBCRepository;
 
-import java.sql.*;
-import java.util.*;
-
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import org.mindrot.jbcrypt.BCrypt;
-
-import util.Conn;
-import util.Queries;
+import model.Configurator;
+import model.util.Conn;
+import model.util.Queries;
+import repository.ConfiguratorRepository;
 
 public class JDBCConfiguratorRepository implements ConfiguratorRepository {
 

@@ -1,9 +1,10 @@
 package service;
 
-import java.sql.*;
-import model.*;
+import java.sql.SQLException;
+import model.Category;
+import repository.CategoryRepository;
+import repository.RelationshipsBetweenCategoriesRepository;
 import service.strategy.Strategy;
-
 
 public class CategoryService{
     

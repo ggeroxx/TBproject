@@ -1,6 +1,6 @@
 package view;
 
-import util.*;
+import model.util.Constants;
 
 public class SubjectView extends View {
     

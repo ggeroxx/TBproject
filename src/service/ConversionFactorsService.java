@@ -3,9 +3,12 @@ package service;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
-
-import model.*;
-import service.SRP.*;
+import model.ConversionFactor;
+import model.ConversionFactors;
+import repository.ConversionFactorsRepository;
+import service.SRP.ConversionFactorsCalculator;
+import service.SRP.ConversionFactorsManager;
+import service.SRP.ConversionFactorsPersistenceService;
 
 public class ConversionFactorsService {
 

@@ -1,20 +1,19 @@
 package test;
 
-import org.junit.*;
-import org.mockito.Mockito;
-
-import util.Constants;
-
-import controller.MVCController.Controller;
-import view.View;
-
-import static org.junit.Assert.*;
-
+import static org.junit.Assert.assertEquals;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import java.util.InputMismatchException;
 import java.util.function.Predicate;
-
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.*;
+import org.junit.Before;
+import org.junit.Test;
+import org.mockito.Mockito;
+import controller.MVCController.Controller;
+import model.util.Constants;
+import view.View;
 
 public class TestReadInt {
 

@@ -1,7 +1,9 @@
 package controller.GRASPController;
 
-import java.sql.*;
-import model.*;
+import java.sql.SQLException;
+import model.District;
+import model.Municipality;
+import repository.DistrictRepository;
 import service.DistrictService;
 
 public class DistrictGRASPController {

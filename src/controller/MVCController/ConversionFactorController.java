@@ -1,10 +1,9 @@
 package controller.MVCController;
 
 import java.sql.SQLException;
-
-import model.*;
-import util.*;
-import view.*;
+import model.ConversionFactor;
+import model.util.Constants;
+import view.ConversionFactorView;
 
 public class ConversionFactorController extends Controller {
 

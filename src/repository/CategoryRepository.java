@@ -1,7 +1,8 @@
-package model;
+package repository;
 
-import java.sql.*;
-import java.util.*;
+import java.sql.SQLException;
+import java.util.List;
+import model.Category;
 
 public interface CategoryRepository {
     

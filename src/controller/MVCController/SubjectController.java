@@ -1,10 +1,10 @@
 package controller.MVCController;
 
-import java.sql.*;
-
-import controller.GRASPController.*;
-import util.*;
-import view.*;
+import java.sql.SQLException;
+import controller.GRASPController.SubjectGRASPController;
+import model.util.Constants;
+import model.util.Controls;
+import view.SubjectView;
 
 public class SubjectController extends Controller {
     

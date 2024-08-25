@@ -1,8 +1,7 @@
 package controller.GRASPController;
 
-import java.sql.*;
-
-import model.*;
+import java.sql.SQLException;
+import model.Session;
 
 public class SessionGRASPController {
     

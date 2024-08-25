@@ -1,6 +1,8 @@
-package model;
+package repository;
 
 import java.sql.SQLException;
+
+import model.Municipality;
 
 public interface MunicipalityRepository {
     

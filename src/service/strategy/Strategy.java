@@ -1,7 +1,6 @@
 package service.strategy;
 
 import java.sql.SQLException;
-
 import service.CategoryService;
 
 public interface Strategy 

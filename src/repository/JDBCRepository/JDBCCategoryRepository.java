@@ -1,9 +1,14 @@
-package model;
+package repository.JDBCRepository;
 
-import java.sql.*;
-import java.util.*;
-
-import util.*;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import model.Category;
+import model.util.Conn;
+import model.util.Queries;
+import repository.CategoryRepository;
 
 public class JDBCCategoryRepository implements CategoryRepository {
 

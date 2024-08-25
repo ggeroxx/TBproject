@@ -1,6 +1,7 @@
 package controller.GRASPController;
 
-import model.*;
+import repository.DistrictToMunicipalitiesRepository;
+import repository.MunicipalityRepository;
 import service.MunicipalityService;
 
 public class MunicipalityGRASPController{

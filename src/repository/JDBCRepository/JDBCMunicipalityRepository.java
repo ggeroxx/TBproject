@@ -1,8 +1,13 @@
-package model;
+package repository.JDBCRepository;
 
-import java.sql.*;
-import java.util.*;
-import util.*;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import model.Municipality;
+import model.util.Conn;
+import model.util.Queries;
+import repository.MunicipalityRepository;
 
 public class JDBCMunicipalityRepository implements MunicipalityRepository {
 

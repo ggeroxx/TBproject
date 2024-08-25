@@ -1,14 +1,16 @@
 package test;
 
-import static org.junit.Assert.*;
-
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import java.sql.SQLException;
 import java.util.Random;
-
 import org.junit.Test;
 import org.mindrot.jbcrypt.BCrypt;
-
-import model.*;
+import model.Category;
+import model.Configurator;
+import model.ConversionFactors;
+import model.District;
+import model.Municipality;
 
 public class TestConfigurator extends TestScheme 
 {

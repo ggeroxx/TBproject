@@ -1,7 +1,7 @@
 package view;
 
-import model.*;
-import util.*;
+import model.District;
+import model.util.Constants;
 
 public class DistrictView extends View {
 

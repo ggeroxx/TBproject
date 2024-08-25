@@ -1,12 +1,15 @@
 package controller.MVCController;
 
 import java.sql.SQLException;
-import java.util.*;
-
-import controller.GRASPController.*;
-import view.*;
-import model.*;
-import util.*;
+import java.util.InputMismatchException;
+import controller.GRASPController.SessionGRASPController;
+import controller.GRASPController.SubjectGRASPController;
+import controller.GRASPController.UserGRASPController;
+import model.Proposal;
+import model.User;
+import model.UserRepository;
+import model.util.Constants;
+import view.UserView;
 
 public class UserController extends SubjectController {
     

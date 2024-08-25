@@ -1,11 +1,10 @@
 package service;
 
-import java.sql.*;
-
+import java.sql.SQLException;
 import org.mindrot.jbcrypt.BCrypt;
-
-import model.*;
-import util.*;
+import model.Configurator;
+import model.util.Constants;
+import repository.ConfiguratorRepository;
 
 public class ConfiguratorService{
 

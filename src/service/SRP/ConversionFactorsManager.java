@@ -2,10 +2,12 @@
 package service.SRP;
 
 import java.sql.SQLException;
-
-
-import model.*;
+import model.Category;
+import model.ConversionFactor;
+import model.ConversionFactors;
+import repository.ConversionFactorsRepository;
 import service.CategoryService;
+
 public class ConversionFactorsManager{
     
     private ConversionFactors conversionFactors;

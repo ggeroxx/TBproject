@@ -1,9 +1,11 @@
 package model;
 
-import java.sql.*;
+import java.sql.SQLException;
 import org.mindrot.jbcrypt.BCrypt;
+import repository.ConfiguratorRepository;
 
 public class AuthenticationService_PureFabrication {
+    
     private ConfiguratorRepository configuratorRepository;
     private UserRepository userRepository;
     private AccessRepository accessRepository;

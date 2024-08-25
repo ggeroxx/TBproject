@@ -1,7 +1,8 @@
 package service;
 
-import java.sql.*;
-import model.*;
+import java.sql.SQLException;
+import model.Configurator;
+import model.User;
 
 public class SubjectService{
     

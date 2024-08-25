@@ -1,6 +1,7 @@
-package model;
+package repository;
 
-import java.sql.*;
+import java.sql.SQLException;
+import model.Configurator;
 
 public interface ConfiguratorRepository {
     

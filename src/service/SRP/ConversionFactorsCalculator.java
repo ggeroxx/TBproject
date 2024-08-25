@@ -5,9 +5,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
+import model.ConversionFactor;
+import model.ConversionFactors;
+import model.util.Constants;
 
-import model.*;
-import util.Constants;
 public class ConversionFactorsCalculator {
     
     private ConversionFactors conversionFactors;

@@ -1,11 +1,13 @@
 package controller.MVCController;
 
-import java.sql.*;
-
-import controller.GRASPController.*;
-import model.*;
-import util.*;
-import view.*;
+import java.sql.SQLException;
+import controller.GRASPController.DistrictGRASPController;
+import model.District;
+import model.Municipality;
+import model.util.Constants;
+import model.util.Controls;
+import repository.DistrictRepository;
+import view.DistrictView;
 
 public class DistrictController extends Controller {
     

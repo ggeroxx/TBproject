@@ -1,6 +1,6 @@
 package view;
 
-import model.*;
+import model.Municipality;
 
 public class MunicipalityView extends View {
     

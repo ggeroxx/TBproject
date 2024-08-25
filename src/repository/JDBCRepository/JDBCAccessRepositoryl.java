@@ -1,10 +1,14 @@
-package model;
+package repository.JDBCRepository;
 
-import java.sql.*;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
-
-import util.*;
+import model.AccessRepository;
+import model.Configurator;
+import model.util.Conn;
+import model.util.Queries;
+import repository.ConfiguratorRepository;
 
 public class JDBCAccessRepositoryl implements AccessRepository {
     

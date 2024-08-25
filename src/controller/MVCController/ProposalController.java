@@ -1,12 +1,15 @@
 package controller.MVCController;
 
 import java.sql.SQLException;
-import java.util.*;
-
-import controller.GRASPController.*;
-import model.*;
-import util.*;
-import view.*;
+import java.util.ArrayList;
+import java.util.List;
+import controller.GRASPController.ProposalGRASPController;
+import model.Category;
+import model.Proposal;
+import model.User;
+import model.util.Constants;
+import repository.ProposalRepository;
+import view.ProposalView;
 
 public class ProposalController extends Controller {
     
