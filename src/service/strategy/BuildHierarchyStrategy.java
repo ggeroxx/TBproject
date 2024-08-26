@@ -1,6 +1,8 @@
 package service.strategy;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
+
 import model.Category;
 import model.util.Constants;
 import service.CategoryService;
@@ -8,11 +10,11 @@ import service.CategoryService;
 public class BuildHierarchyStrategy implements Strategy {
 
     @Override
-    public String execute(CategoryService service, Object... params) throws SQLException {
-        Category category = (Category) params[0];
-        int IDToPrint = (int) params[1];
-        StringBuffer toReturn = (StringBuffer) params[2];
-        StringBuffer spaces = (StringBuffer) params[3];
+    public String execute(CategoryService service, ArrayList<Object> params) throws SQLException 
+    {
+        int IDToPrint = (int) params.get(0);
+        StringBuffer toReturn = (StringBuffer) params.get(1);
+        StringBuffer spaces = (StringBuffer) params.get(2);
 
         Category notLeaf = service.getCategoryRepository().getCategoryByID(IDToPrint);
 
@@ -24,8 +26,13 @@ public class BuildHierarchyStrategy implements Strategy {
             toReturn.append(spaces.toString() + "└──── " + notLeaf.getID() + ". " + notLeaf.getName() + "\n\n");
         }
 
-        for (Integer IDLeaf : service.getRelationshipsBetweenCategoriesRepository().getChildIDsFromParentID(IDToPrint)) {
-            execute(service, category, IDLeaf, toReturn, spaces.append("\t"));
+        for (Integer IDLeaf : service.getRelationshipsBetweenCategoriesRepository().getChildIDsFromParentID(IDToPrint)) 
+        {
+            ArrayList<Object> newParams = new ArrayList<>();
+            newParams.add(IDLeaf);
+            newParams.add(toReturn);
+            newParams.add(spaces.append("\t"));
+            execute(service, newParams);
         }
 
         if (spaces.length() > 1) spaces.setLength(spaces.length() - 1);

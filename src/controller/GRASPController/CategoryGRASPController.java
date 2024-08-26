@@ -1,6 +1,7 @@
 package controller.GRASPController;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import model.Category;
 import repository.CategoryRepository;
 import repository.RelationshipsBetweenCategoriesRepository;
@@ -38,16 +39,22 @@ public class CategoryGRASPController{
 
     public String buildHierarchy ( int IDToPrint, StringBuffer toReturn, StringBuffer spaces ) throws SQLException
     {
+        ArrayList<Object> params = new ArrayList<>();
+        params.add(IDToPrint);
+        params.add(toReturn);
+        params.add(spaces);
+
         this.categoryService.setStrategy(new BuildHierarchyStrategy());
-        //return this.categoryService.buildHierarchy(IDToPrint, toReturn, spaces);
-        return this.categoryService.execute(getCategory(), IDToPrint, toReturn, spaces);
+        return this.categoryService.execute(params);
     }
 
     public String info ( Category category ) throws SQLException
     {
+        ArrayList<Object> params = new ArrayList<>();
+        params.add( category );
+
         this.categoryService.setStrategy(new InfoStrategy());
-        //return this.categoryService.info(category);
-        return this.categoryService.execute(category, 0, null, null);
+        return this.categoryService.execute(params);
     }
 
     public boolean existValueOfField ( String field, Category parent ) throws SQLException

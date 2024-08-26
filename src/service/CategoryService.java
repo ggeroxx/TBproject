@@ -1,6 +1,7 @@
 package service;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import model.Category;
 import repository.CategoryRepository;
 import repository.RelationshipsBetweenCategoriesRepository;
@@ -46,9 +47,9 @@ public class CategoryService{
         return this.categoryRepository;
     }
 
-    public String execute ( Category category, int IDToPrint, StringBuffer toReturn, StringBuffer spaces ) throws SQLException
+    public String execute ( ArrayList <Object> params) throws SQLException
     {
-        return strategy.execute(this, category, IDToPrint, toReturn, spaces);
+        return strategy.execute(this, params);
     }
 
     public String padRight ( String str, int maxLenght )

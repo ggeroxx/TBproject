@@ -1,6 +1,8 @@
 package service.strategy;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
+
 import model.Category;
 import model.util.Constants;
 import service.CategoryService;
@@ -8,8 +10,8 @@ import service.CategoryService;
 public class InfoStrategy implements Strategy {
 
     @Override
-    public String execute(CategoryService service, Object... params) throws SQLException {
-        Category category = (Category) params[0];
+    public String execute(CategoryService service, ArrayList<Object> params) throws SQLException {
+        Category category = (Category) params.get(0);
         StringBuffer sb = new StringBuffer();
 
         sb.append(Constants.NAME + ":" + service.padRight(Constants.NAME + ":", 20) + Constants.BOLD + category.getName() + Constants.RESET + "\n");
