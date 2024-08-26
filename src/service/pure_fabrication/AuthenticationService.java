@@ -9,7 +9,7 @@ import repository.ConfiguratorRepository;
 import repository.UserRepository;
 import service.Session;
 
-public class AuthenticationService {
+public class AuthenticationService implements Authentication{
     
     private ConfiguratorRepository configuratorRepository;
     private UserRepository userRepository;
@@ -22,11 +22,13 @@ public class AuthenticationService {
         this.accessRepository = accessRepository;
     }
 
+    @Override
     public AccessRepository getAccessJDBC() 
     {
         return this.accessRepository;
     }
 
+    @Override
     public Character authenticate( String username, String password, Session session ) throws SQLException 
     {
         Configurator conf = configuratorRepository.getConfiguratorByUsername( username );

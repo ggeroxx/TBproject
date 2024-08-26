@@ -1,17 +1,18 @@
 package service;
 
 import java.sql.SQLException;
-import service.pure_fabrication.AuthenticationService;
-import service.pure_fabrication.TemporaryOperationsManager;
+
+import service.pure_fabrication.Authentication;
+import service.pure_fabrication.TemporaryOperations;
 
 public class Session {
     
     private Boolean status;
     private Character subject;
-    private AuthenticationService authenticationService;
-    private TemporaryOperationsManager tempOpsManager;
+    private Authentication authenticationService;
+    private TemporaryOperations tempOpsManager;
 
-    public Session( AuthenticationService authenticationService, TemporaryOperationsManager tempOpsManager)
+    public Session( Authentication authenticationService, TemporaryOperations tempOpsManager)
     {
         this.authenticationService = authenticationService;
         this.tempOpsManager = tempOpsManager;

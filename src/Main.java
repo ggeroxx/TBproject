@@ -48,6 +48,8 @@ import service.SubjectService;
 import service.UserService;
 import service.pure_fabrication.AuthenticationService;
 import service.pure_fabrication.TemporaryOperationsManager;
+import service.pure_fabrication.Authentication;
+import service.pure_fabrication.TemporaryOperations;
 import view.CategoryView;
 import view.ConfiguratorView;
 import view.ConversionFactorView;
@@ -85,8 +87,8 @@ public class Main {
         ProposalRepository proposalRepository = new JDBCProposalRepository();
         ConversionFactorsRepository conversionFactorsRepository = new JDBCConversionFactorsRepository();
 
-        AuthenticationService authenticationService = new AuthenticationService( configuratorRepository, userRepository, accessRepository );
-        TemporaryOperationsManager tempOpsManager = new TemporaryOperationsManager( districtRepository, categoryRepository, districtToMunicipalitiesRepository, relationshipsBetweenCategoriesRepository );
+        Authentication authenticationService = new AuthenticationService( configuratorRepository, userRepository, accessRepository );
+        TemporaryOperations tempOpsManager = new TemporaryOperationsManager( districtRepository, categoryRepository, districtToMunicipalitiesRepository, relationshipsBetweenCategoriesRepository );
         Session session = new Session(authenticationService, tempOpsManager);
 
         ProposalService proposalService = new ProposalService(proposalRepository);

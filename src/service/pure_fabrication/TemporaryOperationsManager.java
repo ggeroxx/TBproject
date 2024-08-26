@@ -6,7 +6,7 @@ import repository.DistrictRepository;
 import repository.DistrictToMunicipalitiesRepository;
 import repository.RelationshipsBetweenCategoriesRepository;
 
-public class TemporaryOperationsManager {
+public class TemporaryOperationsManager implements TemporaryOperations {
     private DistrictRepository districtRepository;
     private CategoryRepository categoryRepository;
     private DistrictToMunicipalitiesRepository districtToMunicipalitiesRepository;
@@ -20,12 +20,14 @@ public class TemporaryOperationsManager {
         this.relationshipsBetweenCategoriesRepository = relationshipsBetweenCategoriesRepository;
     }
 
+    @Override
     public void prepareTemporaryData() throws SQLException 
     {
         districtRepository.setTmpIDValueAutoIncrement( districtRepository.getMaxID() );
         categoryRepository.setTmpIDValueAutoIncrement( categoryRepository.getMaxID() );
     }
 
+    @Override
     public void clearTemporaryData() throws SQLException 
     {
         districtToMunicipalitiesRepository.deleteTmpDistrictToMunicipalities();
