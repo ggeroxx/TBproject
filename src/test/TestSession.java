@@ -9,11 +9,11 @@ import static org.mockito.Mockito.when;
 import java.sql.SQLException;
 import org.junit.Test;
 import org.mindrot.jbcrypt.BCrypt;
-import model.AccessRepository;
-import model.AuthenticationService_PureFabrication;
 import model.Configurator;
-import model.Session;
 import model.User;
+import repository.AccessRepository;
+import service.Session;
+import service.pure_fabrication.AuthenticationService;
 
 public class TestSession extends TestScheme{
     
@@ -21,7 +21,7 @@ public class TestSession extends TestScheme{
     public void testLoginLogoutConfigurator() throws SQLException
     {
         AccessRepository accRep = mock( AccessRepository.class );
-        AuthenticationService_PureFabrication authenticationService = new AuthenticationService_PureFabrication( configuratorRepository, userRepository, accRep );
+        AuthenticationService authenticationService = new AuthenticationService( configuratorRepository, userRepository, accRep );
 
         Session session = new Session( authenticationService, tempOpsManager );
         

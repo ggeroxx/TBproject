@@ -1,10 +1,8 @@
 package test;
 
 import java.sql.SQLException;
-
 import org.junit.After;
 import org.junit.Before;
-
 import controller.GRASPController.CategoryGRASPController;
 import controller.GRASPController.ConfiguratorGRASPController;
 import controller.GRASPController.ConversionFactorsGRASPController;
@@ -24,12 +22,8 @@ import controller.MVCController.MunicipalityController;
 import controller.MVCController.ProposalController;
 import controller.MVCController.SubjectController;
 import controller.MVCController.UserController;
-import model.AccessRepository;
-import model.AuthenticationService_PureFabrication;
-import model.Session;
-import model.TemporaryOperationsManager_PureFabrication;
-import model.UserRepository;
 import model.util.Conn;
+import repository.AccessRepository;
 import repository.CategoryRepository;
 import repository.ConfiguratorRepository;
 import repository.ConversionFactorsRepository;
@@ -38,6 +32,7 @@ import repository.DistrictToMunicipalitiesRepository;
 import repository.MunicipalityRepository;
 import repository.ProposalRepository;
 import repository.RelationshipsBetweenCategoriesRepository;
+import repository.UserRepository;
 import repository.JDBCRepository.JDBCAccessRepositoryl;
 import repository.JDBCRepository.JDBCCategoryRepository;
 import repository.JDBCRepository.JDBCConfiguratorRepository;
@@ -54,8 +49,11 @@ import service.ConversionFactorsService;
 import service.DistrictService;
 import service.MunicipalityService;
 import service.ProposalService;
+import service.Session;
 import service.SubjectService;
 import service.UserService;
+import service.pure_fabrication.AuthenticationService;
+import service.pure_fabrication.TemporaryOperationsManager;
 import view.CategoryView;
 import view.ConfiguratorView;
 import view.ConversionFactorView;
@@ -91,8 +89,8 @@ public class TestScheme {
     ProposalRepository proposalRepository = new JDBCProposalRepository();
     ConversionFactorsRepository conversionFactorsRepository = new JDBCConversionFactorsRepository();
 
-    AuthenticationService_PureFabrication authenticationService = new AuthenticationService_PureFabrication( configuratorRepository, userRepository, accessRepository );
-    TemporaryOperationsManager_PureFabrication tempOpsManager = new TemporaryOperationsManager_PureFabrication( districtRepository, categoryRepository, districtToMunicipalitiesRepository, relationshipsBetweenCategoriesRepository );
+    AuthenticationService authenticationService = new AuthenticationService( configuratorRepository, userRepository, accessRepository );
+    TemporaryOperationsManager tempOpsManager = new TemporaryOperationsManager( districtRepository, categoryRepository, districtToMunicipalitiesRepository, relationshipsBetweenCategoriesRepository );
     Session session = new Session(authenticationService, tempOpsManager);
 
     ProposalService proposalService = new ProposalService(proposalRepository);

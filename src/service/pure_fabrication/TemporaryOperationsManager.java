@@ -1,4 +1,4 @@
-package model;
+package service.pure_fabrication;
 
 import java.sql.SQLException;
 import repository.CategoryRepository;
@@ -6,13 +6,13 @@ import repository.DistrictRepository;
 import repository.DistrictToMunicipalitiesRepository;
 import repository.RelationshipsBetweenCategoriesRepository;
 
-public class TemporaryOperationsManager_PureFabrication {
+public class TemporaryOperationsManager {
     private DistrictRepository districtRepository;
     private CategoryRepository categoryRepository;
     private DistrictToMunicipalitiesRepository districtToMunicipalitiesRepository;
     private RelationshipsBetweenCategoriesRepository relationshipsBetweenCategoriesRepository;
 
-    public TemporaryOperationsManager_PureFabrication ( DistrictRepository districtRepository, CategoryRepository categoryRepository, DistrictToMunicipalitiesRepository districtToMunicipalitiesRepository, RelationshipsBetweenCategoriesRepository relationshipsBetweenCategoriesRepository ) 
+    public TemporaryOperationsManager ( DistrictRepository districtRepository, CategoryRepository categoryRepository, DistrictToMunicipalitiesRepository districtToMunicipalitiesRepository, RelationshipsBetweenCategoriesRepository relationshipsBetweenCategoriesRepository ) 
     {
         this.districtRepository = districtRepository;
         this.categoryRepository = categoryRepository;

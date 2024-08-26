@@ -4,10 +4,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import model.AccessRepository;
+
 import model.Configurator;
 import model.util.Conn;
 import model.util.Queries;
+import repository.AccessRepository;
 import repository.ConfiguratorRepository;
 
 public class JDBCAccessRepositoryl implements AccessRepository {

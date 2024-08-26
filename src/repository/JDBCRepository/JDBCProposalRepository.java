@@ -8,11 +8,11 @@ import java.util.List;
 import model.Category;
 import model.Proposal;
 import model.User;
-import model.UserRepository;
 import model.util.Conn;
 import model.util.Queries;
 import repository.CategoryRepository;
 import repository.ProposalRepository;
+import repository.UserRepository;
 
 public class JDBCProposalRepository implements ProposalRepository {
     

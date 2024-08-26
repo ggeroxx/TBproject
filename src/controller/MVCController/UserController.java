@@ -7,8 +7,8 @@ import controller.GRASPController.SubjectGRASPController;
 import controller.GRASPController.UserGRASPController;
 import model.Proposal;
 import model.User;
-import model.UserRepository;
 import model.util.Constants;
+import repository.UserRepository;
 import view.UserView;
 
 public class UserController extends SubjectController {

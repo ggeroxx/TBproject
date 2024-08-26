@@ -3,8 +3,8 @@ package controller.MVCController;
 import java.sql.SQLException;
 import java.util.InputMismatchException;
 import java.util.function.Predicate;
-import model.Session;
 import model.util.Constants;
+import service.Session;
 import view.View;
 
 public class Controller {

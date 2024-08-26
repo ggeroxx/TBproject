@@ -5,9 +5,9 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import model.User;
-import model.UserRepository;
 import model.util.Conn;
 import model.util.Queries;
+import repository.UserRepository;
 
 public class JDBCUserRepository implements UserRepository {
     

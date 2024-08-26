@@ -3,12 +3,12 @@ package controller.MVCController;
 import java.sql.SQLException;
 import java.util.InputMismatchException;
 import org.mindrot.jbcrypt.BCrypt;
-import model.AccessRepository;
 import model.Configurator;
-import model.Session;
 import model.User;
 import model.util.Conn;
 import model.util.Constants;
+import repository.AccessRepository;
+import service.Session;
 import view.MainView;
 
 public class MainController extends Controller {

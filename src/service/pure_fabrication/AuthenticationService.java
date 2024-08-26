@@ -1,16 +1,21 @@
-package model;
+package service.pure_fabrication;
 
 import java.sql.SQLException;
 import org.mindrot.jbcrypt.BCrypt;
+import model.Configurator;
+import model.User;
+import repository.AccessRepository;
 import repository.ConfiguratorRepository;
+import repository.UserRepository;
+import service.Session;
 
-public class AuthenticationService_PureFabrication {
+public class AuthenticationService {
     
     private ConfiguratorRepository configuratorRepository;
     private UserRepository userRepository;
     private AccessRepository accessRepository;
 
-    public AuthenticationService_PureFabrication( ConfiguratorRepository configuratorRepository, UserRepository userRepository, AccessRepository accessRepository ) 
+    public AuthenticationService( ConfiguratorRepository configuratorRepository, UserRepository userRepository, AccessRepository accessRepository ) 
     {
         this.configuratorRepository = configuratorRepository;
         this.userRepository = userRepository;
