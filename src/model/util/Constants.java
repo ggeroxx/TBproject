@@ -74,9 +74,9 @@ public class Constants {
 
     public static final String BYE_BYE_MESSAGE = YELLOW + "\nBye bye ...\n\n" + RESET;
 
-    public static final String LOGIN_ERROR = RED + "\n --- " + BOLD + "ATTENTION" + RESET + RED + ", invalid username a/o password! Try again! ---" + RESET;
+    public static final String LOGIN_ERROR = "ATTENTION, invalid username a/o password! Try again!";
 
-    public static final String DENIED_ACCESS = RED + BOLD + "\n --- DENIED ACCESS, %s is working... --- \n" + RESET;
+    public static final String DENIED_ACCESS = "DENIED ACCESS, %s is working...";
 
     // ---------------------------------------- SubjectView ----------------------------------------
 
@@ -90,13 +90,13 @@ public class Constants {
 
     public static final String ENTER_MAIL = "Enter mail: ";
 
-    public static final String USERNAME_NOT_AVAILABLE = RED + "\n --- username NOT available ! --- \n" + RESET;
+    public static final String USERNAME_NOT_AVAILABLE = "Username NOT available !";
 
-    public static final String ERROR_PATTERN_USERNAME = RED + "\n --- " + BOLD + "ATTENTION" + RESET + RED + ", parameters not respected! min 3 max 20 characters --- \n" + RESET;
+    public static final String ERROR_PATTERN_USERNAME = "ATTENTION, parameters not respected! min 3 max 20 characters";
 
-    public static final String ERROR_PATTERN_PASSWORD = RED + "\n --- " + BOLD + "ATTENTION" + RESET + RED + ", parameters not respected! min 8 max 25 characters, at least one digit and one character required --- \n" + RESET;
+    public static final String ERROR_PATTERN_PASSWORD = "ATTENTION, parameters not respected! min 8 max 25 characters, at least one digit and one character required";
 
-    public static final String ERROR_PATTERN_MAIL = RED + "\n --- " + BOLD + "ATTENTION" + RESET + RED + ", parameters not respected! --- \n\n" + RESET;
+    public static final String ERROR_PATTERN_MAIL = "ATTENTION, parameters not respected!";
 
     // ---------------------------------------- DistrictController ----------------------------------------
 
@@ -104,11 +104,11 @@ public class Constants {
 
     public static final String DISTRICTS_LIST = PURPLE + BOLD + "\n\nDISTRICTS LIST\n\n" + RESET;
 
-    public static final String ADDED_SUCCESFULL_MESSAGE = GREEN + "\n --- Added succesfull ✓ --- \n" + RESET;
+    public static final String ADDED_SUCCESFULL_MESSAGE = " Added succesfull!!!";
 
-    public static final String DISTRICT_NAME_ALREADY_PRESENT = RED + "\n --- District name already present --- \n" + RESET;
+    public static final String DISTRICT_NAME_ALREADY_PRESENT = "District name already present";
 
-    public static final String MUNICIPALITY_NAME_ALREADY_PRESENT = RED + "\n --- Municipality already present ---" + RESET;
+    public static final String MUNICIPALITY_NAME_ALREADY_PRESENT = "Municipality already present";
 
     public static final String ENTER_DISTRICT_NAME = "\nenter district name: ";
 
@@ -229,7 +229,7 @@ public class Constants {
 
     public static final String ENTER_VALUE_CONVERSION_FACTOR = "Enter value of conversion factor ";
 
-    public static final String OUT_OF_RANGE_ERROR = RED + "\n --- Invalid or out of range !!! --- \n\n" + RESET;
+    public static final String OUT_OF_RANGE_ERROR = "Invalid or out of range !!!";
 
     public static final String CONVERSION_FACTORS_LIST = PURPLE + BOLD + "\n\nCONVERSION FACTORS LIST\n\n" + RESET;
 
@@ -253,7 +253,7 @@ public class Constants {
 
     public static final String INVALID_OPTION = RED + "\n --- Invalid option ! --- \n" + RESET;
 
-    public static final String NOT_EXIST_MESSAGE = RED + "\n --- NOT exist ! --- \n" + RESET;
+    public static final String NOT_EXIST_MESSAGE = "NOT exist !";
 
     public static final String GENERIC_EXCEPTION_MESSAGE = "GENERIC EXCEPTION";
 
@@ -263,7 +263,7 @@ public class Constants {
 
     public static final String END_ADD_MESSAGE = "\nend: (y/n) --> ";
 
-    public static final String ERROR_PATTERN_NAME = RED + "\n --- " + BOLD + "ATTENTION" + RESET + RED + ", parameters not respected! min 1 max 50 characters --- \n" + RESET;
+    public static final String ERROR_PATTERN_NAME = "ATTENTION, parameters not respected! min 1 max 50 characters";
 
     public static final String NOT_SAVED = "  -->  (not saved)";
 

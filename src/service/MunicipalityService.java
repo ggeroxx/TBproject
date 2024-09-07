@@ -1,5 +1,9 @@
 package service;
 
+import java.sql.SQLException;
+
+import model.District;
+import model.Municipality;
 import repository.DistrictToMunicipalitiesRepository;
 import repository.MunicipalityRepository;
 
@@ -22,6 +26,13 @@ public class MunicipalityService{
     public DistrictToMunicipalitiesRepository getDistrictToMunicipalitiesRepository ()
     {
         return this.districtToMunicipalitiesRepository;
+    }
+
+    public String getAllMunicipalityFromDistrict ( District district ) throws SQLException
+    {
+        StringBuffer municipalities = new StringBuffer();
+        for ( Municipality toPrint : getDistrictToMunicipalitiesRepository().selectAllMunicipalityOfDistrict( district ) ) municipalities.append("  " + toPrint.getCAP() + " " + toPrint.getProvince() + " " + toPrint.getName()  + "\n");
+        return municipalities.toString();
     }
 
 }

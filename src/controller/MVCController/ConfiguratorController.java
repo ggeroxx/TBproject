@@ -2,17 +2,21 @@ package controller.MVCController;
 
 import java.sql.SQLException;
 import java.util.InputMismatchException;
-
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import controller.GRASPController.ConfiguratorGRASPController;
 import controller.GRASPController.SessionGRASPController;
 import controller.GRASPController.SubjectGRASPController;
 import model.Configurator;
+import model.util.Conn;
 import model.util.Constants;
 import repository.ConfiguratorRepository;
+import view.ConfiguratorMenuView;
 import view.ConfiguratorView;
 
 public class ConfiguratorController extends SubjectController {
 
+    private ConfiguratorMenuView configuratorMenuView;
     private ConfiguratorView configuratorView;
     private SessionGRASPController sessionGRASPController;
     private DistrictController districtController;
@@ -21,7 +25,7 @@ public class ConfiguratorController extends SubjectController {
     private ProposalController proposalController;
     private ConfiguratorGRASPController controllerGRASP;
 
-    public ConfiguratorController ( ConfiguratorView configuratorView, SubjectGRASPController subjectGRASPController, SessionGRASPController sessionGRASPController, DistrictController districtController, CategoryController categoryController, ConversionFactorsController conversionFactorsController, ProposalController proposalController, ConfiguratorGRASPController controllerGRASP )
+    public ConfiguratorController ( ConfiguratorMenuView configuratorMenuView, ConfiguratorView configuratorView, SubjectGRASPController subjectGRASPController, SessionGRASPController sessionGRASPController, DistrictController districtController, CategoryController categoryController, ConversionFactorsController conversionFactorsController, ProposalController proposalController, ConfiguratorGRASPController controllerGRASP )
     {
         super( configuratorView, subjectGRASPController);
         this.configuratorView = configuratorView;
@@ -31,6 +35,67 @@ public class ConfiguratorController extends SubjectController {
         this.conversionFactorsController = conversionFactorsController;
         this.proposalController = proposalController;
         this.controllerGRASP = controllerGRASP;
+
+        this.configuratorMenuView = configuratorMenuView;
+
+        this.configuratorMenuView.getInsertNewDistrictButton().addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) 
+            {
+                districtController.startInsertNewDistrictView(ConfiguratorController.this);
+			}
+		});
+
+        this.configuratorMenuView.getInsertConversionFactorsButton().addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) 
+            {
+                try {
+                    conversionFactorsController.startInsertConversionFactorsView();
+                } catch (SQLException e1) {
+                    e1.printStackTrace();
+                }
+			}
+		});
+
+        this.configuratorMenuView.getViewDistrictButton().addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) 
+            {
+                try {
+                    districtController.startDistrictInfoView();
+                } catch (SQLException e1) 
+                {
+                    e1.printStackTrace();
+                }
+			}
+		});
+
+        this.configuratorMenuView.getViewAllConversionFactorsButton().addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) 
+            {
+                try {
+                    conversionFactorsController.startAllConversionFactorsView();
+                } catch (SQLException e1) {
+                    e1.printStackTrace();
+                }
+			}
+		});
+
+        this.configuratorMenuView.getCloseLabel().addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+                try 
+                {
+                    sessionGRASPController.logout();
+                    conversionFactorsController.resetConversionFactors();
+                } catch (SQLException e1) {
+                    e1.printStackTrace();
+                }
+				System.exit(0);
+			}
+		});
     }
 
     public void setConfigurator ( Configurator configurator ) 
@@ -45,7 +110,10 @@ public class ConfiguratorController extends SubjectController {
 
     public void start () throws SQLException
     {
-        int choice = 0;
+
+        configuratorMenuView.setUndecorated(true);
+        configuratorMenuView.setVisible(true);
+        /*int choice = 0;
 
         super.forcedClosure( this.sessionGRASPController.getSession() );
 
@@ -130,7 +198,7 @@ public class ConfiguratorController extends SubjectController {
                 configuratorView.print( Constants.GENERIC_EXCEPTION_MESSAGE );
                 e.printStackTrace();
             }
-        } while ( choice != 10 );
+        } while ( choice != 10 );*/
     }
 
     public void saveAll ( ) throws SQLException

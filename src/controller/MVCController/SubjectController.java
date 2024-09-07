@@ -27,6 +27,8 @@ public class SubjectController extends Controller {
     {
         return subjectView.enterPassword();
     }
+    
+    
         
     public String enterNewUsername () throws SQLException
     {

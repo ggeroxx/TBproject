@@ -1,6 +1,7 @@
 package controller.GRASPController;
 
 import java.sql.SQLException;
+import java.util.List;
 import model.District;
 import model.Municipality;
 import repository.DistrictRepository;
@@ -28,6 +29,11 @@ public class DistrictGRASPController {
     public void saveDistricts () throws SQLException
     {
         this.districtService.saveDistricts();
+    }
+
+    public List<String> allDistrictName () throws SQLException
+    {
+        return this.districtService.allDistrictName();
     }
 
     public boolean isPresentMunicipalityInDistrict ( Municipality municipalityToCheck ) throws SQLException

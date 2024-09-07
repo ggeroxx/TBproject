@@ -1,32 +1,161 @@
 package controller.MVCController;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
 import java.sql.SQLException;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.InputMismatchException;
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
+
+import javax.swing.AbstractButton;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JRadioButton;
+
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+
 import controller.GRASPController.ConversionFactorsGRASPController;
 import model.Category;
 import model.ConversionFactor;
 import model.ConversionFactors;
 import model.util.Constants;
 import repository.ConversionFactorsRepository;
+import view.AllConversionFactorsView;
 import view.ConversionFactorsView;
+import view.InsertConversionFactorsView;
 
 public class ConversionFactorsController extends Controller {
     
+    private InsertConversionFactorsView insertConversionFactorsView;
+    private AllConversionFactorsView allConversionFactorsView;
     private ConversionFactorsView conversionFactorsView;
     private ConversionFactorController conversionFactorController;
     private CategoryController categoryController;
     private ConversionFactorsGRASPController controllerGRASP; 
+    private HashMap<JRadioButton, ConversionFactor> radioButtonObjectMap = new HashMap<>();
 
-    public ConversionFactorsController ( ConversionFactorsView conversionFactorsView, ConversionFactorController conversionFactorController, CategoryController categoryController, ConversionFactorsGRASPController controllerGRASP)
+    public ConversionFactorsController ( AllConversionFactorsView allConversionFactorsView, InsertConversionFactorsView insertConversionFactorsView, ConversionFactorsView conversionFactorsView, ConversionFactorController conversionFactorController, CategoryController categoryController, ConversionFactorsGRASPController controllerGRASP)
     {
         super( conversionFactorsView );
         this.conversionFactorsView = conversionFactorsView;
         this.conversionFactorController = conversionFactorController;
         this.categoryController = categoryController;
         this.controllerGRASP = controllerGRASP;
+
+        this.insertConversionFactorsView = insertConversionFactorsView;
+        this.allConversionFactorsView = allConversionFactorsView;
+
+        insertConversionFactorsView.getInsertValueButton().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) 
+            {
+
+                if(getSelectedRadioButton() != null && !insertConversionFactorsView.getTextValue().isEmpty())
+                {
+                    ConversionFactor conversionFactor = radioButtonObjectMap.get(getSelectedRadioButton());
+                    double[] range = calculateRange( getIndexForConversionFactor(conversionFactor) );
+
+                    try
+                    {
+                        Double.parseDouble(insertConversionFactorsView.getTextValue());
+                    
+                        if( ( ( Double.parseDouble(insertConversionFactorsView.getTextValue()) >= range[0] ) && ( Double.parseDouble(insertConversionFactorsView.getTextValue()) <= range[1] ) ) )
+                        {
+                            try 
+                            {
+                                calculate( getIndexForConversionFactor(conversionFactor), Double.parseDouble(insertConversionFactorsView.getTextValue()) );
+                            } 
+                            catch (NumberFormatException | SQLException e1) 
+                            {
+                                e1.printStackTrace();
+                            }
+                            insertConversionFactorsView.getPanel().removeAll();
+                            insertConversionFactorsView.setlblRange("");
+                            insertConversionFactorsView.setTextValue("");
+                            insertConversionFactorsView.setlblError("");
+                            insertConversionFactorsView.dispose();
+                            radioButtonObjectMap = new HashMap<>();
+                            try {
+                                startInsertConversionFactorsView();
+                            } catch (SQLException e1) {
+                                e1.printStackTrace();
+                            }
+                        }
+                        else
+                        {
+                            insertConversionFactorsView.setlblError(Constants.OUT_OF_RANGE_ERROR);
+                        }
+                    }
+                    catch(NumberFormatException ex)
+                    {
+
+                    }
+                }
+            }
+                
+        });
+
+        this.insertConversionFactorsView.getCloseLabel().addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) 
+            {
+                try {
+                    if(isComplete())
+                    {
+                        insertConversionFactorsView.dispose();
+                    }
+                } catch (SQLException e1) 
+                {
+                    e1.printStackTrace();
+                }
+			}
+		});
+
+        this.allConversionFactorsView.getCloseLabel().addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) 
+            {
+                allConversionFactorsView.dispose();
+			}
+		});
+
+    }
+
+    public void startInsertConversionFactorsView() throws SQLException
+    {
+        if ( isComplete() )
+        {
+            startAllConversionFactorsView();
+        }
+        else
+        {
+            populate();
+            insertConversionFactorsView.setUndecorated(true);
+            insertConversionFactorsView.setVisible(true);
+            for ( Entry<Integer, ConversionFactor> entry : getConversionFactors().getList().entrySet() )
+            {
+                addRadioButton( entry.getValue() );
+            }
+        }
+        
+        
+
+    }
+
+    public void startAllConversionFactorsView() throws SQLException
+    {
+        populate();
+        this.allConversionFactorsView.setUndecorated(true);
+        this.allConversionFactorsView.setVisible(true);
+        for ( Entry<Integer, ConversionFactor> entry : getConversionFactors().getList().entrySet() )
+        {
+            addLabel( entry.getValue() );
+        }
     }
 
     public ConversionFactorsRepository getConversionFactorsRepository () 
@@ -200,5 +329,63 @@ public class ConversionFactorsController extends Controller {
     {
         return this.controllerGRASP.isComplete();
     }
+
+    private void addRadioButton( ConversionFactor conversionFactor ) throws SQLException 
+    {
+        JRadioButton radioButton = new JRadioButton( conversionFactorController.infoConversionFactor(conversionFactor) );
+
+        insertConversionFactorsView.addRadioButton( radioButton );
+
+        radioButtonObjectMap.put( radioButton, conversionFactor );
+
+        if(conversionFactor.getValue() != null)
+        {
+            radioButton.setEnabled( false );
+        }
+
+        radioButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed( ActionEvent e ) {
+                if (radioButton.isSelected()) 
+                {
+                    double[] range = calculateRange( getIndexForConversionFactor(conversionFactor) );
+                    insertConversionFactorsView.setlblRange("[ " + range[0] +" - " + range[1]+ " ]");
+                        
+                } 
+            }
+        });
+    }
+
+    private void addLabel( ConversionFactor conversionFactor ) throws SQLException 
+    {
+        JLabel label = new JLabel( conversionFactorController.infoConversionFactor(conversionFactor) );
+        allConversionFactorsView.addlblConversionFactor( label );
+    }
+
+    public Integer getIndexForConversionFactor(ConversionFactor conversionFactor) 
+    {
+        for (Map.Entry<Integer, ConversionFactor> entry : getConversionFactors().getList().entrySet()) 
+        {
+            if (entry.getValue().equals(conversionFactor)) 
+            {
+                return entry.getKey();
+            }
+        }
+        return null;
+    }
+
+    private JRadioButton getSelectedRadioButton() 
+	{
+	    Enumeration<AbstractButton> buttons = insertConversionFactorsView.getGroup().getElements();
+	    while (buttons.hasMoreElements()) 
+        {
+	        JRadioButton button = (JRadioButton) buttons.nextElement();
+	        if (button.isSelected()) 
+            {
+	            return button;
+	        }
+	    }
+	    return null;
+	}
 
 }

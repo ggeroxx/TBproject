@@ -50,14 +50,22 @@ import service.pure_fabrication.AuthenticationService;
 import service.pure_fabrication.TemporaryOperationsManager;
 import service.pure_fabrication.Authentication;
 import service.pure_fabrication.TemporaryOperations;
+import view.AllConversionFactorsView;
 import view.CategoryView;
+import view.ConfiguratorMenuView;
 import view.ConfiguratorView;
 import view.ConversionFactorView;
 import view.ConversionFactorsView;
+import view.DistrictInfoView;
 import view.DistrictView;
+import view.InsertConversionFactorsView;
+import view.InsertDistrictView;
+import view.LoginView;
 import view.MainView;
 import view.MunicipalityView;
 import view.ProposalView;
+import view.RegistrationConfiguratorView;
+import view.RegistrationUserView;
 import view.SubjectView;
 import view.UserView;
 
@@ -110,18 +118,27 @@ public class Main {
         CategoryGRASPController categoryGRASPController = new CategoryGRASPController(categoryService);
         SubjectGRASPController subjectGRASPController = new SubjectGRASPController(subjectService);
 
+        LoginView loginView = new LoginView ();
+        RegistrationConfiguratorView registrationConfiguratorView = new RegistrationConfiguratorView();
+        RegistrationUserView registrationUserView = new RegistrationUserView();
+        ConfiguratorMenuView configuratorMenuView = new ConfiguratorMenuView();
+        InsertDistrictView insertDistrictView = new InsertDistrictView();
+        DistrictInfoView districtInfoView = new DistrictInfoView();
+        InsertConversionFactorsView insertConversionFactorsView = new InsertConversionFactorsView();
+        AllConversionFactorsView allConversionFactorsView = new AllConversionFactorsView();
+
         SubjectController subjectController = new SubjectController( subjectView, subjectGRASPController );
         MunicipalityController municipalityController = new MunicipalityController(municipalityView, municipalityGRASPController);
-        DistrictController districtController = new DistrictController(districtView, municipalityController, districtGRASPController);
+        DistrictController districtController = new DistrictController( insertDistrictView,  districtInfoView, districtView, municipalityController, districtGRASPController);
         CategoryController categoryController = new CategoryController(categoryView, categoryGRASPController);
         ConversionFactorController conversionFactorController = new ConversionFactorController( conversionFactorView, categoryController );
-        ConversionFactorsController conversionFactorsController = new ConversionFactorsController(conversionFactorsView, conversionFactorController, categoryController, conversionFactorsGRASPController);
+        ConversionFactorsController conversionFactorsController = new ConversionFactorsController( allConversionFactorsView, insertConversionFactorsView, conversionFactorsView, conversionFactorController, categoryController, conversionFactorsGRASPController);
         ProposalController proposalController = new ProposalController(proposalView, categoryController, conversionFactorsController, proposalGRASPController);
         UserController userController = new UserController(userView, subjectGRASPController, sessionGRASPController, categoryController, proposalController, userGRASPController);
-        ConfiguratorController configuratorController = new ConfiguratorController(configuratorView, subjectGRASPController, sessionGRASPController, districtController, categoryController, conversionFactorsController, proposalController, configuratorGRASPController);
-        MainController MainController = new MainController( mainView, session, accessRepository, districtController, subjectController, configuratorController, userController );
+        ConfiguratorController configuratorController = new ConfiguratorController( configuratorMenuView, configuratorView, subjectGRASPController, sessionGRASPController, districtController, categoryController, conversionFactorsController, proposalController, configuratorGRASPController);
+        MainController mainController = new MainController( loginView, registrationConfiguratorView, registrationUserView, mainView, session, accessRepository, districtController, subjectController, configuratorController, userController );
 
-        MainController.start();
+        mainController.start();
 
     }
 

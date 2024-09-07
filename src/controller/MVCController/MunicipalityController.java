@@ -3,7 +3,6 @@ package controller.MVCController;
 import java.sql.SQLException;
 import controller.GRASPController.MunicipalityGRASPController;
 import model.District;
-import model.Municipality;
 import model.util.Constants;
 import repository.DistrictToMunicipalitiesRepository;
 import repository.MunicipalityRepository;
@@ -31,9 +30,9 @@ public class MunicipalityController extends Controller {
         return this.controllerGRASP.getDistrictToMunicipalitiesRepository();
     }
 
-    public void listAll ( District district ) throws SQLException
+    public String getAllMunicipalityFromDistrict ( District district ) throws SQLException
     {
-        for ( Municipality toPrint : getDistrictToMunicipalitiesRepository().selectAllMunicipalityOfDistrict( district ) ) municipalityView.printMunicipality( toPrint );
+        return this.controllerGRASP.getAllMunicipalityFromDistrict(district);
     }
 
     public String enterName () throws SQLException
@@ -48,6 +47,12 @@ public class MunicipalityController extends Controller {
                 return false;
             }
         } );
+    }
+
+    public boolean existaMunicipalityName (String name) throws SQLException
+    {
+        if(getMunicipalityRepository().getMunicipalityByName( name ) == null) return false;
+        return true;
     }
 
 }

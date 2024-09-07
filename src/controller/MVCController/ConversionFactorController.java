@@ -36,4 +36,22 @@ public class ConversionFactorController extends Controller {
             );
     }
 
+    public String infoConversionFactor ( ConversionFactor cf ) throws SQLException
+    {
+
+        String rootLeaf1 = "";
+        if ( categoryController.getCategoryRepository().getNumberOfEqualsCategories( cf.getLeaf_1() ) > 1 )
+            rootLeaf1 = "  [ " + categoryController.getCategoryRepository().getRootByLeaf( cf.getLeaf_1() ).getName() + " ]  ";
+
+        String rootLeaf2 = "";
+        if ( categoryController.getCategoryRepository().getNumberOfEqualsCategories( cf.getLeaf_2() ) > 1 )
+            rootLeaf2 = "  [ " + categoryController.getCategoryRepository().getRootByLeaf( cf.getLeaf_2() ).getName() + " ]  ";
+
+        return ( 
+                cf.getLeaf_1().getName() + rootLeaf1 + super.padRight( cf.getLeaf_1().getName() + rootLeaf1, 70 ) + "\t\t" + 
+                cf.getLeaf_2().getName() + rootLeaf2 + super.padRight( cf.getLeaf_2().getName() + rootLeaf2, 70 ) + ":  " + 
+                String.format( java.util.Locale.US, "%.4f", cf.getValue() ) 
+            );
+    }
+
 }
