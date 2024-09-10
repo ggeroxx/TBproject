@@ -5,7 +5,6 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import java.awt.Color;
 import java.awt.EventQueue;
-
 import javax.swing.JButton;
 import java.awt.SystemColor;
 import javax.swing.JTextField;
@@ -13,12 +12,15 @@ import javax.swing.JLabel;
 import javax.swing.JPasswordField;
 import javax.swing.SwingConstants;
 import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.ImageIcon;
 import java.awt.event.MouseMotionAdapter;
+import javax.swing.Timer;
 import javax.swing.JTextArea;
 import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneConstants;
@@ -109,7 +111,7 @@ public class InsertDistrictView extends JFrame{
 		lblImg.setBounds(38, 23, 351, 512);
 		panel.add(lblImg);
 		lblImg.setBackground(new Color(255, 255, 255));
-		lblImg.setIcon(new ImageIcon(RegistrationConfiguratorView.class.getResource("/img/login.jpg")));
+		lblImg.setIcon(new ImageIcon(ChangeCredentialsConfiguratorView.class.getResource("/img/login.jpg")));
 		
 		btnAddDistrict = new JButton("AddDistrict");
 		btnAddDistrict.setForeground(Color.WHITE);
@@ -289,5 +291,60 @@ public class InsertDistrictView extends JFrame{
     public void setLblErrorNameDistrict(String message)
     {
     	lblErrorNameDistrict.setText(message);
+    }
+    
+    public void blockAddDistrictAnEnableAddMunicipality( String nameDistrict )
+    {
+    	setLblErrorNameDistrict("");
+        setTextNameDistrict( nameDistrict );
+        getTextFiledNameDistrict().setEnabled(false);
+        getAddDistrictAddButton().setVisible(false);
+        getlblMunicipality().setVisible(true);
+        getTextFiledMunicipality().setVisible(true);
+        getlblErrorMunicipality().setVisible(true);
+        getAddmunicipalityButton().setVisible(true);
+        revalidate();
+        repaint();
+    }
+    
+    public void addedSuccesfullMunicipality( String succefullMessage, String municipalities)
+    {
+    	setLblErrorMunicipality( succefullMessage );
+        setTextMunicipalities("");
+        setTextMunicipalities( municipalities );
+    	getScrollPane().setVisible(true);
+        getTxtMunicipalities().setVisible(true);   
+        getlblErrorMunicipality().setForeground(Color.GREEN);
+
+        Timer timer = new Timer(2000, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent evt) {
+                setLblErrorMunicipality("");
+                getlblErrorMunicipality().setForeground(Color.RED); 
+                setTxtMunicipality("");
+            }
+        });
+        timer.setRepeats(false); 
+        timer.start();
+    }
+    
+    
+    public void resetFields()
+    {
+        setTextNameDistrict("");
+        getTextFiledNameDistrict().setEnabled(true);
+        getAddDistrictAddButton().setVisible(true);
+        getScrollPane().setVisible(false);
+        getTxtMunicipalities().setVisible(false);
+        getlblMunicipality().setVisible(false);
+        getTextFiledMunicipality().setVisible(false);
+        getlblErrorMunicipality().setVisible(false);
+        getAddmunicipalityButton().setVisible(false);
+        setTextMunicipalities("");
+        setTxtMunicipality("");
+        setLblErrorMunicipality("");
+        setLblErrorNameDistrict("");
+        revalidate();
+        repaint();
     }
 }

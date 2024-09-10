@@ -156,7 +156,7 @@ public class InsertConversionFactorsView extends JFrame{
 		lblClose.setForeground(Color.RED);
 		lblClose.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		lblClose.setBackground(SystemColor.menu);
-		lblClose.setBounds(1147, 7, 35, 27);
+		lblClose.setBounds(1170, 0, 35, 27);
 		contentPane.add(lblClose);
 		
 		group = new ButtonGroup();

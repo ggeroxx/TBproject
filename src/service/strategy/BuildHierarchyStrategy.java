@@ -21,7 +21,7 @@ public class BuildHierarchyStrategy implements Strategy {
         if (notLeaf.isRoot()) {
             toReturn.append(notLeaf.getID() + ". " + notLeaf.getName() + "\n\n");
         } else if (service.getCategoryRepository().getCategoriesWithoutChild().contains(notLeaf)) {
-            toReturn.append(spaces.toString() + Constants.RED + "└──── " + notLeaf.getID() + ". " + notLeaf.getName() + Constants.NO_CHILD + Constants.RESET + "\n\n");
+            toReturn.append(spaces.toString() + "└──── " + notLeaf.getID() + ". " + notLeaf.getName() + Constants.NO_CHILD + "\n\n");
         } else {
             toReturn.append(spaces.toString() + "└──── " + notLeaf.getID() + ". " + notLeaf.getName() + "\n\n");
         }

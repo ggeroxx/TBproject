@@ -60,4 +60,9 @@ public class ConfiguratorService{
     {
         categoryService.setCategory( categoryService.getCategoryRepository().createCategory(name, field, description, isRoot, hierarchyID, configurator.getID()) );
     }
+
+    public Configurator getConfiguratorByUsername( String username ) throws SQLException
+    {
+        return configuratorRepository.getConfiguratorByUsername(username);
+    }
 }

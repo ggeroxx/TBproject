@@ -164,15 +164,15 @@ public class Constants {
 
     public static final String LINE = GREY + "────────────────────\n" + RESET;
 
-    public static final String ERROR_PATTERN_FIELD = RED + "\n --- " + BOLD + "ATTENTION" + RESET + RED + ", parameters not respected! min 1 max 25 characters --- \n" + RESET;
+    public static final String ERROR_PATTERN_FIELD = "ATTENTION, parameters not respected! min 1 max 25 characters";
 
-    public static final String ERROR_FIELD_VALUE = RED + "\n --- " + BOLD + "ATTENTION" + RESET + RED + ", parameters not respected or value already present ! --- \n" + RESET;
+    public static final String ERROR_FIELD_VALUE = "ATTENTION, parameters not respected or value already present !";
 
-    public static final String ERROR_PATTERN_DESCRIPTION = RED + "\n --- " + BOLD + "ATTENTION" + RESET + RED + ", parameters not respected! min 0 max 100 characters --- \n" + RESET;
+    public static final String ERROR_PATTERN_DESCRIPTION = "ATTENTION, parameters not respected! min 0 max 100 characters";
 
-    public static final String ROOT_CATEGORY_ALREADY_PRESENT = RED + "\n --- Root category already present --- \n" + RESET;
+    public static final String ROOT_CATEGORY_ALREADY_PRESENT = "Root category already present";
 
-    public static final String INTERNAL_CATEGORY_ALREADY_PRESENT = RED + "\n --- Category already present --- \n" + RESET;
+    public static final String INTERNAL_CATEGORY_ALREADY_PRESENT = "Category already present";
 
     public static final String NO_CHILD = " (no child) ";
 

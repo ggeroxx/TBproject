@@ -19,7 +19,7 @@ import java.awt.event.MouseEvent;
 import javax.swing.ImageIcon;
 import java.awt.event.MouseMotionAdapter;
 
-public class RegistrationConfiguratorView extends JFrame implements FieldsView {
+public class ChangeCredentialsConfiguratorView extends JFrame {
 
 	private JPanel contentPane;
 	private JTextField textUsername;
@@ -55,7 +55,7 @@ public class RegistrationConfiguratorView extends JFrame implements FieldsView {
 
 
 	
-	public RegistrationConfiguratorView( ) 
+	public ChangeCredentialsConfiguratorView( ) 
 	{
 		addMouseListener(new MouseAdapter() 
 		{
@@ -74,7 +74,7 @@ public class RegistrationConfiguratorView extends JFrame implements FieldsView {
 		    {
 		        int x = e.getXOnScreen();
 		        int y = e.getYOnScreen(); 
-		        RegistrationConfiguratorView.this.setLocation(x - xx, y - xy);
+		        ChangeCredentialsConfiguratorView.this.setLocation(x - xx, y - xy);
 		    }
 		});
 		
@@ -98,7 +98,7 @@ public class RegistrationConfiguratorView extends JFrame implements FieldsView {
 		JLabel lblImg = new JLabel("");
 		lblImg.setBounds(10, 10, 351, 512);
 		lblImg.setBackground(new Color(255, 255, 255));
-		lblImg.setIcon(new ImageIcon(RegistrationConfiguratorView.class.getResource("/img/login.jpg")));
+		lblImg.setIcon(new ImageIcon(ChangeCredentialsConfiguratorView.class.getResource("/img/login.jpg")));
 		panel.add(lblImg);
 		
 		btnChangeCredentials = new JButton("Change Credentials");
@@ -199,6 +199,14 @@ public class RegistrationConfiguratorView extends JFrame implements FieldsView {
     public void setMessageErrorPassword(String message) 
     {
     	lblErrorPassword.setText(message);
+    }
+    
+    public void resetFiled ()
+    {
+        setTextUsername("");
+        setMessageErrorUsername("");
+        setPasswordField("");
+        setMessageErrorPassword("");
     }
     
     

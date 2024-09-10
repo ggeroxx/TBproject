@@ -22,7 +22,7 @@ import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.JComboBox;
 
-public class RegistrationUserView extends JFrame implements FieldsView {
+public class RegistrationUserView extends JFrame {
 
 	private JPanel contentPane;
 	private JTextField textUsername;
@@ -36,6 +36,8 @@ public class RegistrationUserView extends JFrame implements FieldsView {
 	private JButton btnSignUp;
 	private JTextArea txtMunicipalities; 
 	private JLabel lblErrorEmail;
+	private JButton btnLogin;
+	private JLabel lblNewLabel;
 
 	/**
 	 * Launch the application.
@@ -88,7 +90,7 @@ public class RegistrationUserView extends JFrame implements FieldsView {
 		
 		setBackground(new Color(255, 255, 255));
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 818, 635);
+		setBounds(100, 100, 820, 682);
 		contentPane = new JPanel();
 		contentPane.setForeground(Color.BLACK);
 		contentPane.setBackground(new Color(255, 255, 255));
@@ -104,10 +106,10 @@ public class RegistrationUserView extends JFrame implements FieldsView {
 		panel.setLayout(null);
 		
 		JLabel lblImg = new JLabel("");
-		lblImg.setBounds(30, 36, 351, 512);
+		lblImg.setBounds(30, 84, 351, 512);
 		panel.add(lblImg);
 		lblImg.setBackground(new Color(255, 255, 255));
-		lblImg.setIcon(new ImageIcon(RegistrationConfiguratorView.class.getResource("/img/login.jpg")));
+		lblImg.setIcon(new ImageIcon(ChangeCredentialsConfiguratorView.class.getResource("/img/login.jpg")));
 		
 		btnSignUp = new JButton("Sign Up");
 		btnSignUp.setForeground(Color.WHITE);
@@ -209,6 +211,18 @@ public class RegistrationUserView extends JFrame implements FieldsView {
 		lblDistrict.setBounds(446, 45, 103, 13);
 		contentPane.add(lblDistrict);
 		
+		btnLogin = new JButton("Login");
+		btnLogin.setForeground(Color.WHITE);
+		btnLogin.setBackground(SystemColor.textHighlight);
+		btnLogin.setBounds(446, 594, 326, 41);
+		contentPane.add(btnLogin);
+		
+		lblNewLabel = new JLabel("have an account?");
+		lblNewLabel.setFont(new Font("Tahoma", Font.BOLD, 10));
+		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		lblNewLabel.setBounds(446, 571, 326, 13);
+		contentPane.add(lblNewLabel);
+		
 		
 	}
 	
@@ -275,6 +289,33 @@ public class RegistrationUserView extends JFrame implements FieldsView {
     public void setTextMunicipalities(String municipalities)
     {
     	txtMunicipalities.setText(municipalities);
+    }
+    
+    public JButton getLoginButton()
+    {
+    	return btnLogin;
+    }
+    
+    public void activeComboBox()
+    {
+    	getComboBoxDistrict().setEnabled(true);
+    }
+    
+    public void disactiveComboBox()
+    {
+    	getComboBoxDistrict().setEnabled(false);
+    }
+    
+    public void resetFiled ()
+    {
+        setTextUsername("");
+        setMessageErrorUsername("");
+        setPasswordField("");
+        setMessageErrorPassword("");
+        setTextEmail("");
+        setMessageErrorEmail("");
+        getComboBoxDistrict().removeAllItems();
+        
     }
     
     

@@ -2,6 +2,7 @@ package service;
 
 import java.sql.SQLException;
 import model.Proposal;
+import model.User;
 import repository.UserRepository;
 
 public class UserService{
@@ -28,6 +29,16 @@ public class UserService{
     public void retireProposal ( Proposal toRetire ) throws SQLException
     {
         this.proposalService.getProposalRepository().retireProposal( toRetire );
+    }
+
+    public void insertUser ( User newUser ) throws SQLException
+    {
+        userRepository.insertUser(newUser);
+    }
+
+    public User getUserByUsername ( String username ) throws SQLException
+    {
+        return userRepository.getUserByUsername(username);
     }
 
 }

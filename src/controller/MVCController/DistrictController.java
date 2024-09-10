@@ -2,41 +2,33 @@ package controller.MVCController;
 
 import java.sql.SQLException;
 import java.util.List;
-
 import javax.swing.JButton;
-import javax.swing.Timer;
-
-import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import controller.GRASPController.DistrictGRASPController;
 import model.District;
 import model.Municipality;
-import model.util.Conn;
 import model.util.Constants;
-import model.util.Controls;
 import repository.DistrictRepository;
+import service.ControlPatternService;
+import service.DistrictService;
 import view.DistrictInfoView;
-import view.DistrictView;
+
 import view.InsertDistrictView;
 
-public class DistrictController extends Controller {
+public class DistrictController {
     
     private InsertDistrictView insertDistrictView;
     private DistrictInfoView districtInfoView;
-    private DistrictView districtView;
     private MunicipalityController municipalityController;
-    private DistrictGRASPController controllerGRASP;
     private ConfiguratorController configuratorController;
+    private DistrictService districtService;
 
-    public DistrictController ( InsertDistrictView insertDistrictView, DistrictInfoView districtInfoView, DistrictView districtView,MunicipalityController municipalityController, DistrictGRASPController controllerGRASP )
+    public DistrictController ( InsertDistrictView insertDistrictView, DistrictInfoView districtInfoView, MunicipalityController municipalityController, DistrictService districtService)
     {
-        super( districtView );
-        this.districtView = districtView;
         this.municipalityController = municipalityController;
-        this.controllerGRASP = controllerGRASP;
+        this.districtService = districtService;
 
         this.insertDistrictView = insertDistrictView;
         this.districtInfoView = districtInfoView;
@@ -45,11 +37,11 @@ public class DistrictController extends Controller {
             @Override
             public void actionPerformed(ActionEvent e) 
             {
-                String districtName = insertDistrictView.getTextNameDistrict();
-                if( checkCorrectName( districtName ) )
-                {   
-                    try 
-                    {
+                try 
+                {
+                    String districtName = insertDistrictView.getTextNameDistrict();
+                    if( checkCorrectName( districtName ) )
+                    {   
                         if( getDistrictRepository().getDistrictByName( districtName ) != null ) 
                         {
                             insertDistrictView.setLblErrorNameDistrict( Constants.DISTRICT_NAME_ALREADY_PRESENT );
@@ -57,26 +49,18 @@ public class DistrictController extends Controller {
                         else
                         {
                             configuratorController.createDistrict( districtName );
-                            insertDistrictView.setLblErrorNameDistrict("");
-                            insertDistrictView.setTextNameDistrict(districtName);
-                            insertDistrictView.getTextFiledNameDistrict().setEnabled(false);
-                            insertDistrictView.getAddDistrictAddButton().setVisible(false);
-                            insertDistrictView.getlblMunicipality().setVisible(true);
-                            insertDistrictView.getTextFiledMunicipality().setVisible(true);
-                            insertDistrictView.getlblErrorMunicipality().setVisible(true);
-                            insertDistrictView.getAddmunicipalityButton().setVisible(true);
-                            insertDistrictView.revalidate();
-                            insertDistrictView.repaint();
+                            insertDistrictView.blockAddDistrictAnEnableAddMunicipality(districtName);
                         }
-                    } 
-                    catch (SQLException e1) 
-                    {
-                        e1.printStackTrace();
+                        
                     }
-                }
-                else
+                    else
+                    {
+                        insertDistrictView.setLblErrorNameDistrict(Constants.ERROR_PATTERN_NAME);
+                    }
+                } 
+                catch (SQLException e1) 
                 {
-                    insertDistrictView.setLblErrorNameDistrict(Constants.ERROR_PATTERN_NAME);
+                    e1.printStackTrace();
                 }
                 
 			}
@@ -98,23 +82,7 @@ public class DistrictController extends Controller {
                         else
                         {
                             addMunicipality( municipalityToAdd );
-                            insertDistrictView.setLblErrorMunicipality( Constants.ADDED_SUCCESFULL_MESSAGE );
-                            insertDistrictView.setTextMunicipalities(null);
-                            insertDistrictView.setTextMunicipalities(getAllMunicipalityFromDistrict(getDistrictRepository().getDistrictByName(insertDistrictView.getTextNameDistrict())));
-                            insertDistrictView.getScrollPane().setVisible(true);
-                            insertDistrictView.getTxtMunicipalities().setVisible(true);   
-                            insertDistrictView.getlblErrorMunicipality().setForeground(Color.GREEN);
-
-                            Timer timer = new Timer(2000, new ActionListener() {
-                                @Override
-                                public void actionPerformed(ActionEvent evt) {
-                                    insertDistrictView.setLblErrorMunicipality("");
-                                    insertDistrictView.getlblErrorMunicipality().setForeground(Color.RED); 
-                                    insertDistrictView.setTxtMunicipality("");
-                                }
-                            });
-                            timer.setRepeats(false); 
-                            timer.start();
+                            insertDistrictView.addedSuccesfullMunicipality(Constants.ADDED_SUCCESFULL_MESSAGE, getAllMunicipalityFromDistrict(districtService.getDistrictByName(insertDistrictView.getTextNameDistrict())) );
                         }
                     }
                     else
@@ -126,6 +94,7 @@ public class DistrictController extends Controller {
                     e1.printStackTrace();
                 }
             }
+
                 
 		});
 
@@ -133,7 +102,7 @@ public class DistrictController extends Controller {
 			@Override
 			public void mouseClicked(MouseEvent e) 
             {
-				districtInfoView.dispose();
+				closeDistrictInfoView();
 			}
 		});
 
@@ -142,43 +111,54 @@ public class DistrictController extends Controller {
 			@Override
 			public void mouseClicked(MouseEvent e) 
             {
-                resetFields();
-				insertDistrictView.dispose();
+                closeInserNewDistrictView();
 			}
 		});
     }
 
-    public void startInsertNewDistrictView(ConfiguratorController configuratorController)
+    public void startInsertNewDistrictView( ConfiguratorController configuratorController )
     {
         this.configuratorController = configuratorController;
         this.insertDistrictView.setUndecorated(true);
         this.insertDistrictView.setVisible(true);
     }
 
+    public void closeInserNewDistrictView ()
+    {
+        insertDistrictView.resetFields();
+		insertDistrictView.dispose();
+    }
+
     public void startDistrictInfoView() throws SQLException
     {
         this.districtInfoView.setUndecorated(true);
         this.districtInfoView.setVisible(true);
+        this.districtInfoView.getmenuBar().removeAll();
 
         for (String name : allDistrictName()) 
         {
-            createDistrictButton(name);
+            districtInfoView.createDistrictButton(name, getAllMunicipalityFromDistrict( districtService.getDistrictByName( name ) ) );
         }
+    }
+
+    public void closeDistrictInfoView()
+    {
+        districtInfoView.dispose();
     }
 
     public DistrictRepository getDistrictRepository ()
     {
-        return this.controllerGRASP.getDistrictRepository();
+        return this.districtService.getDistrictRepository();
     }
 
     public void setDistrict ( District district )
     {
-        this.controllerGRASP.setDistrict(district);
+        this.districtService.setDistrict(district);
     }
 
     public List<String> allDistrictName () throws SQLException 
     {
-        return this.controllerGRASP.allDistrictName();
+        return this.districtService.allDistrictName();
     }
 
     public String getAllMunicipalityFromDistrict(District district) throws SQLException
@@ -186,110 +166,30 @@ public class DistrictController extends Controller {
         return municipalityController.getAllMunicipalityFromDistrict( district );
     }
 
-    public void listAll () throws SQLException
-    {
-        for ( District toPrint : getDistrictRepository().getAllSavedDistricts() ) districtView.println( " " + toPrint.getID() + ". " + toPrint.getName() );
-        for ( District toPrint : getDistrictRepository().getAllNotSavedDistricts() ) districtView.println( " " + toPrint.getID() + ". " + toPrint.getName() + Constants.NOT_SAVED );
-    }
-
-    public int chooseDistrict ()
-    {
-        return super.readIntWithExit( Constants.ENTER_DISTRICT_OR_EXIT, Constants.NOT_EXIST_MESSAGE, ( input ) -> {
-            try 
-            {
-                return getDistrictRepository().getDistrictByID( (Integer) input ) == null;
-            } 
-            catch ( SQLException e ) 
-            {
-                return false;
-            }
-        } );
-    }
-
     public boolean checkCorrectName( String name)
     {
-        return Controls.checkPattern( name, 0, 50 ) ? false : true;
-    }
-
-    public void viewDistrict () throws SQLException
-    {
-        super.clearConsole( Constants.TIME_SWITCH_MENU );
-        districtView.print( Constants.DISTRICTS_LIST );
-
-        if ( getDistrictRepository().getAllDistricts().isEmpty() )
-        {
-            districtView.println( Constants.NOT_EXIST_MESSAGE + "\n" );
-            super.clearConsole( Constants.TIME_ERROR_MESSAGE );
-            return;
-        }
-
-        this.listAll();
-        int districtID = this.chooseDistrict();
-        if ( districtID == 0 ) return;
-
-        District tmp = getDistrictRepository().getDistrictByID( districtID );
-        super.clearConsole( Constants.TIME_SWITCH_MENU );
-        districtView.println( "\n" + tmp.getName() + ":\n" );
-        //municipalityController.listAll( tmp );
-
-        districtView.enterString( Constants.ENTER_TO_EXIT );
-        super.clearConsole( Constants.TIME_SWITCH_MENU );
+        return ControlPatternService.checkPattern( name, 0, 50 ) ? false : true;
     }
 
     public void saveDistricts () throws SQLException
     {
-        this.controllerGRASP.saveDistricts();
+        this.districtService.saveDistricts();
     }
 
     public boolean isPresentMunicipalityInDistrict ( Municipality municipalityToCheck ) throws SQLException
     {
-        return this.controllerGRASP.isPresentMunicipalityInDistrict( municipalityToCheck );
+        return this.districtService.isPresentMunicipalityInDistrict( municipalityToCheck );
     }
 
     public void addMunicipality ( Municipality municipalityToAdd ) throws SQLException
     {
-        this.controllerGRASP.addMunicipality( municipalityToAdd );
+        this.districtService.addMunicipality( municipalityToAdd );
     }
 
-    public void resetFields()
+    public District getDistrictByName( String name) throws SQLException
     {
-        insertDistrictView.setTextNameDistrict("");
-        insertDistrictView.getTextFiledNameDistrict().setEnabled(true);
-        insertDistrictView.getAddDistrictAddButton().setVisible(true);
-        insertDistrictView.getScrollPane().setVisible(false);
-        insertDistrictView.getTxtMunicipalities().setVisible(false);
-        insertDistrictView.getlblMunicipality().setVisible(false);
-        insertDistrictView.getTextFiledMunicipality().setVisible(false);
-        insertDistrictView.getlblErrorMunicipality().setVisible(false);
-        insertDistrictView.getAddmunicipalityButton().setVisible(false);
-        insertDistrictView.setTextMunicipalities("");
-        insertDistrictView.setTxtMunicipality("");
-        insertDistrictView.setLblErrorMunicipality("");
-        insertDistrictView.setLblErrorNameDistrict("");
-        insertDistrictView.revalidate();
-        insertDistrictView.repaint();
+        return districtService.getDistrictByName( name );
     }
 
-     public void createDistrictButton(String districtName) {
-        JButton button = new JButton(districtName);
-
-        button.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) 
-            {
-                try {
-                    districtInfoView.setLblDistrictName(districtName);
-                    districtInfoView.setTextAreaMuniciplaities(getAllMunicipalityFromDistrict(getDistrictRepository().getDistrictByName(districtName)));
-                } catch (SQLException e1) 
-                {
-                    e1.printStackTrace();
-                }
-            }
-        });
-
-        districtInfoView.addButton(button);
-        districtInfoView.getmenuBar().add(button);
-        button.doClick();
-    }
 
 }

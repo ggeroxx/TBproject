@@ -9,6 +9,7 @@ import model.Proposal;
 import model.User;
 import model.util.Constants;
 import repository.UserRepository;
+import service.UserService;
 import view.UserView;
 
 public class UserController extends SubjectController {
@@ -18,8 +19,9 @@ public class UserController extends SubjectController {
     private ProposalController proposalController;
     private UserGRASPController controllerGRASP;
     private SessionGRASPController sessionGRASPController;
+    private UserService userService;
 
-    public UserController ( UserView userView, SubjectGRASPController subjectGRASPController, SessionGRASPController sessionGRASPController, CategoryController categoryController, ProposalController proposalController, UserGRASPController controllerGRASP )
+    public UserController ( UserView userView, SubjectGRASPController subjectGRASPController, SessionGRASPController sessionGRASPController, CategoryController categoryController, ProposalController proposalController, UserGRASPController controllerGRASP, UserService userService )
     {
         super( userView, subjectGRASPController);
         this.userView = userView;
@@ -27,6 +29,7 @@ public class UserController extends SubjectController {
         this.categoryController = categoryController;
         this.proposalController = proposalController;
         this.controllerGRASP = controllerGRASP;
+        this.userService = userService;
     }
 
     public User getUser ()
@@ -110,6 +113,16 @@ public class UserController extends SubjectController {
     public void retireProposal ( Proposal toRetire ) throws SQLException
     {
         this.controllerGRASP.retireProposal(toRetire);
+    }
+
+    public void insertUser (User newUser ) throws SQLException
+    {
+        userService.insertUser(newUser);
+    }
+
+    public User getUserByUsername ( String username ) throws SQLException
+    {
+        return userService.getUserByUsername ( username );
     }
 
 }

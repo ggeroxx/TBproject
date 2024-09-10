@@ -62,4 +62,9 @@ public class DistrictService {
         districtToMunicipalitiesRepository.addMunicipality( this.district.getID(), municipalityToAdd.getID() );
     }
 
+    public District getDistrictByName( String name ) throws SQLException
+    {
+        return districtRepository.getDistrictByName( name );
+    }
+
 }

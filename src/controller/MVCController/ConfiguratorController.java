@@ -1,54 +1,47 @@
 package controller.MVCController;
 
 import java.sql.SQLException;
-import java.util.InputMismatchException;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import controller.GRASPController.ConfiguratorGRASPController;
-import controller.GRASPController.SessionGRASPController;
-import controller.GRASPController.SubjectGRASPController;
 import model.Configurator;
-import model.util.Conn;
-import model.util.Constants;
-import repository.ConfiguratorRepository;
+import service.ConfiguratorService;
+import service.SessionService;
 import view.ConfiguratorMenuView;
 import view.ConfiguratorView;
 
-public class ConfiguratorController extends SubjectController {
+public class ConfiguratorController {
 
     private ConfiguratorMenuView configuratorMenuView;
-    private ConfiguratorView configuratorView;
-    private SessionGRASPController sessionGRASPController;
+    private SessionService sessionService;
     private DistrictController districtController;
     private CategoryController categoryController;
     private ConversionFactorsController conversionFactorsController;
     private ProposalController proposalController;
-    private ConfiguratorGRASPController controllerGRASP;
+    private ConfiguratorService configuratorService;
 
-    public ConfiguratorController ( ConfiguratorMenuView configuratorMenuView, ConfiguratorView configuratorView, SubjectGRASPController subjectGRASPController, SessionGRASPController sessionGRASPController, DistrictController districtController, CategoryController categoryController, ConversionFactorsController conversionFactorsController, ProposalController proposalController, ConfiguratorGRASPController controllerGRASP )
+    public ConfiguratorController ( ConfiguratorMenuView configuratorMenuView, SessionService sessionService, DistrictController districtController, CategoryController categoryController, ConversionFactorsController conversionFactorsController, ProposalController proposalController, ConfiguratorService configuratorService )
     {
-        super( configuratorView, subjectGRASPController);
-        this.configuratorView = configuratorView;
-        this.sessionGRASPController = sessionGRASPController;
+        this.configuratorMenuView = configuratorMenuView;
+        this.sessionService = sessionService;
         this.districtController = districtController;
         this.categoryController = categoryController;
         this.conversionFactorsController = conversionFactorsController;
         this.proposalController = proposalController;
-        this.controllerGRASP = controllerGRASP;
+        this.configuratorService = configuratorService;
 
-        this.configuratorMenuView = configuratorMenuView;
-
-        this.configuratorMenuView.getInsertNewDistrictButton().addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) 
+        this.configuratorMenuView.getInsertNewDistrictButton().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) 
             {
                 districtController.startInsertNewDistrictView(ConfiguratorController.this);
 			}
 		});
 
-        this.configuratorMenuView.getInsertConversionFactorsButton().addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) 
+        this.configuratorMenuView.getInsertConversionFactorsButton().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) 
             {
                 try {
                     conversionFactorsController.startInsertConversionFactorsView();
@@ -58,9 +51,9 @@ public class ConfiguratorController extends SubjectController {
 			}
 		});
 
-        this.configuratorMenuView.getViewDistrictButton().addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) 
+        this.configuratorMenuView.getViewDistrictButton().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e)
             {
                 try {
                     districtController.startDistrictInfoView();
@@ -71,9 +64,9 @@ public class ConfiguratorController extends SubjectController {
 			}
 		});
 
-        this.configuratorMenuView.getViewAllConversionFactorsButton().addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) 
+        this.configuratorMenuView.getViewAllConversionFactorsButton().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e)
             {
                 try {
                     conversionFactorsController.startAllConversionFactorsView();
@@ -83,142 +76,99 @@ public class ConfiguratorController extends SubjectController {
 			}
 		});
 
+        this.configuratorMenuView.getViewConversionFactorsOfCategoryButton().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e)
+            {
+                try {
+                    conversionFactorsController.startConversionFactorsOfCategoryView();
+                } catch (SQLException e1) {
+                    e1.printStackTrace();
+                }
+            }
+
+		});
+
+        this.configuratorMenuView.getInsertNewHierarchyButton().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) 
+            {
+                try {
+                    categoryController.startInsertNewHierarchyView(ConfiguratorController.this);
+                } catch (SQLException e1) {
+                    e1.printStackTrace();
+                }
+            }
+
+		});
+
         this.configuratorMenuView.getCloseLabel().addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
                 try 
                 {
-                    sessionGRASPController.logout();
-                    conversionFactorsController.resetConversionFactors();
+                    close();
                 } catch (SQLException e1) {
                     e1.printStackTrace();
                 }
-				System.exit(0);
+			}
+		});
+
+        this.configuratorMenuView.getLogoutButton().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) 
+            {
+                try 
+                {
+                    close();
+                } catch (SQLException e1) {
+                    e1.printStackTrace();
+                }
 			}
 		});
     }
 
-    public void setConfigurator ( Configurator configurator ) 
-    {
-        this.controllerGRASP.setConfigurator(configurator);
-    }
-
-    public ConfiguratorRepository getconfiguratorRepository () 
-    {
-        return this.controllerGRASP.getconfiguratorRepository();
-    }
-
     public void start () throws SQLException
     {
-
         configuratorMenuView.setUndecorated(true);
         configuratorMenuView.setVisible(true);
-        /*int choice = 0;
+    }
 
-        super.forcedClosure( this.sessionGRASPController.getSession() );
+    public void close() throws SQLException
+    {
+        sessionService.logout();
+        conversionFactorsController.resetConversionFactors();
+        configuratorMenuView.dispose();
+    }
 
-        do
-        {
-            try
-            {
-                super.clearConsole( Constants.TIME_SWITCH_MENU );
-                choice = configuratorView.viewConfiguratorMenu();
-
-                switch ( choice ) 
-                {
-                    case 1:
-                            districtController.enterDistrict( this );
-                        break;
-
-                    case 2:
-                            categoryController.enterHierarchy( this );
-                        break;
-
-                    case 3:
-                            conversionFactorsController.enterConversionFactors();
-                        break;
-
-                    case 4:
-
-                            try
-                            {
-                                saveAll();
-                            }
-                            catch( IllegalStateException e )
-                            {
-                                configuratorView.println( Constants.IMPOSSIBLE_SAVE_CF );
-                                super.clearConsole( Constants.TIME_ERROR_MESSAGE );
-                                break;
-                            }
-
-                            configuratorView.println( Constants.SAVE_COMPLETED );
-                            super.clearConsole( Constants.TIME_MESSAGE );
-                        break;
-
-                    case 5:
-                            districtController.viewDistrict();
-                        break;
-
-                    case 6:
-                            categoryController.viewHierarchy();
-                        break;
-
-                    case 7:
-                            conversionFactorsController.listAllConversionFactors();
-                        break;
-
-                    case 8:
-                            conversionFactorsController.listConversionFactorsOfLeaf();
-                        break;
-
-                    case 9:
-                            proposalController.listProposalsOfLeaf();
-                        break;
-
-                    case 10:
-                            this.sessionGRASPController.logout();
-                            conversionFactorsController.resetConversionFactors();
-                            configuratorView.println( Constants.LOG_OUT );
-                            super.clearConsole( Constants.TIME_LOGOUT );
-                        break;
-
-                    default:
-                            configuratorView.print( Constants.INVALID_OPTION );
-                            super.clearConsole( Constants.TIME_ERROR_MESSAGE);
-                        break;
-                }
-
-            }
-            catch ( InputMismatchException e )
-            {
-                configuratorView.print( Constants.INVALID_OPTION );
-            }
-            catch ( Exception e )
-            {
-                configuratorView.print( Constants.GENERIC_EXCEPTION_MESSAGE );
-                e.printStackTrace();
-            }
-        } while ( choice != 10 );*/
+    public void setConfigurator ( Configurator configurator ) 
+    {
+        this.configuratorService.setConfigurator(configurator);
     }
 
     public void saveAll ( ) throws SQLException
     {
-        this.controllerGRASP.saveAll();
+        this.configuratorService.saveAll();
     }
 
     public void changeCredentials ( String approvedUsername, String newPassword ) throws SQLException
     {
-        this.controllerGRASP.changeCredentials(approvedUsername, newPassword);
+        this.configuratorService.changeCredentials(approvedUsername, newPassword);
     }
 
     public void createDistrict ( String districtName ) throws SQLException
     {
-       this.controllerGRASP.createDistrict(districtName);
+       this.configuratorService.createDistrict(districtName);
     }
 
     public void createCategory ( String name, String field, String description, boolean isRoot, Integer hierarchyID ) throws SQLException
     {
-        this.controllerGRASP.createCategory(name, field, description, isRoot, hierarchyID);
+        this.configuratorService.createCategory(name, field, description, isRoot, hierarchyID);
+    }
+
+    public Configurator getConfiguratorByUsername ( String username ) throws SQLException
+    {
+        return configuratorService.getConfiguratorByUsername( username );
     }
 
 }

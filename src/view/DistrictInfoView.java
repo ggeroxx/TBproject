@@ -4,6 +4,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.EventQueue;
 import javax.swing.JButton;
 import java.awt.SystemColor;
@@ -13,6 +14,8 @@ import javax.swing.JPasswordField;
 import javax.swing.SwingConstants;
 import java.awt.Font;
 import java.awt.MenuBar;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
@@ -108,7 +111,7 @@ public class DistrictInfoView extends JFrame{
 		lblImg.setBounds(10, 23, 379, 474);
 		panel.add(lblImg);
 		lblImg.setBackground(new Color(255, 255, 255));
-		lblImg.setIcon(new ImageIcon(RegistrationConfiguratorView.class.getResource("/img/login.jpg")));
+		lblImg.setIcon(new ImageIcon(ChangeCredentialsConfiguratorView.class.getResource("/img/login.jpg")));
 		
 		lblClose = new JLabel("X");
 		lblClose.setBackground(new Color(240, 240, 240));
@@ -167,4 +170,23 @@ public class DistrictInfoView extends JFrame{
 	{
 		textAreaMuniciplaities.setText(Message);
 	}
+	
+	public void createDistrictButton( String districtName, String municipalities ) 
+    {
+        JButton button = new JButton(districtName);
+        button.setPreferredSize(new Dimension(300, button.getPreferredSize().height));
+        button.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) 
+            {
+
+	            setLblDistrictName( districtName );
+	            setTextAreaMuniciplaities( municipalities );
+            }
+        });
+        
+        addButton(button);
+        getmenuBar().add(button);
+        //button.doClick();
+    }
 }

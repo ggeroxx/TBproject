@@ -8,13 +8,15 @@ import controller.GRASPController.SessionGRASPController;
 import controller.GRASPController.SubjectGRASPController;
 import controller.GRASPController.UserGRASPController;
 import controller.MVCController.CategoryController;
+import controller.MVCController.ChangeCredentialsConfiguratorController;
 import controller.MVCController.ConfiguratorController;
 import controller.MVCController.ConversionFactorController;
 import controller.MVCController.ConversionFactorsController;
 import controller.MVCController.DistrictController;
-import controller.MVCController.MainController;
+import controller.MVCController.LoginController;
 import controller.MVCController.MunicipalityController;
 import controller.MVCController.ProposalController;
+import controller.MVCController.RegistrationUserController;
 import controller.MVCController.SubjectController;
 import controller.MVCController.UserController;
 import repository.AccessRepository;
@@ -44,6 +46,7 @@ import service.DistrictService;
 import service.MunicipalityService;
 import service.ProposalService;
 import service.Session;
+import service.SessionService;
 import service.SubjectService;
 import service.UserService;
 import service.pure_fabrication.AuthenticationService;
@@ -55,16 +58,17 @@ import view.CategoryView;
 import view.ConfiguratorMenuView;
 import view.ConfiguratorView;
 import view.ConversionFactorView;
+import view.ConversionFactorsOfCategoryView;
 import view.ConversionFactorsView;
 import view.DistrictInfoView;
 import view.DistrictView;
 import view.InsertConversionFactorsView;
 import view.InsertDistrictView;
+import view.InsertNewHierarchyView;
 import view.LoginView;
-import view.MainView;
 import view.MunicipalityView;
 import view.ProposalView;
-import view.RegistrationConfiguratorView;
+import view.ChangeCredentialsConfiguratorView;
 import view.RegistrationUserView;
 import view.SubjectView;
 import view.UserView;
@@ -73,7 +77,6 @@ public class Main {
 
     public static void main ( String[] args ) {
 
-        MainView mainView = new MainView();
         DistrictView districtView = new DistrictView();
         MunicipalityView municipalityView = new MunicipalityView();
         ConfiguratorView configuratorView = new ConfiguratorView();
@@ -99,6 +102,7 @@ public class Main {
         TemporaryOperations tempOpsManager = new TemporaryOperationsManager( districtRepository, categoryRepository, districtToMunicipalitiesRepository, relationshipsBetweenCategoriesRepository );
         Session session = new Session(authenticationService, tempOpsManager);
 
+        SessionService sessionService = new SessionService(session);
         ProposalService proposalService = new ProposalService(proposalRepository);
         MunicipalityService municipalityService = new MunicipalityService(municipalityRepository, districtToMunicipalitiesRepository);
         DistrictService districtService = new DistrictService(districtRepository, districtToMunicipalitiesRepository);
@@ -119,26 +123,32 @@ public class Main {
         SubjectGRASPController subjectGRASPController = new SubjectGRASPController(subjectService);
 
         LoginView loginView = new LoginView ();
-        RegistrationConfiguratorView registrationConfiguratorView = new RegistrationConfiguratorView();
+        ChangeCredentialsConfiguratorView changeCredentialsConfiguratorView = new ChangeCredentialsConfiguratorView();
         RegistrationUserView registrationUserView = new RegistrationUserView();
         ConfiguratorMenuView configuratorMenuView = new ConfiguratorMenuView();
         InsertDistrictView insertDistrictView = new InsertDistrictView();
         DistrictInfoView districtInfoView = new DistrictInfoView();
         InsertConversionFactorsView insertConversionFactorsView = new InsertConversionFactorsView();
         AllConversionFactorsView allConversionFactorsView = new AllConversionFactorsView();
+        ConversionFactorsOfCategoryView conversionFactorsOfCategoryView = new ConversionFactorsOfCategoryView();
+        InsertNewHierarchyView insertNewHierarchyView = new InsertNewHierarchyView();
 
         SubjectController subjectController = new SubjectController( subjectView, subjectGRASPController );
         MunicipalityController municipalityController = new MunicipalityController(municipalityView, municipalityGRASPController);
-        DistrictController districtController = new DistrictController( insertDistrictView,  districtInfoView, districtView, municipalityController, districtGRASPController);
-        CategoryController categoryController = new CategoryController(categoryView, categoryGRASPController);
+        DistrictController districtController = new DistrictController(insertDistrictView, districtInfoView, municipalityController, districtService);
+        CategoryController categoryController = new CategoryController( insertNewHierarchyView, categoryView, categoryGRASPController );
         ConversionFactorController conversionFactorController = new ConversionFactorController( conversionFactorView, categoryController );
-        ConversionFactorsController conversionFactorsController = new ConversionFactorsController( allConversionFactorsView, insertConversionFactorsView, conversionFactorsView, conversionFactorController, categoryController, conversionFactorsGRASPController);
+        ConversionFactorsController conversionFactorsController = new ConversionFactorsController( allConversionFactorsView, insertConversionFactorsView, conversionFactorsOfCategoryView, conversionFactorsView, conversionFactorController, categoryController, conversionFactorsGRASPController);
         ProposalController proposalController = new ProposalController(proposalView, categoryController, conversionFactorsController, proposalGRASPController);
-        UserController userController = new UserController(userView, subjectGRASPController, sessionGRASPController, categoryController, proposalController, userGRASPController);
-        ConfiguratorController configuratorController = new ConfiguratorController( configuratorMenuView, configuratorView, subjectGRASPController, sessionGRASPController, districtController, categoryController, conversionFactorsController, proposalController, configuratorGRASPController);
-        MainController mainController = new MainController( loginView, registrationConfiguratorView, registrationUserView, mainView, session, accessRepository, districtController, subjectController, configuratorController, userController );
+        ConfiguratorController configuratorController = new ConfiguratorController(configuratorMenuView, sessionService, districtController, categoryController, conversionFactorsController, proposalController, configuratorService);
+        
+        UserController userController = new UserController(userView, subjectGRASPController, sessionGRASPController, categoryController, proposalController, userGRASPController, userService);
+        ChangeCredentialsConfiguratorController changeCredentialsConfiguratorController = new ChangeCredentialsConfiguratorController(changeCredentialsConfiguratorView, configuratorController, subjectController);
+        RegistrationUserController registrationUserController = new RegistrationUserController(registrationUserView, districtController, subjectController, userController);
+        LoginController loginController = new LoginController(loginView, changeCredentialsConfiguratorController, registrationUserController, sessionService, accessRepository, districtController, configuratorController, userController);
 
-        mainController.start();
+
+        loginController.start();
 
     }
 

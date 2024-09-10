@@ -14,6 +14,7 @@ import java.util.Map.Entry;
 import javax.swing.AbstractButton;
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JMenuItem;
 import javax.swing.JRadioButton;
 
 import java.awt.event.MouseAdapter;
@@ -26,6 +27,7 @@ import model.ConversionFactors;
 import model.util.Constants;
 import repository.ConversionFactorsRepository;
 import view.AllConversionFactorsView;
+import view.ConversionFactorsOfCategoryView;
 import view.ConversionFactorsView;
 import view.InsertConversionFactorsView;
 
@@ -33,13 +35,14 @@ public class ConversionFactorsController extends Controller {
     
     private InsertConversionFactorsView insertConversionFactorsView;
     private AllConversionFactorsView allConversionFactorsView;
+    private ConversionFactorsOfCategoryView conversionFactorsOfCategoryView;
     private ConversionFactorsView conversionFactorsView;
     private ConversionFactorController conversionFactorController;
     private CategoryController categoryController;
     private ConversionFactorsGRASPController controllerGRASP; 
     private HashMap<JRadioButton, ConversionFactor> radioButtonObjectMap = new HashMap<>();
 
-    public ConversionFactorsController ( AllConversionFactorsView allConversionFactorsView, InsertConversionFactorsView insertConversionFactorsView, ConversionFactorsView conversionFactorsView, ConversionFactorController conversionFactorController, CategoryController categoryController, ConversionFactorsGRASPController controllerGRASP)
+    public ConversionFactorsController ( AllConversionFactorsView allConversionFactorsView, InsertConversionFactorsView insertConversionFactorsView, ConversionFactorsOfCategoryView conversionFactorsOfCategoryView, ConversionFactorsView conversionFactorsView, ConversionFactorController conversionFactorController, CategoryController categoryController, ConversionFactorsGRASPController controllerGRASP)
     {
         super( conversionFactorsView );
         this.conversionFactorsView = conversionFactorsView;
@@ -49,6 +52,7 @@ public class ConversionFactorsController extends Controller {
 
         this.insertConversionFactorsView = insertConversionFactorsView;
         this.allConversionFactorsView = allConversionFactorsView;
+        this.conversionFactorsOfCategoryView = conversionFactorsOfCategoryView;
 
         insertConversionFactorsView.getInsertValueButton().addActionListener(new ActionListener() {
             @Override
@@ -124,6 +128,14 @@ public class ConversionFactorsController extends Controller {
 			}
 		});
 
+        this.conversionFactorsOfCategoryView.getCloseLabel().addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) 
+            {
+                conversionFactorsOfCategoryView.dispose();
+			}
+		});
+
     }
 
     public void startInsertConversionFactorsView() throws SQLException
@@ -142,8 +154,6 @@ public class ConversionFactorsController extends Controller {
                 addRadioButton( entry.getValue() );
             }
         }
-        
-        
 
     }
 
@@ -154,8 +164,24 @@ public class ConversionFactorsController extends Controller {
         this.allConversionFactorsView.setVisible(true);
         for ( Entry<Integer, ConversionFactor> entry : getConversionFactors().getList().entrySet() )
         {
-            addLabel( entry.getValue() );
+            addLabelInAllConversionFactorsView( entry.getValue() );
         }
+    }
+
+    public void startConversionFactorsOfCategoryView() throws SQLException
+    {
+        conversionFactorsOfCategoryView.getPanel().removeAll();
+        conversionFactorsOfCategoryView.setLblCategory("CONVERSION FACTORS OF CATEGORY");
+        this.conversionFactorsOfCategoryView.setUndecorated(true);
+        this.conversionFactorsOfCategoryView.setVisible(true);
+        for ( Category toPrint : categoryController.getCategoryRepository().getAllSavedLeaf() ) 
+        {
+            addMenuItem( toPrint, " " + toPrint.getID() + ". " + super.padRight( Integer.toString( toPrint.getID() ) , 3 ) + toPrint.getName() + super.padRight( toPrint.getName() , 50 ) + "  [ " + categoryController.getCategoryRepository().getRootByLeaf( toPrint ).getName() + " ]  " );
+        }
+        for ( Category toPrint : categoryController.getCategoryRepository().getAllNotSavedLeaf() )
+        {
+            addMenuItem( toPrint, " " + toPrint.getID() + ". " + super.padRight( Integer.toString( toPrint.getID() ) , 3 ) + toPrint.getName() + super.padRight( toPrint.getName() , 50 ) + "  [ " + categoryController.getCategoryRepository().getRootByLeaf( toPrint ).getName() + " ]  " + Constants.NOT_SAVED );
+        } 
     }
 
     public ConversionFactorsRepository getConversionFactorsRepository () 
@@ -356,7 +382,7 @@ public class ConversionFactorsController extends Controller {
         });
     }
 
-    private void addLabel( ConversionFactor conversionFactor ) throws SQLException 
+    private void addLabelInAllConversionFactorsView( ConversionFactor conversionFactor ) throws SQLException 
     {
         JLabel label = new JLabel( conversionFactorController.infoConversionFactor(conversionFactor) );
         allConversionFactorsView.addlblConversionFactor( label );
@@ -387,5 +413,34 @@ public class ConversionFactorsController extends Controller {
 	    }
 	    return null;
 	}
+
+    public void addMenuItem( Category category, String info)
+    {
+        JMenuItem categoryItem = new JMenuItem( info );
+        conversionFactorsOfCategoryView.addMenuCategory(categoryItem);
+
+        categoryItem.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                conversionFactorsOfCategoryView.getPanel().removeAll();
+                conversionFactorsOfCategoryView.setLblCategory(category.getName());
+                try {
+                    populate();
+                    for ( Entry<Integer, ConversionFactor> entry : getConversionFactors().getList().entrySet() )
+                    {
+                        if ( entry.getValue().getLeaf_1().getID() == category.getID() || entry.getValue().getLeaf_2().getID() == category.getID() )
+                        {
+                            JLabel label = new JLabel( conversionFactorController.infoConversionFactor( entry.getValue() ) );
+                            conversionFactorsOfCategoryView.addlblConversionFactor( label );
+                            
+                        }
+                    }
+                } catch (SQLException e1) {
+                    e1.printStackTrace();
+                }
+                
+            }
+        });
+        
+    }
 
 }

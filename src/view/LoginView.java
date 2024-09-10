@@ -19,7 +19,7 @@ import java.awt.event.MouseMotionAdapter;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
-public class LoginView extends JFrame implements FieldsView{
+public class LoginView extends JFrame {
 	
 	private JPanel contentPane;
 	private JTextField textUsername;
@@ -206,15 +206,10 @@ public class LoginView extends JFrame implements FieldsView{
         return lblClose;
     }
 
-	@Override
-	public void setMessageErrorUsername(String message) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void setMessageErrorPassword(String message) {
-		// TODO Auto-generated method stub
-		
-	}
+    public void resetFiled ()
+    {
+        setTextUsername("");
+        setPasswordField("");
+        setMessage("");
+    }
 }

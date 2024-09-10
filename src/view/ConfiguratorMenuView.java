@@ -27,6 +27,10 @@ public class ConfiguratorMenuView extends JFrame {
 	private JButton btnViewDistrict;
 	private JButton btnInsertConversionFactors;
 	private JButton btnViewAllConversion;
+	private JButton btnViewConversionFactorsOfCategory;
+	private JButton btnInsertNewHierarchy;
+	private JButton btnSaveAll;
+	private JButton btnLogout;
 
 	/**
 	 * Launch the application.
@@ -102,7 +106,7 @@ public class ConfiguratorMenuView extends JFrame {
 		
 		lblClose = new JLabel("X");
 		lblClose.setBackground(new Color(240, 240, 240));
-		lblClose.setBounds(767, 0, 35, 27);
+		lblClose.setBounds(787, 0, 35, 27);
 		contentPane.add(lblClose);
 		lblClose.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		lblClose.setHorizontalAlignment(SwingConstants.CENTER);
@@ -121,7 +125,7 @@ public class ConfiguratorMenuView extends JFrame {
 		btnInsertNewDistrict.setBounds(10, 97, 372, 35);
 		contentPane.add(btnInsertNewDistrict);
 		
-		JButton btnInsertNewHierarchy = new JButton("INSERT NEW HIERARCHY");
+		btnInsertNewHierarchy = new JButton("INSERT NEW HIERARCHY");
 		btnInsertNewHierarchy.setForeground(Color.BLUE);
 		btnInsertNewHierarchy.setFont(new Font("Tahoma", Font.BOLD, 12));
 		btnInsertNewHierarchy.setBackground(SystemColor.menu);
@@ -135,7 +139,7 @@ public class ConfiguratorMenuView extends JFrame {
 		btnInsertConversionFactors.setBounds(10, 187, 372, 35);
 		contentPane.add(btnInsertConversionFactors);
 		
-		JButton btnSaveAll = new JButton("SAVE ALL");
+		btnSaveAll = new JButton("SAVE ALL");
 		btnSaveAll.setForeground(Color.BLUE);
 		btnSaveAll.setFont(new Font("Tahoma", Font.BOLD, 12));
 		btnSaveAll.setBackground(SystemColor.menu);
@@ -163,7 +167,7 @@ public class ConfiguratorMenuView extends JFrame {
 		btnViewAllConversion.setBounds(10, 367, 372, 35);
 		contentPane.add(btnViewAllConversion);
 		
-		JButton btnViewConversionFactorsOfCategory = new JButton("VIEW CONVERSION FACTORS OF A CATEGORY");
+		btnViewConversionFactorsOfCategory = new JButton("VIEW CONVERSION FACTORS OF A CATEGORY");
 		btnViewConversionFactorsOfCategory.setForeground(Color.BLUE);
 		btnViewConversionFactorsOfCategory.setFont(new Font("Tahoma", Font.BOLD, 12));
 		btnViewConversionFactorsOfCategory.setBackground(SystemColor.menu);
@@ -177,7 +181,7 @@ public class ConfiguratorMenuView extends JFrame {
 		btnViewProposalOfCategory.setBounds(10, 457, 372, 35);
 		contentPane.add(btnViewProposalOfCategory);
 		
-		JButton btnLogout = new JButton("LOGOUT");
+		btnLogout = new JButton("LOGOUT");
 		btnLogout.setForeground(Color.BLUE);
 		btnLogout.setFont(new Font("Tahoma", Font.BOLD, 12));
 		btnLogout.setBackground(SystemColor.menu);
@@ -209,4 +213,20 @@ public class ConfiguratorMenuView extends JFrame {
 	{
 		return btnInsertConversionFactors;
 	}
+	
+	public JButton getViewConversionFactorsOfCategoryButton()
+	{
+		return btnViewConversionFactorsOfCategory;
+	}
+	 
+	public JButton getInsertNewHierarchyButton()
+	{
+		return btnInsertNewHierarchy;
+	}
+	
+	public JButton getLogoutButton()
+	{
+		return btnLogout;
+	}
+	
 }
