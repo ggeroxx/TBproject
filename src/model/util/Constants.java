@@ -235,9 +235,9 @@ public class Constants {
 
     // ---------------------------------------- ConfiguratorController ----------------------------------------
 
-    public static final String SAVE_COMPLETED = GREEN + "\n --- saved COMPLETED ✓ ---\n" + RESET;
+    public static final String SAVE_COMPLETED = "saved COMPLETED!!!";
 
-    public static final String IMPOSSIBLE_SAVE_CF = RED + BOLD + "\n --- ATTENTION, not all conversion factors have been set !!! --- " + RESET;
+    public static final String IMPOSSIBLE_SAVE_CF = "ATTENTION, not all conversion factors have been set !!!";
 
     // ---------------------------------------- multiple uses constants ----------------------------------------
 

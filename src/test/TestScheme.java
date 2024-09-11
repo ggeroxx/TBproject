@@ -73,6 +73,7 @@ import view.InsertNewHierarchyView;
 import view.LoginView;
 import view.MainView;
 import view.MunicipalityView;
+import view.ProposalOfCategoryView;
 import view.ProposalView;
 import view.ChangeCredentialsConfiguratorView;
 import view.RegistrationUserView;
@@ -138,6 +139,7 @@ public class TestScheme {
     ConversionFactorsOfCategoryView conversionFactorsOfCategoryView = new ConversionFactorsOfCategoryView();
     InsertNewHierarchyView insertNewHierarchyView = new InsertNewHierarchyView();
     HierarchyView hierarchyView = new HierarchyView();
+    ProposalOfCategoryView proposalOfCategoryView = new ProposalOfCategoryView();
 
     SubjectController subjectController = new SubjectController( subjectView, subjectGRASPController );
     MunicipalityController municipalityController = new MunicipalityController(municipalityView, municipalityGRASPController);
@@ -145,7 +147,7 @@ public class TestScheme {
     CategoryController categoryController = new CategoryController(insertNewHierarchyView, hierarchyView, categoryService);
     ConversionFactorController conversionFactorController = new ConversionFactorController( conversionFactorView, categoryController );
     ConversionFactorsController conversionFactorsController = new ConversionFactorsController(allConversionFactorsView, insertConversionFactorsView, conversionFactorsOfCategoryView, conversionFactorController, categoryController, conversionFactorsService);
-    ProposalController proposalController = new ProposalController(proposalView, categoryController, conversionFactorsController, proposalGRASPController);
+    ProposalController proposalController = new ProposalController(proposalOfCategoryView, proposalView, categoryController, conversionFactorsController, proposalGRASPController);
     ConfiguratorController configuratorController = new ConfiguratorController(configuratorMenuView, sessionService, districtController, categoryController, conversionFactorsController, proposalController, configuratorService);    
     UserController userController = new UserController(userView, subjectGRASPController, sessionGRASPController, categoryController, proposalController, userGRASPController, userService);
     ChangeCredentialsConfiguratorController changeCredentialsConfiguratorController = new ChangeCredentialsConfiguratorController(changeCredentialsConfiguratorView, configuratorController, subjectController);

@@ -1,30 +1,52 @@
 package controller.MVCController;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map.Entry;
+
+import javax.swing.JMenuItem;
+
+
 import controller.GRASPController.ProposalGRASPController;
 import model.Category;
+import model.ConversionFactor;
 import model.Proposal;
 import model.User;
 import model.util.Constants;
 import repository.ProposalRepository;
+import service.ControlPatternService;
+import view.ProposalOfCategoryView;
 import view.ProposalView;
 
 public class ProposalController extends Controller {
     
+    private ProposalOfCategoryView proposalOfCategoryView;
     private ProposalView proposalView;
     private CategoryController categoryController;
     private ConversionFactorsController conversionFactorsController;
     private ProposalGRASPController controllerGRASP;
 
-    public ProposalController ( ProposalView proposalView, CategoryController categoryController, ConversionFactorsController conversionFactorsController, ProposalGRASPController controllerGRASP)
+    public ProposalController ( ProposalOfCategoryView proposalOfCategoryView, ProposalView proposalView, CategoryController categoryController, ConversionFactorsController conversionFactorsController, ProposalGRASPController controllerGRASP)
     {
         super( proposalView );
+        this.proposalOfCategoryView = proposalOfCategoryView;
         this.proposalView = proposalView;
         this.categoryController = categoryController;
         this.conversionFactorsController = conversionFactorsController;
         this.controllerGRASP = controllerGRASP;
+
+        this.proposalOfCategoryView.getCloseLabel().addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) 
+            {
+                closeProposalOfCategoryView();
+			}
+		});
     }
 
     public ProposalRepository getProposalRepository () 
@@ -182,5 +204,47 @@ public class ProposalController extends Controller {
         proposalView.println( "requested:" + super.padRight( "requested:" ,15 ) + "[ " + proposal.getRequestedCategory().getName() + super.padRight( proposal.getRequestedCategory().getName(), 50 ) + ", " + proposal.getRequestedHours() + " hours ]" );
         proposalView.print( "offered:" + super.padRight( "offered:" ,15 ) + "[ " + proposal.getOfferedCategory().getName() + super.padRight( proposal.getOfferedCategory().getName(), 50 ) + ", " + Constants.CYAN + proposal.getOfferedHours() + " hours " + Constants.RESET + "] " );
     }*/
+
+    public void startProposalOfCategoryView() throws SQLException
+    {
+        proposalOfCategoryView.init();
+
+        for ( Category toPrint : categoryController.getCategoryRepository().getAllSavedLeaf() ) 
+        {
+            addMenuItemForProposalCategoryView( toPrint, " " + toPrint.getID() + ". " + ControlPatternService.padRight( Integer.toString( toPrint.getID() ) , 3 ) + toPrint.getName() + ControlPatternService.padRight( toPrint.getName() , 50 ) + "  [ " + categoryController.getCategoryRepository().getRootByLeaf( toPrint ).getName() + " ]  " );
+        }
+        for ( Category toPrint : categoryController.getCategoryRepository().getAllNotSavedLeaf() )
+        {
+            addMenuItemForProposalCategoryView( toPrint, " " + toPrint.getID() + ". " + ControlPatternService.padRight( Integer.toString( toPrint.getID() ) , 3 ) + toPrint.getName() + ControlPatternService.padRight( toPrint.getName() , 50 ) + "  [ " + categoryController.getCategoryRepository().getRootByLeaf( toPrint ).getName() + " ]  " + Constants.NOT_SAVED );
+        } 
+    }
+
+    public void closeProposalOfCategoryView ()
+    {
+        proposalOfCategoryView.resetFields();
+        proposalOfCategoryView.dispose();
+    }
+
+
+    public void addMenuItemForProposalCategoryView( Category category, String info)
+    {
+        JMenuItem categoryItem = proposalOfCategoryView.addMenuItem(info);
+        categoryItem.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                proposalOfCategoryView.getPanel().removeAll();
+                proposalOfCategoryView.setLblProposal(category.getName());
+                try {
+                    for ( Proposal proposal : getProposalRepository().getAllProposalsByLeaf( categoryController.getCategoryRepository().getCategoryByID( category.getID() ) ) )
+                    {
+                        proposalOfCategoryView.addlblProposal( proposal.getID() + "." + ControlPatternService.padRight( proposal.getID() + ".", 5) + "requested:" + ControlPatternService.padRight( "requested:" ,15 ) + "[ " + proposal.getRequestedCategory().getName() + ControlPatternService.padRight( proposal.getRequestedCategory().getName(), 50 ) + ", " + proposal.getRequestedHours() + ControlPatternService.padRight(Integer.toString(proposal.getRequestedHours()), 3) + " hours ]\n" + ControlPatternService.padRight( "", 5 ) + "offered:" + ControlPatternService.padRight( "offered:" ,15 ) + "[ " + proposal.getOfferedCategory().getName() + ControlPatternService.padRight( proposal.getOfferedCategory().getName(), 50 ) + ", " + proposal.getOfferedHours() + " hours ] ");     
+                    }
+                } catch (SQLException e1) {
+                    e1.printStackTrace();
+                }
+                
+            }
+        });
+        
+    }
 
 }

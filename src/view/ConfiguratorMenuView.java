@@ -8,7 +8,11 @@ import java.awt.EventQueue;
 
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
+import javax.swing.Timer;
+
 import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.ImageIcon;
@@ -32,6 +36,8 @@ public class ConfiguratorMenuView extends JFrame {
 	private JButton btnSaveAll;
 	private JButton btnLogout;
 	private JButton btnViewHierarchy;
+	private JLabel lblErrorSave;
+	private JButton btnViewProposalOfCategory;
 
 	/**
 	 * Launch the application.
@@ -84,7 +90,7 @@ public class ConfiguratorMenuView extends JFrame {
 		
 		setBackground(new Color(255, 255, 255));
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 824, 600);
+		setBounds(100, 100, 831, 621);
 		contentPane = new JPanel();
 		contentPane.setForeground(Color.BLACK);
 		contentPane.setBackground(new Color(255, 255, 255));
@@ -175,7 +181,7 @@ public class ConfiguratorMenuView extends JFrame {
 		btnViewConversionFactorsOfCategory.setBounds(10, 412, 372, 35);
 		contentPane.add(btnViewConversionFactorsOfCategory);
 		
-		JButton btnViewProposalOfCategory = new JButton("VIEW PROPOSALS OF A CATEGORY");
+		btnViewProposalOfCategory = new JButton("VIEW PROPOSALS OF A CATEGORY");
 		btnViewProposalOfCategory.setForeground(Color.BLUE);
 		btnViewProposalOfCategory.setFont(new Font("Tahoma", Font.BOLD, 12));
 		btnViewProposalOfCategory.setBackground(SystemColor.menu);
@@ -188,6 +194,11 @@ public class ConfiguratorMenuView extends JFrame {
 		btnLogout.setBackground(SystemColor.menu);
 		btnLogout.setBounds(10, 502, 372, 35);
 		contentPane.add(btnLogout);
+		
+		lblErrorSave = new JLabel("");
+		lblErrorSave.setHorizontalAlignment(SwingConstants.CENTER);
+		lblErrorSave.setBounds(10, 547, 372, 27);
+		contentPane.add(lblErrorSave);
 	}
 	
 	public JLabel getCloseLabel() 
@@ -233,6 +244,38 @@ public class ConfiguratorMenuView extends JFrame {
 	public JButton getViewHierarchyButton()
 	{
 		return btnViewHierarchy;
+	}
+	
+	public JButton getSaveAllButton ()
+	{
+		return btnSaveAll;
+	}
+	
+	public JLabel getLblErrorSave()
+	{
+		return lblErrorSave;
+	}
+	
+	public void setLblErrorSave( String message )
+	{
+		lblErrorSave.setText(message);
+	}
+	public void viewMessageSave()
+	{
+		Timer timer = new Timer(2000, new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent evt) 
+        {
+        	setLblErrorSave("");
+        }
+		});
+		timer.setRepeats(false); 
+        timer.start();
+	}
+	
+	public JButton getViewProposalOfCategoryButton ()
+	{
+		return btnViewProposalOfCategory;
 	}
 	
 }

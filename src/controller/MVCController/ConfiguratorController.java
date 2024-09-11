@@ -1,11 +1,13 @@
 package controller.MVCController;
 
 import java.sql.SQLException;
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import model.Configurator;
+import model.util.Constants;
 import service.ConfiguratorService;
 import service.SessionService;
 import view.ConfiguratorMenuView;
@@ -107,6 +109,39 @@ public class ConfiguratorController {
             {
                 try {
                     categoryController.startHierarchyView();
+                } catch (SQLException e1) {
+                    e1.printStackTrace();
+                }
+            }
+
+		});
+
+        this.configuratorMenuView.getSaveAllButton().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) 
+            {
+                try {
+                    saveAll();
+                    configuratorMenuView.getLblErrorSave().setForeground(Color.GREEN);
+                    configuratorMenuView.setLblErrorSave(Constants.SAVE_COMPLETED);
+                    configuratorMenuView.viewMessageSave();
+                } catch (IllegalStateException e1) {
+                    configuratorMenuView.getLblErrorSave().setForeground(Color.RED);
+                    configuratorMenuView.setLblErrorSave(Constants.IMPOSSIBLE_SAVE_CF);
+                    configuratorMenuView.viewMessageSave();
+                }catch (SQLException e1) {
+                    e1.printStackTrace();
+                }
+            }
+
+		});
+
+        this.configuratorMenuView.getViewProposalOfCategoryButton().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) 
+            {
+                try {
+                    proposalController.startProposalOfCategoryView();
                 } catch (SQLException e1) {
                     e1.printStackTrace();
                 }

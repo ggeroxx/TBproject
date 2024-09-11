@@ -535,12 +535,21 @@ public class InsertNewHierarchyView extends JFrame {
 	    return null;
 	}
 	
-	public void resetRadioButtons()
+
+	public void removeAllRadioButtons() 
 	{
-		getPanelParentID().removeAll();
-		getChckbxLeafCategory().removeAll();
-		getPanelParentID().revalidate();
-		getPanelParentID().repaint();
+		
+	    Enumeration<AbstractButton> buttons = getGroup().getElements();
+	    while (buttons.hasMoreElements()) 
+	    {
+	        AbstractButton button = buttons.nextElement();
+	        getGroup().remove(button);
+	    }
+	    
+	    getPanelParentID().removeAll(); 
+	    getPanelParentID().revalidate();
+	    getPanelParentID().repaint(); 
+	    
 	}
 		
 }

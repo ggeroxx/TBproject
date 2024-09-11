@@ -505,11 +505,14 @@ public class CategoryController {
     }
 
     public void closeInsertNewHierarchy ()
-    {
-        //radioButtonObjectMapForParentiID = new HashMap<>();
+    { 
+        for (ActionListener al : insertNewHierarchyView.getInsertCategoryButton().getActionListeners()) 
+        {
+            insertNewHierarchyView.getInsertCategoryButton().removeActionListener(al);
+        }
         insertNewHierarchyView.setTextArea("");
-        //insertNewHierarchyView.resetRadioButtons();
-        insertNewHierarchyView.getGroup().clearSelection();
+        insertNewHierarchyView.removeAllRadioButtons();
+        radioButtonObjectMapForParentiID.clear();
         insertNewHierarchyView.dispose();
     }
 
@@ -638,10 +641,11 @@ public class CategoryController {
     public void continueInsertWithFiledType(ConfiguratorController configuratorController, Category root) throws SQLException
     {
         insertNewHierarchyView.initInsertFiledTypeAndParentID();
-        for ( Category toPrint : getCategoryRepository().getParentCategories( root.getID()) ) addRadioButton( toPrint );
 
         if (insertNewHierarchyView.getInsertParentIdButton().getActionListeners().length == 0) 
         {
+            for ( Category toPrint : getCategoryRepository().getParentCategories( root.getID()) ) addRadioButton( toPrint );
+
             this.insertNewHierarchyView.getInsertParentIdButton().addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) 
@@ -723,7 +727,7 @@ public class CategoryController {
 
         for ( Category toPrint : categoryService.getAllRoot() ) 
         {
-            addMenuItem( toPrint, " " + toPrint.getID() + ". " + ControlPatternService.padRight( Integer.toString( toPrint.getID() ) , 3 ) + toPrint.getName() + ControlPatternService.padRight( toPrint.getName() , 50 )  );
+            addMenuItemForHierarchyView( toPrint, " " + toPrint.getID() + ". " + ControlPatternService.padRight( Integer.toString( toPrint.getID() ) , 3 ) + toPrint.getName() + ControlPatternService.padRight( toPrint.getName() , 50 )  );
         } 
     }
 
@@ -732,7 +736,7 @@ public class CategoryController {
         hierarchyView.dispose();
     }
 
-    public void addMenuItem( Category root, String info)
+    public void addMenuItemForHierarchyView( Category root, String info)
     {
         JMenuItem categoryItem = hierarchyView.addMenuItem(info);
         categoryItem.addActionListener(new ActionListener() {
