@@ -18,10 +18,13 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
+import javax.swing.AbstractButton;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import java.awt.event.MouseMotionAdapter;
+import java.util.Enumeration;
+
 import javax.swing.JTextArea;
 import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneConstants;
@@ -151,10 +154,11 @@ public class ConversionFactorsOfCategoryView extends JFrame{
 
 	}
 	
-	public void addlblConversionFactor(JLabel lblConversionFactor) 
+	public void addlblConversionFactor( String info ) 
 	 {
-		lblConversionFactor.setFont(new Font("Monospaced", Font.PLAIN, 12));
-		panel.add(lblConversionFactor);
+		JLabel label = new JLabel( info );
+		label.setFont(new Font("Monospaced", Font.PLAIN, 12));
+		panel.add(label);
 		contentPane.revalidate(); 
 		contentPane.repaint();     
 	 }
@@ -188,4 +192,31 @@ public class ConversionFactorsOfCategoryView extends JFrame{
 	{
         return lblClose;
     }
+	
+	public void init ()
+	{
+		getPanel().removeAll();
+		getPanel().revalidate();
+		getPanel().repaint();
+		mnMenuCategories.removeAll();
+        setLblCategory("CONVERSION FACTORS OF CATEGORY");
+        setUndecorated(true);
+        setVisible(true);
+	}
+	
+	public JMenuItem addMenuItem (String info)
+	{
+		JMenuItem categoryItem = new JMenuItem( info );
+        addMenuCategory(categoryItem);
+        return categoryItem;
+	}
+	
+	public void resetFields()
+	{
+		getPanel().removeAll();
+		getPanel().revalidate();
+		getPanel().repaint();
+	}
+	
+
 }

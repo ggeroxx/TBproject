@@ -63,11 +63,11 @@ public class UserController extends SubjectController {
                 switch ( choice ) 
                 {
                     case 1:
-                            categoryController.navigateHierarchy();
+                            //categoryController.navigateHierarchy();
                         break;
 
                     case 2:
-                            proposalController.proposeProposal( this );
+                            //proposalController.proposeProposal( this );
                         break;
 
                     case 3:

@@ -11,8 +11,11 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.InputMismatchException;
+import java.util.Map.Entry;
 
+import javax.lang.model.util.ElementScanner14;
 import javax.swing.AbstractButton;
+import javax.swing.JMenuItem;
 import javax.swing.JRadioButton;
 import javax.swing.Timer;
 
@@ -24,36 +27,38 @@ import model.Category;
 import model.ConversionFactor;
 import model.Municipality;
 import repository.CategoryRepository;
+import service.CategoryService;
+import service.ControlPatternService;
 import view.CategoryView;
+import view.HierarchyView;
 import view.InsertNewHierarchyView;
 
-public class CategoryController extends Controller {
-    
+public class CategoryController {
+     
     private InsertNewHierarchyView insertNewHierarchyView;
-    private CategoryView categoryView;
-    private CategoryGRASPController controllerGRASP;
-    private HashMap<JRadioButton, Category> radioButtonObjectMap = new HashMap<>();
+    private HierarchyView hierarchyView;
+    private CategoryService categoryService;
+    private HashMap<JRadioButton, Category> radioButtonObjectMapForParentiID = new HashMap<>();
+    private HashMap<JRadioButton, Category> radioButtonObjectMapForCategory = new HashMap<>();
 
-    public CategoryController ( InsertNewHierarchyView insertNewHierarchyView, CategoryView categoryView, CategoryGRASPController controllerGRASP)
+    public CategoryController ( InsertNewHierarchyView insertNewHierarchyView, HierarchyView hierarchyView, CategoryService categoryService)
     {
-        super( categoryView );
-        this.categoryView = categoryView;
-        this.controllerGRASP = controllerGRASP;
-
         this.insertNewHierarchyView = insertNewHierarchyView;
+        this.categoryService = categoryService;
+        this.hierarchyView = hierarchyView;
 
         insertNewHierarchyView.getChckbxLeafCategory().addItemListener(new ItemListener() {
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.DESELECTED) 
                 {
-                    insertNewHierarchyView.getTextFieldField().setEditable(true);
-                    insertNewHierarchyView.repaint();
-                } else if (e.getStateChange() == ItemEvent.SELECTED) 
+                    insertNewHierarchyView.chckbxLeafCategoryDeselected();
+                }
+                else
                 {
-                    insertNewHierarchyView.getTextFieldField().setEditable(false);
-                    insertNewHierarchyView.setTextField("");
-                    insertNewHierarchyView.setLblFieldError("");
-                    insertNewHierarchyView.repaint();
+                    if (e.getStateChange() == ItemEvent.SELECTED) 
+                    {
+                        insertNewHierarchyView.chckbxLeafCategorySelected();
+                    }
                 }
             }
         });
@@ -64,7 +69,7 @@ public class CategoryController extends Controller {
                 try {
                     if (!(getCategoryRepository().getCategoriesWithoutChild().size() > 0 ))
                     {
-                        insertNewHierarchyView.dispose();
+                        closeInsertNewHierarchy();
                     }
                 } catch (SQLException e1) {
                     e1.printStackTrace();
@@ -72,25 +77,32 @@ public class CategoryController extends Controller {
 			}
 		});
 
+        this.hierarchyView.getCloseLabel().addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+                closeHierarchyView();
+			}
+		});
+
     }
 
     public void setCategory ( Category category ) 
     {
-        this.controllerGRASP.setCategory(category);
+        this.categoryService.setCategory(category);
     }
 
     public Category getCategory () 
     {
-        return this.controllerGRASP.getCategory();
+        return this.categoryService.getCategory();
     }
 
 
     public CategoryRepository getCategoryRepository()
     {
-        return this.controllerGRASP.getCategoryRepository();
+        return this.categoryService.getCategoryRepository();
     }
 
-    public void viewHierarchy () throws SQLException
+    /*public void viewHierarchy () throws SQLException
     {
         super.clearConsole( Constants.TIME_SWITCH_MENU );
         categoryView.print( Constants.HIERARCHIES_LIST );
@@ -358,14 +370,14 @@ public class CategoryController extends Controller {
         categoryView.enterString( Constants.ENTER_TO_EXIT );
         super.clearConsole( Constants.TIME_SWITCH_MENU );
         return;
-    }
+    }*/
 
     private boolean existValueOfField ( String field, Category parent ) throws SQLException
     {
-        return this.controllerGRASP.existValueOfField(field,parent);
+        return this.categoryService.existValueOfField(field,parent);
     }
 
-    public void enterHierarchy ( ConfiguratorController configuratorController ) throws SQLException
+    /*public void enterHierarchy ( ConfiguratorController configuratorController ) throws SQLException
     {
         super.clearConsole( Constants.TIME_SWITCH_MENU );
         categoryView.print( Constants.HIERARCHY_SCREEN );
@@ -438,47 +450,31 @@ public class CategoryController extends Controller {
         this.viewBuiltHierarchy( root.getHierarchyID() );
         categoryView.println( Constants.OPERATION_COMPLETED );
         super.clearConsole( Constants.TIME_MESSAGE );
-    }
+    }*/
 
     public void saveCategories () throws SQLException
     {
-        this.controllerGRASP.saveCategories();
+        this.categoryService.saveCategories();
     }
 
     public void createRelationship ( int parentID, String fieldType ) throws SQLException
     {
-        this.controllerGRASP.createRelationship(parentID, fieldType);
+        this.categoryService.createRelationship(parentID, fieldType);
     }
 
     public boolean isPresentInternalCategory ( Category root, String nameToCheck ) throws SQLException
     {
-        return this.controllerGRASP.isPresentInternalCategory(root, nameToCheck);
+        return this.categoryService.isPresentInternalCategory(root, nameToCheck);
     }
 
     public boolean isValidParentID ( Category root, int IDToCheck ) throws SQLException
     {
-        return this.controllerGRASP.isValidParentID(root, IDToCheck);
+        return this.categoryService.isValidParentID(root, IDToCheck);
     }
 
     public void startInsertNewHierarchyView( ConfiguratorController configuratorController) throws SQLException
     {
-
-        insertNewHierarchyView.getChckbxLeafCategory().setVisible(false);
-        insertNewHierarchyView.getLblDescription().setVisible(false);
-        insertNewHierarchyView.getTextFieldDescription().setVisible(false);
-        insertNewHierarchyView.getLblDescriptionError().setVisible(false);
-        insertNewHierarchyView.getLblParentID().setVisible(false);
-        insertNewHierarchyView.getScrollPaneParentID().setVisible(false);
-        insertNewHierarchyView.getPanelParentID().setVisible(false);
-        insertNewHierarchyView.getLblFieldType().setVisible(false);
-        insertNewHierarchyView.getTextFieldFieldType().setVisible(false);
-        insertNewHierarchyView.getLblFiledTypeError().setVisible(false);
-        insertNewHierarchyView.getInsertCategoryButton().setVisible(false);
-        insertNewHierarchyView.getInsertParentIdButton().setVisible(false);
-        insertNewHierarchyView.setUndecorated(true);
-        insertNewHierarchyView.setVisible(true);
-        
-
+        insertNewHierarchyView.initInsertRoot();
         if (insertNewHierarchyView.getInsertRootButton().getActionListeners().length == 0) 
         {
             this.insertNewHierarchyView.getInsertRootButton().addActionListener(new ActionListener() {
@@ -488,51 +484,14 @@ public class CategoryController extends Controller {
                     try
                     {
                         String categoryName = insertNewHierarchyView.getTextCategory();
-                        if( Controls.checkPattern( categoryName, 0, 50 ))
+                        String field = insertNewHierarchyView.getTextField();
+                        
+                        if(validateRootFileds(categoryName, field))
                         {
-                            insertNewHierarchyView.setLblCategoryError(Constants.ERROR_PATTERN_NAME);
-                        }
-                        else
-                        {
-                            if( getCategoryRepository().getRootCategoryByName( categoryName ) != null)
-                            {
-                                insertNewHierarchyView.setLblCategoryError(Constants.ROOT_CATEGORY_ALREADY_PRESENT);
-                            }
-                            else
-                            {
-                                insertNewHierarchyView.setLblCategoryError("");
-                                String field = insertNewHierarchyView.getTextField();
-                                if(Controls.checkPattern( field, 0, 25 ))
-                                {
-                                    insertNewHierarchyView.setLblFieldError(Constants.ERROR_PATTERN_FIELD);
-                                }
-                                else
-                                {
-                                    insertNewHierarchyView.setLblFieldError("");
-                                    configuratorController.createCategory( categoryName, field, null, true, null );
-                                    insertNewHierarchyView.setTextCategory("");
-                                    insertNewHierarchyView.setTextField("");
-                                    insertNewHierarchyView.getChckbxLeafCategory().setVisible(true);
-                                    insertNewHierarchyView.getLblDescription().setVisible(true);
-                                    insertNewHierarchyView.getTextFieldDescription().setVisible(true);
-                                    insertNewHierarchyView.getLblDescriptionError().setVisible(true);
-                                    insertNewHierarchyView.getLblParentID().setVisible(true);
-                                    insertNewHierarchyView.getScrollPaneParentID().setVisible(true);
-                                    insertNewHierarchyView.getPanelParentID().setVisible(true);
-                                    insertNewHierarchyView.getLblFieldType().setVisible(true);
-                                    insertNewHierarchyView.getTextFieldFieldType().setVisible(true);
-                                    insertNewHierarchyView.getLblFiledTypeError().setVisible(true);
-                                    insertNewHierarchyView.getInsertCategoryButton().setVisible(true);
-                                    insertNewHierarchyView.getInsertRootButton().setVisible(false);
-                                    insertNewHierarchyView.dispose();
-                                    insertNewHierarchyView.setUndecorated(true);
-                                    insertNewHierarchyView.setVisible(true);
-
-                                    continueInsert(configuratorController, getCategory());
-                                    
-                                }
-                            }
-                        }
+                            configuratorController.createCategory( categoryName, field, null, true, null );
+                            insertNewHierarchyView.afterInsertRoot();
+                            continueInsertCategoryAfterRoot(configuratorController, getCategory());
+                        }      
                     }
                     catch(SQLException ex)
                     {
@@ -545,25 +504,52 @@ public class CategoryController extends Controller {
         }
     }
 
-    public void continueInsert(ConfiguratorController configuratorController, Category root) throws SQLException
+    public void closeInsertNewHierarchy ()
     {
-        insertNewHierarchyView.getInsertParentIdButton().setVisible(false);
-        insertNewHierarchyView.getLblParentID().setVisible(false);
-        insertNewHierarchyView.getScrollPaneParentID().setVisible(false);
-        insertNewHierarchyView.getPanelParentID().setVisible(false);
-        insertNewHierarchyView.getLblFieldType().setVisible(false);
-        insertNewHierarchyView.getTextFieldFieldType().setVisible(false);
-        insertNewHierarchyView.getLblFiledTypeError().setVisible(false);
-        insertNewHierarchyView.getTextFieldCategory().setEditable(true);
-        insertNewHierarchyView.getTextFieldField().setEditable(true);
-        insertNewHierarchyView.getTextFieldDescription().setEditable(true);
-        insertNewHierarchyView.getChckbxLeafCategory().setEnabled(true);
-        insertNewHierarchyView.getChckbxLeafCategory().setSelected(false);
-        insertNewHierarchyView.getInsertCategoryButton().setVisible(true);
-        insertNewHierarchyView.repaint();
-        
-        
-        insertNewHierarchyView.setTextArea( controllerGRASP.buildHierarchy( root.getHierarchyID(), new StringBuffer(), new StringBuffer() ));
+        //radioButtonObjectMapForParentiID = new HashMap<>();
+        insertNewHierarchyView.setTextArea("");
+        //insertNewHierarchyView.resetRadioButtons();
+        insertNewHierarchyView.getGroup().clearSelection();
+        insertNewHierarchyView.dispose();
+    }
+
+    public boolean validateRootFileds( String categoryName, String field) throws SQLException
+    {
+        boolean wrongPatternCategoryName = ControlPatternService.checkPattern( categoryName, 0, 50 );
+        boolean existRootCategory =  getCategoryRepository().getRootCategoryByName( categoryName ) != null;
+        boolean wrongPatternField = ControlPatternService.checkPattern( field, 0, 25 );
+        if( wrongPatternCategoryName )
+        {
+            insertNewHierarchyView.setLblCategoryError(Constants.ERROR_PATTERN_NAME);
+        }
+        else
+        {
+            if( existRootCategory)
+            {
+                insertNewHierarchyView.setLblCategoryError(Constants.ROOT_CATEGORY_ALREADY_PRESENT);
+            }
+            else
+            {
+                insertNewHierarchyView.setLblCategoryError("");
+            }
+        }
+       
+        if(wrongPatternField)
+        {
+            insertNewHierarchyView.setLblFieldError(Constants.ERROR_PATTERN_FIELD);
+        }
+        else
+        {
+            insertNewHierarchyView.setLblFieldError("");
+        }
+
+        return (!wrongPatternCategoryName && ! existRootCategory && !wrongPatternCategoryName) ? true: false;  
+    }
+
+    public void continueInsertCategoryAfterRoot(ConfiguratorController configuratorController, Category root) throws SQLException
+    {
+        insertNewHierarchyView.initInsertCategoryAfterRoot();
+        insertNewHierarchyView.setTextArea( categoryService.buildHierarchy( root.getHierarchyID(), new StringBuffer(), new StringBuffer() ));
         this.insertNewHierarchyView.getInsertCategoryButton().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) 
@@ -572,63 +558,24 @@ public class CategoryController extends Controller {
                 {
 
                     String categoryName = insertNewHierarchyView.getTextCategory();
-                    if( Controls.checkPattern( categoryName, 0, 50 ))
+                    String field = insertNewHierarchyView.getTextField();
+                    String description = insertNewHierarchyView.getTextDescription();
+                    
+                    if( validateCategoryFields( categoryName, field, description, root ) )
                     {
-                        insertNewHierarchyView.setLblCategoryError(Constants.ERROR_PATTERN_NAME);
-                    }
-                    else
-                    {
-                        if(isPresentInternalCategory( root, categoryName ))
+                        if(!insertNewHierarchyView.getChckbxLeafCategory().isSelected())
                         {
-                            insertNewHierarchyView.setLblCategoryError(Constants.INTERNAL_CATEGORY_ALREADY_PRESENT);
+                            configuratorController.createCategory( categoryName, field, description, false, root.getHierarchyID() );
                         }
                         else
                         {
-                            if(!insertNewHierarchyView.getChckbxLeafCategory().isSelected())
-                            {
-                                insertNewHierarchyView.setLblCategoryError("");
-                                String field = insertNewHierarchyView.getTextField();
-                                String description = insertNewHierarchyView.getTextDescription();
-                                if(Controls.checkPattern( field, 0, 25 ))
-                                {
-                                    insertNewHierarchyView.setLblFieldError(Constants.ERROR_PATTERN_FIELD);
-                                }
-                                else
-                                {
-                                    insertNewHierarchyView.setLblFieldError("");
-                                    if(Controls.checkPattern( description, -1, 100 ))
-                                    {
-                                        insertNewHierarchyView.setLblDescriptionError(Constants.ERROR_PATTERN_DESCRIPTION);
-                                    }
-                                    else
-                                    {
-                                        insertNewHierarchyView.setLblDescriptionError("");
-                                        configuratorController.createCategory( categoryName, field, description, false, root.getHierarchyID() );
-                                        insertNewHierarchyView.getInsertCategoryButton().removeActionListener(insertNewHierarchyView.getInsertCategoryButton().getActionListeners()[0]);
-                                        continueInsertWithFiledType(configuratorController, root);
-                                    }
-                                }
-                            }
-                            else
-                            {
-                                insertNewHierarchyView.setLblCategoryError("");
-                                String description = insertNewHierarchyView.getTextDescription();
-
-                                if(Controls.checkPattern( description, -1, 100 ))
-                                    {
-                                        insertNewHierarchyView.setLblDescriptionError(Constants.ERROR_PATTERN_DESCRIPTION);
-                                    }
-                                    else
-                                    {
-                                        insertNewHierarchyView.setLblDescriptionError("");
-                                        configuratorController.createCategory( categoryName, null, description, false, root.getHierarchyID() );
-                                        insertNewHierarchyView.getInsertCategoryButton().removeActionListener(insertNewHierarchyView.getInsertCategoryButton().getActionListeners()[0]);
-                                        continueInsertWithFiledType(configuratorController, root);
-                                    }
-                            }
-                            
+                            configuratorController.createCategory( categoryName, null, description, false, root.getHierarchyID() );
                         }
+                        insertNewHierarchyView.setLblDescriptionError("");
+                        insertNewHierarchyView.getInsertCategoryButton().removeActionListener(insertNewHierarchyView.getInsertCategoryButton().getActionListeners()[0]);
+                        continueInsertWithFiledType(configuratorController, root);
                     }
+                                   
                 }
                 catch(SQLException ex)
                 {
@@ -640,25 +587,58 @@ public class CategoryController extends Controller {
         });
     }
 
+    public boolean validateCategoryFields ( String categoryName, String field, String description, Category root) throws SQLException
+    {
+        boolean wrongPatternCategoryName = ControlPatternService.checkPattern( categoryName, 0, 50 );
+        boolean isPresentInternalCategory = isPresentInternalCategory( root, categoryName );
+        boolean wrongPatternDescription = Controls.checkPattern( description, -1, 100 );
+
+        if( wrongPatternCategoryName )
+        {
+            insertNewHierarchyView.setLblCategoryError(Constants.ERROR_PATTERN_NAME);
+        }
+        else
+        {
+            if( isPresentInternalCategory)
+            {
+                insertNewHierarchyView.setLblCategoryError(Constants.INTERNAL_CATEGORY_ALREADY_PRESENT);
+            }
+            else
+            {
+                insertNewHierarchyView.setLblCategoryError("");
+            }
+        }
+
+        if(wrongPatternDescription)
+        {
+            insertNewHierarchyView.setLblDescriptionError(Constants.ERROR_PATTERN_DESCRIPTION);
+        }
+        else
+        {
+            insertNewHierarchyView.setLblDescriptionError("");
+        }
+       
+        if(!insertNewHierarchyView.getChckbxLeafCategory().isSelected())
+        {
+            boolean wrongPatternField = ControlPatternService.checkPattern( field, 0, 25 );
+            if(wrongPatternField)
+            {
+                insertNewHierarchyView.setLblFieldError(Constants.ERROR_PATTERN_FIELD);
+            }
+            else
+            {
+                insertNewHierarchyView.setLblFieldError("");
+            }
+            return ( !wrongPatternCategoryName && !isPresentInternalCategory && !wrongPatternDescription && !wrongPatternField );
+        }
+        return ( !wrongPatternCategoryName && !isPresentInternalCategory && !wrongPatternDescription );
+
+    }
+
     public void continueInsertWithFiledType(ConfiguratorController configuratorController, Category root) throws SQLException
     {
-        insertNewHierarchyView.getLblParentID().setVisible(true);
-        insertNewHierarchyView.getScrollPaneParentID().setVisible(true);
-        insertNewHierarchyView.getPanelParentID().setVisible(true);
-        insertNewHierarchyView.getLblFieldType().setVisible(true);
-        insertNewHierarchyView.getTextFieldFieldType().setVisible(true);
-        insertNewHierarchyView.getLblFiledTypeError().setVisible(true);
-
-        for ( Category toPrint : getCategoryRepository().getParentCategories( getCategory().getHierarchyID() ) ) addRadioButton( toPrint );
-        
-
-        insertNewHierarchyView.getTextFieldCategory().setEditable(false);
-        insertNewHierarchyView.getTextFieldField().setEditable(false);
-        insertNewHierarchyView.getTextFieldDescription().setEditable(false);
-        insertNewHierarchyView.getChckbxLeafCategory().setEnabled(false);
-        insertNewHierarchyView.getInsertCategoryButton().setVisible(false);
-        insertNewHierarchyView.getInsertParentIdButton().setVisible(true);
-        insertNewHierarchyView.repaint();
+        insertNewHierarchyView.initInsertFiledTypeAndParentID();
+        for ( Category toPrint : getCategoryRepository().getParentCategories( root.getID()) ) addRadioButton( toPrint );
 
         if (insertNewHierarchyView.getInsertParentIdButton().getActionListeners().length == 0) 
         {
@@ -669,28 +649,19 @@ public class CategoryController extends Controller {
                     try
                     {
                         String fieldType = insertNewHierarchyView.getTextFieldType();
-                        if(radioButtonObjectMap.get(getSelectedRadioButton()) != null)
+                        if(radioButtonObjectMapForParentiID.get(insertNewHierarchyView.getSelectedRadioButton()) != null)
                         {
-                            int parentID = radioButtonObjectMap.get(getSelectedRadioButton()).getID();
+                            int parentID = radioButtonObjectMapForParentiID.get(insertNewHierarchyView.getSelectedRadioButton()).getID();
 
-                            if( (Controls.checkPattern( fieldType, 0, 25 ) || fieldType.equals( "<" ) ) || ( existValueOfField( fieldType, getCategoryRepository().getCategoryByID( parentID ) ) ) )
+                            if( validateFiledType(fieldType, parentID) )
                             {
-                                insertNewHierarchyView.setLblFieldTypeError(Constants.ERROR_FIELD_VALUE);
-                            }
-                            else
-                            {
-                                insertNewHierarchyView.setLblFieldTypeError("");
                                 createRelationship( parentID, fieldType );
-                                insertNewHierarchyView.setTextCategory("");
-                                insertNewHierarchyView.setTextField("");
-                                insertNewHierarchyView.setTextDescription("");
-                                insertNewHierarchyView.setTextFieldType("");
-                                insertNewHierarchyView.getPanelParentID().removeAll();
-                                insertNewHierarchyView.repaint();
-                                insertNewHierarchyView.getInsertParentIdButton().removeActionListener(insertNewHierarchyView.getInsertParentIdButton().getActionListeners()[0]);
-                                continueInsert(configuratorController, root);
+                                insertNewHierarchyView.afterInsertParentIDAndFiledType();
+                                insertNewHierarchyView.getSelectedRadioButton().setSelected(false);
+                                insertNewHierarchyView.getGroup().clearSelection();
+                                continueInsertCategoryAfterRoot(configuratorController, root);
                             }
-                        }
+                        } 
                     }
                     catch(SQLException ex)
                     {
@@ -702,18 +673,93 @@ public class CategoryController extends Controller {
             
     }
 
+    public boolean validateFiledType ( String fieldType, int parentID ) throws SQLException
+    {
+        boolean wrongPatternFiledType = (ControlPatternService.checkPattern( fieldType, 0, 25 ) || fieldType.equals( "<" ) ) || ( existValueOfField( fieldType, getCategoryRepository().getCategoryByID( parentID ) ) );
+        if( wrongPatternFiledType )
+        {
+            insertNewHierarchyView.setLblFieldTypeError(Constants.ERROR_FIELD_VALUE);
+        }
+        else
+        {
+            insertNewHierarchyView.setLblFieldTypeError("");
+        }
+        return !wrongPatternFiledType;
+    }
+
     private void addRadioButton( Category category ) throws SQLException 
     {
-        JRadioButton radioButton = new JRadioButton( "  " + category.getID() + ". " + category.getName() );
+        String info = "  " + category.getID() + ". " + category.getName();
+        JRadioButton radioButton = insertNewHierarchyView.addRadioButton( info );
+        radioButtonObjectMapForParentiID.put( radioButton, category );
+    }
 
-        insertNewHierarchyView.addRadioButton( radioButton );
+    private void addRadioButtonCategoryForInformations( Category category ) throws SQLException 
+    {
+        
+        JRadioButton radioButton = hierarchyView.addRadioButton( category.getName() );
+        radioButtonObjectMapForCategory.put( radioButton, category );
 
-        radioButtonObjectMap.put( radioButton, category );
+        radioButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed( ActionEvent e ) {
+                if (radioButton.isSelected()) 
+                {
+                    try 
+                    {
+                        hierarchyView.setLblInformations(category.getName());
+                        hierarchyView.setTextAreaInfo(categoryService.info( radioButtonObjectMapForCategory.get( getSelectedRadioButton() ) ) );
+                    } catch (SQLException e1) {
+                        e1.printStackTrace();
+                    }
+                } 
+            }
+        });
+    }
+
+    public void startHierarchyView() throws SQLException
+    {
+        hierarchyView.init();
+
+        for ( Category toPrint : categoryService.getAllRoot() ) 
+        {
+            addMenuItem( toPrint, " " + toPrint.getID() + ". " + ControlPatternService.padRight( Integer.toString( toPrint.getID() ) , 3 ) + toPrint.getName() + ControlPatternService.padRight( toPrint.getName() , 50 )  );
+        } 
+    }
+
+    public void closeHierarchyView()
+    {
+        hierarchyView.dispose();
+    }
+
+    public void addMenuItem( Category root, String info)
+    {
+        JMenuItem categoryItem = hierarchyView.addMenuItem(info);
+        categoryItem.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                try
+                {
+                    hierarchyView.getPanelCategory().removeAll();
+                    hierarchyView.setTextArea( categoryService.buildHierarchy( root.getHierarchyID(), new StringBuffer(), new StringBuffer() ) );
+                    hierarchyView.setTextAreaInfo("");
+                    hierarchyView.setLblInformations("INFORMATIONS");
+                    hierarchyView.setLblHierarchy(root.getName());
+                    for ( Category toPrint : categoryService.getAllCategoriesFromRoot(root) )
+                    {
+                        addRadioButtonCategoryForInformations( toPrint);
+                    }
+                }
+                catch (SQLException e1) {
+                    e1.printStackTrace();
+                }
+            }
+        });
+        
     }
 
     private JRadioButton getSelectedRadioButton() 
 	{
-	    Enumeration<AbstractButton> buttons = insertNewHierarchyView.getGroup().getElements();
+	    Enumeration<AbstractButton> buttons = hierarchyView.getGroup().getElements();
 	    while (buttons.hasMoreElements()) 
         {
 	        JRadioButton button = (JRadioButton) buttons.nextElement();

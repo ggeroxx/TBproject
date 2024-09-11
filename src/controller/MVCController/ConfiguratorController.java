@@ -9,7 +9,6 @@ import model.Configurator;
 import service.ConfiguratorService;
 import service.SessionService;
 import view.ConfiguratorMenuView;
-import view.ConfiguratorView;
 
 public class ConfiguratorController {
 
@@ -95,6 +94,19 @@ public class ConfiguratorController {
             {
                 try {
                     categoryController.startInsertNewHierarchyView(ConfiguratorController.this);
+                } catch (SQLException e1) {
+                    e1.printStackTrace();
+                }
+            }
+
+		});
+
+        this.configuratorMenuView.getViewHierarchyButton().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) 
+            {
+                try {
+                    categoryController.startHierarchyView();
                 } catch (SQLException e1) {
                     e1.printStackTrace();
                 }

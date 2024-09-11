@@ -13,14 +13,18 @@ import javax.swing.JPasswordField;
 import javax.swing.SwingConstants;
 import java.awt.Font;
 import java.awt.MenuBar;
+import java.awt.event.ActionEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
+import javax.swing.AbstractButton;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import java.awt.event.MouseMotionAdapter;
+import java.util.Enumeration;
+
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 
@@ -220,5 +224,23 @@ public class InsertConversionFactorsView extends JFrame{
 	{
         return lblClose;
     }
+	
+	public void resetFields()
+	{
+		getPanel().removeAll();
+		getPanel().revalidate();
+		getPanel().repaint();
+        setlblRange("");
+        setTextValue("");
+        setlblError("");
+	}
+	
+    public JRadioButton addRadioButton( String info ) 
+    {
+        JRadioButton radioButton = new JRadioButton( info );
+        addRadioButton( radioButton );
+        return radioButton;
+    }
+   
 	
 }

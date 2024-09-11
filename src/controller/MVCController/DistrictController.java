@@ -2,7 +2,6 @@ package controller.MVCController;
 
 import java.sql.SQLException;
 import java.util.List;
-import javax.swing.JButton;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -10,7 +9,6 @@ import java.awt.event.MouseEvent;
 import model.District;
 import model.Municipality;
 import model.util.Constants;
-import repository.DistrictRepository;
 import service.ControlPatternService;
 import service.DistrictService;
 import view.DistrictInfoView;
@@ -42,7 +40,7 @@ public class DistrictController {
                     String districtName = insertDistrictView.getTextNameDistrict();
                     if( checkCorrectName( districtName ) )
                     {   
-                        if( getDistrictRepository().getDistrictByName( districtName ) != null ) 
+                        if( districtService.getDistrictByName( districtName ) != null ) 
                         {
                             insertDistrictView.setLblErrorNameDistrict( Constants.DISTRICT_NAME_ALREADY_PRESENT );
                         }
@@ -144,11 +142,6 @@ public class DistrictController {
     public void closeDistrictInfoView()
     {
         districtInfoView.dispose();
-    }
-
-    public DistrictRepository getDistrictRepository ()
-    {
-        return this.districtService.getDistrictRepository();
     }
 
     public void setDistrict ( District district )

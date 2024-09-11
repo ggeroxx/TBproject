@@ -66,6 +66,7 @@ import view.ConversionFactorsOfCategoryView;
 import view.ConversionFactorsView;
 import view.DistrictInfoView;
 import view.DistrictView;
+import view.HierarchyView;
 import view.InsertConversionFactorsView;
 import view.InsertDistrictView;
 import view.InsertNewHierarchyView;
@@ -136,13 +137,14 @@ public class TestScheme {
     AllConversionFactorsView allConversionFactorsView = new AllConversionFactorsView();
     ConversionFactorsOfCategoryView conversionFactorsOfCategoryView = new ConversionFactorsOfCategoryView();
     InsertNewHierarchyView insertNewHierarchyView = new InsertNewHierarchyView();
+    HierarchyView hierarchyView = new HierarchyView();
 
     SubjectController subjectController = new SubjectController( subjectView, subjectGRASPController );
     MunicipalityController municipalityController = new MunicipalityController(municipalityView, municipalityGRASPController);
     DistrictController districtController = new DistrictController(insertDistrictView, districtInfoView, municipalityController, districtService);
-    CategoryController categoryController = new CategoryController( insertNewHierarchyView, categoryView, categoryGRASPController );
+    CategoryController categoryController = new CategoryController(insertNewHierarchyView, hierarchyView, categoryService);
     ConversionFactorController conversionFactorController = new ConversionFactorController( conversionFactorView, categoryController );
-    ConversionFactorsController conversionFactorsController = new ConversionFactorsController( allConversionFactorsView, insertConversionFactorsView, conversionFactorsOfCategoryView, conversionFactorsView, conversionFactorController, categoryController, conversionFactorsGRASPController);
+    ConversionFactorsController conversionFactorsController = new ConversionFactorsController(allConversionFactorsView, insertConversionFactorsView, conversionFactorsOfCategoryView, conversionFactorController, categoryController, conversionFactorsService);
     ProposalController proposalController = new ProposalController(proposalView, categoryController, conversionFactorsController, proposalGRASPController);
     ConfiguratorController configuratorController = new ConfiguratorController(configuratorMenuView, sessionService, districtController, categoryController, conversionFactorsController, proposalController, configuratorService);    
     UserController userController = new UserController(userView, subjectGRASPController, sessionGRASPController, categoryController, proposalController, userGRASPController, userService);

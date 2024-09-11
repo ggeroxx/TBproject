@@ -1,10 +1,13 @@
 package service;
 
+import java.util.List;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import model.Category;
 import repository.CategoryRepository;
 import repository.RelationshipsBetweenCategoriesRepository;
+import service.strategy.BuildHierarchyStrategy;
+import service.strategy.InfoStrategy;
 import service.strategy.Strategy;
 
 public class CategoryService{
@@ -91,5 +94,38 @@ public class CategoryService{
     {
         return categoryRepository.isValidParentID( root.getHierarchyID(), IDToCheck );
     }
+
+    public String buildHierarchy ( int IDToPrint, StringBuffer toReturn, StringBuffer spaces ) throws SQLException
+    {
+        ArrayList<Object> params = new ArrayList<>();
+        params.add(IDToPrint);
+        params.add(toReturn);
+        params.add(spaces);
+
+        setStrategy(new BuildHierarchyStrategy());
+        return execute(params);
+    }
+
+    public String info ( Category category ) throws SQLException
+    {
+        ArrayList<Object> params = new ArrayList<>();
+        params.add( category );
+
+        setStrategy(new InfoStrategy());
+        return execute(params);
+    }
+
+    
+
+    public List<Category> getAllRoot() throws SQLException
+    {
+        return categoryRepository.getAllRoot();
+    }
+
+    public List<Category> getAllCategoriesFromRoot( Category root) throws SQLException
+    {
+        return categoryRepository.getAllCategoriesFromRoot(root);
+    }
+
 
 }

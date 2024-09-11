@@ -37,7 +37,7 @@ public class ProposalController extends Controller {
         for( Proposal proposal : proposals )
         {
             String COLOR = proposal.getState().equals( "open" ) ? Constants.GREEN : proposal.getState().equals( "close" ) ? Constants.RED : Constants.YELLOW;
-            this.printProposal( proposal );
+            //this.printProposal( proposal );
             proposalView.printState( proposal, COLOR );
         }
     }
@@ -101,7 +101,7 @@ public class ProposalController extends Controller {
         super.clearConsole( Constants.TIME_SWITCH_MENU );
     }
 
-    public void listProposalsOfLeaf () throws SQLException
+    /*public void listProposalsOfLeaf () throws SQLException
     {
         super.clearConsole( Constants.TIME_SWITCH_MENU );
         proposalView.print( Constants.LEAF_CATEGORY_LIST );
@@ -150,7 +150,7 @@ public class ProposalController extends Controller {
         super.clearConsole( Constants.TIME_SWITCH_MENU );
         proposalView.print( Constants.PROPOSE_PROPOSAL_SCREEN );
 
-        int offeredHours = (int) Math.round( conversionFactorsController.getConversionFactorsRepository().getConversionFactor( requestedCategory, offeredCategory ).getValue() * requestedHours );
+        int offeredHours = (int) Math.round( conversionFactorsController.getConversionFactorValue(requestedCategory, offeredCategory) * requestedHours );
         Proposal newProposal = new Proposal( null, requestedCategory, offeredCategory, requestedHours, offeredHours, userController.getUser(), "open" );
         this.printProposalWithCyanHours( newProposal );
 
@@ -181,6 +181,6 @@ public class ProposalController extends Controller {
     {
         proposalView.println( "requested:" + super.padRight( "requested:" ,15 ) + "[ " + proposal.getRequestedCategory().getName() + super.padRight( proposal.getRequestedCategory().getName(), 50 ) + ", " + proposal.getRequestedHours() + " hours ]" );
         proposalView.print( "offered:" + super.padRight( "offered:" ,15 ) + "[ " + proposal.getOfferedCategory().getName() + super.padRight( proposal.getOfferedCategory().getName(), 50 ) + ", " + Constants.CYAN + proposal.getOfferedHours() + " hours " + Constants.RESET + "] " );
-    }
+    }*/
 
 }

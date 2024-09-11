@@ -168,4 +168,10 @@ public class JDBCCategoryRepository implements CategoryRepository {
         Conn.queryUpdate( Queries.SET_CATEGORY_TMP_ID_VALUE_AUTO_INCREMENT_QUERY, new ArrayList<>( Arrays.asList( newValue ) ) );
     }
 
+    @Override
+    public List<Category> getAllCategoriesFromRoot ( Category root) throws SQLException 
+    {
+        return getAll( String.format( Queries.GET_ALL_CATEGORIES_FROM_ROOT, root.getID(), root.getID() ) );
+    }
+
 }

@@ -48,5 +48,6 @@ public interface CategoryRepository {
 
     void setTmpIDValueAutoIncrement ( int newValue ) throws SQLException;
 
+    List<Category> getAllCategoriesFromRoot ( Category root) throws SQLException;
 
 }

@@ -31,6 +31,7 @@ public class ConfiguratorMenuView extends JFrame {
 	private JButton btnInsertNewHierarchy;
 	private JButton btnSaveAll;
 	private JButton btnLogout;
+	private JButton btnViewHierarchy;
 
 	/**
 	 * Launch the application.
@@ -153,7 +154,7 @@ public class ConfiguratorMenuView extends JFrame {
 		btnViewDistrict.setBounds(10, 277, 372, 35);
 		contentPane.add(btnViewDistrict);
 		
-		JButton btnViewHierarchy = new JButton("VIEW HIERARCHY");
+		btnViewHierarchy = new JButton("VIEW HIERARCHY");
 		btnViewHierarchy.setForeground(Color.BLUE);
 		btnViewHierarchy.setFont(new Font("Tahoma", Font.BOLD, 12));
 		btnViewHierarchy.setBackground(SystemColor.menu);
@@ -227,6 +228,11 @@ public class ConfiguratorMenuView extends JFrame {
 	public JButton getLogoutButton()
 	{
 		return btnLogout;
+	}
+	
+	public JButton getViewHierarchyButton()
+	{
+		return btnViewHierarchy;
 	}
 	
 }

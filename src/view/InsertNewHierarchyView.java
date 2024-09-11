@@ -15,6 +15,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTree;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.AbstractButton;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
@@ -23,6 +24,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
+import java.util.Enumeration;
 import java.awt.event.ActionEvent;
 import java.awt.BorderLayout;
 
@@ -186,7 +188,7 @@ public class InsertNewHierarchyView extends JFrame {
 		lblDescriptionError = new JLabel("");
 		lblDescriptionError.setForeground(Color.RED);
 		lblDescriptionError.setHorizontalAlignment(SwingConstants.CENTER);
-		lblDescriptionError.setBounds(10, 311, 593, 19);
+		lblDescriptionError.setBounds(10, 311, 593, 13);
 		contentPane.add(lblDescriptionError);
 		
 		lblDescription = new JLabel("DESCRIPTION");
@@ -233,7 +235,7 @@ public class InsertNewHierarchyView extends JFrame {
 		});
 		btnInsertCategory.setForeground(Color.BLACK);
 		btnInsertCategory.setBackground(Color.BLUE);
-		btnInsertCategory.setBounds(140, 321, 342, 31);
+		btnInsertCategory.setBounds(140, 335, 342, 31);
 		contentPane.add(btnInsertCategory);
 		
 		btnInsertParentId = new JButton("INSERT PARENT ID & FIELD TYPE");
@@ -245,13 +247,15 @@ public class InsertNewHierarchyView extends JFrame {
 		group = new ButtonGroup();
 	}
 	
-	public void addRadioButton(JRadioButton radioButton) 
+	public JRadioButton addRadioButton( String info ) 
 	 {
+		JRadioButton radioButton = new JRadioButton( info );
 		radioButton.setFont(new Font("Monospaced", Font.PLAIN, 12));
 		group.add(radioButton);
 		panelParentID.add(radioButton);
 		contentPane.revalidate(); 
-		contentPane.repaint();     
+		contentPane.repaint(); 
+		return radioButton;
 	 }
 	
 	public void setTextArea( String Message )
@@ -404,5 +408,139 @@ public class InsertNewHierarchyView extends JFrame {
         return lblClose;
     }
 	
+	public void chckbxLeafCategoryDeselected()
+	{
+		getTextFieldField().setEditable(true);
+        repaint();
+	}
 	
+	public void chckbxLeafCategorySelected()
+	{
+		getTextFieldField().setEditable(false);
+        setTextField("");
+        setLblFieldError("");
+        repaint();
+	}
+	
+	public void initInsertRoot()
+	{
+		getInsertRootButton().setVisible(true);
+		getChckbxLeafCategory().setVisible(false);
+        getLblDescription().setVisible(false);
+        getTextFieldDescription().setVisible(false);
+        getLblDescriptionError().setVisible(false);
+        getLblParentID().setVisible(false);
+        getScrollPaneParentID().setVisible(false);
+        getPanelParentID().setVisible(false);
+        getLblFieldType().setVisible(false);
+        getTextFieldFieldType().setVisible(false);
+        getLblFiledTypeError().setVisible(false);
+        getInsertCategoryButton().setVisible(false);
+        getInsertParentIdButton().setVisible(false);
+        setUndecorated(true);
+        setVisible(true);
+	}
+	
+	public void afterInsertRoot()
+	{
+        setTextCategory("");
+        setTextField("");
+        getChckbxLeafCategory().setVisible(true);
+        getLblDescription().setVisible(true);
+        getTextFieldDescription().setVisible(true);
+        getLblDescriptionError().setVisible(true);
+        getLblParentID().setVisible(true);
+        getScrollPaneParentID().setVisible(true);
+        getPanelParentID().setVisible(true);
+        getLblFieldType().setVisible(true);
+        getTextFieldFieldType().setVisible(true);
+        getLblFiledTypeError().setVisible(true);
+        getInsertCategoryButton().setVisible(true);
+        getInsertRootButton().setVisible(false);
+        dispose();
+        setUndecorated(true);
+        setVisible(true);
+	}
+	
+	public void initInsertCategoryAfterRoot()
+	{
+		getInsertParentIdButton().setVisible(false);
+        getLblParentID().setVisible(false);
+        getScrollPaneParentID().setVisible(false);
+        getPanelParentID().setVisible(false);
+        getLblFieldType().setVisible(false);
+        getTextFieldFieldType().setVisible(false);
+        getLblFiledTypeError().setVisible(false);
+        getTextFieldCategory().setEditable(true);
+        getTextFieldField().setEditable(true);
+        getTextFieldDescription().setEditable(true);
+        getChckbxLeafCategory().setEnabled(true);
+        getChckbxLeafCategory().setSelected(false);
+        getInsertCategoryButton().setVisible(true);
+        repaint();
+	}
+	
+	public void initInsertFiledTypeAndParentID ()
+	{
+		getLblParentID().setVisible(true);
+        getScrollPaneParentID().setVisible(true);
+        getPanelParentID().setVisible(true);
+        getLblFieldType().setVisible(true);
+        getTextFieldFieldType().setVisible(true);
+        getLblFiledTypeError().setVisible(true);
+        getTextFieldCategory().setEditable(false);
+        getTextFieldField().setEditable(false);
+        getTextFieldDescription().setEditable(false);
+        getChckbxLeafCategory().setEnabled(false);
+        getInsertCategoryButton().setVisible(false);
+        getInsertParentIdButton().setVisible(true);
+        repaint();
+	}
+	
+	public void afterInsertParentIDAndFiledType ()
+	{
+		setLblFieldTypeError("");
+        setTextCategory("");
+        setTextField("");
+        setTextDescription("");
+        setTextFieldType("");
+        getPanelParentID().removeAll();
+        getInsertParentIdButton().removeActionListener(getInsertParentIdButton().getActionListeners()[0]);
+        repaint();
+	}
+	
+	public void setFalseAllRadioButton ()
+	{
+		ButtonGroup group = getGroup();
+		Enumeration<AbstractButton> buttons = group.getElements();
+		while (buttons.hasMoreElements()) 
+		{
+		    AbstractButton button = buttons.nextElement();
+		    button.setSelected(false);
+		}
+		getGroup().clearSelection();
+	}
+	
+	public JRadioButton getSelectedRadioButton () 
+	{
+	    Enumeration<AbstractButton> buttons = getGroup().getElements();
+	    while (buttons.hasMoreElements()) 
+        {
+	        JRadioButton button = (JRadioButton) buttons.nextElement();
+	        if (button.isSelected()) 
+            {
+	            return button;
+	        }
+	    }
+	    return null;
+	}
+	
+	public void resetRadioButtons()
+	{
+		getPanelParentID().removeAll();
+		getChckbxLeafCategory().removeAll();
+		getPanelParentID().revalidate();
+		getPanelParentID().repaint();
+	}
+		
 }

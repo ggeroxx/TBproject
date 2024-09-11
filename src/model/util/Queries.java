@@ -267,6 +267,13 @@ public class Queries {
                                                                   "FROM tmp_categories " +
                                                                   "WHERE field IS NOT NULL " +
                                                                   "AND id NOT IN (" + Queries.GET_PARENTID_QUERY + ")";
+    public static final String GET_ALL_CATEGORIES_FROM_ROOT = "SELECT * " +
+                                                              "FROM categories " +
+                                                              "WHERE hierarchyID = %d " +
+                                                              "UNION " +
+                                                              "SELECT * " +
+                                                              "FROM tmp_categories " +
+                                                              "WHERE hierarchyID = %d ";
 
     // ---------------------------------------- relationshipsBetweenCategoriesRepositoryImpl ----------------------------------------
 

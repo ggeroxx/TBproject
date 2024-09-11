@@ -3,6 +3,8 @@ package service;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
+
+import model.Category;
 import model.ConversionFactor;
 import model.ConversionFactors;
 import repository.ConversionFactorsRepository;
@@ -69,5 +71,10 @@ public class ConversionFactorsService {
     {
         populate();
         return conversionFactorsManager.getConversionFactors().getList().entrySet().stream().allMatch(entry -> entry.getValue().getValue() != null);
+    }
+
+    public Double getConversionFactorValue ( Category requested, Category offered) throws SQLException 
+    {
+        return conversionFactorsPersistenceService.getConversionFactorValue( requested, offered );
     }
 }

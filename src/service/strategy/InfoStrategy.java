@@ -13,7 +13,7 @@ public class InfoStrategy implements Strategy {
         Category category = (Category) params.get(0);
         StringBuffer sb = new StringBuffer();
 
-        sb.append(Constants.NAME + ":" + service.padRight(Constants.NAME + ":", 20) + Constants.BOLD + category.getName() + Constants.RESET + "\n");
+        sb.append(Constants.NAME + ":" + service.padRight(Constants.NAME + ":", 20)  + category.getName() + "\n");
         if (!category.isRoot()) sb.append(Constants.DESCRIPTION + ":" + service.padRight(Constants.DESCRIPTION + ":", 20) + category.getDescription() + "\n");
 
         if (category.getField() == null) {
@@ -21,7 +21,7 @@ public class InfoStrategy implements Strategy {
         } else {
             sb.append(Constants.FIELD + ":" + service.padRight(Constants.FIELD + ":", 20) + category.getField() + " = { ");
             for (String fieldValue : service.getRelationshipsBetweenCategoriesRepository().getFieldValuesFromParentID(category.getID())) {
-                sb.append(Constants.YELLOW + fieldValue + Constants.RESET + ", ");
+                sb.append( fieldValue + ", ");
             }
             sb.deleteCharAt(sb.length() - 2);
             sb.append("}\n");

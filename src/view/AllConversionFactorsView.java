@@ -141,10 +141,11 @@ public class AllConversionFactorsView extends JFrame{
 
 	}
 	
-	public void addlblConversionFactor(JLabel lblConversionFactor) 
+	public void addlblConversionFactor( String info ) 
 	 {
-		lblConversionFactor.setFont(new Font("Monospaced", Font.PLAIN, 12));
-		panel.add(lblConversionFactor);
+		JLabel label = new JLabel( info);
+		label.setFont(new Font("Monospaced", Font.PLAIN, 12));
+		panel.add(label);
 		contentPane.revalidate(); 
 		contentPane.repaint();     
 	 }
@@ -160,11 +161,17 @@ public class AllConversionFactorsView extends JFrame{
 		return panel;
 	}
 	
-
-	
 	public JLabel getCloseLabel() 
 	{
         return lblClose;
     }
+	
+	public void resetFields()
+	{
+		getPanel().removeAll();
+		getPanel().revalidate();
+		getPanel().repaint();
+	}
+	
 	
 }
