@@ -5,40 +5,135 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.sql.SQLException;
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Map.Entry;
-
 import javax.swing.JMenuItem;
-
-
-import controller.GRASPController.ProposalGRASPController;
+import javax.swing.JRadioButton;
 import model.Category;
-import model.ConversionFactor;
 import model.Proposal;
 import model.User;
 import model.util.Constants;
-import repository.ProposalRepository;
 import service.ControlPatternService;
+import service.ProposalService;
 import view.ProposalOfCategoryView;
-import view.ProposalView;
+import view.ProposalOfUserView;
+import view.ProposeProposalView;
+import view.RetireProposalView;
 
-public class ProposalController extends Controller {
+public class ProposalController {
     
     private ProposalOfCategoryView proposalOfCategoryView;
-    private ProposalView proposalView;
+    private ProposalOfUserView proposalOfUserView;
+    private RetireProposalView retireProposalView;
+    private ProposeProposalView proposeProposalView;
     private CategoryController categoryController;
     private ConversionFactorsController conversionFactorsController;
-    private ProposalGRASPController controllerGRASP;
+    private ProposalService proposalService;
+    private UserController userController;
+    private HashMap<JRadioButton, Proposal> radioButtonObjectMapForRetireProposal = new HashMap<>();
+    private HashMap<JRadioButton, Category> radioButtonObjectMapRequestedCategory = new HashMap<>();
+    private HashMap<JRadioButton, Category> radioButtonObjectMapOfferedCategory = new HashMap<>();
+    private Category requestCategory;
+    private Category offerCategory;
+    private int requestedHours;
+    private int offeredHours;
 
-    public ProposalController ( ProposalOfCategoryView proposalOfCategoryView, ProposalView proposalView, CategoryController categoryController, ConversionFactorsController conversionFactorsController, ProposalGRASPController controllerGRASP)
+    public ProposalController ( ProposalOfCategoryView proposalOfCategoryView, ProposalOfUserView proposalOfUserView, RetireProposalView retireProposalView, ProposeProposalView proposeProposalView, CategoryController categoryController, ConversionFactorsController conversionFactorsController, ProposalService proposalService)
     {
-        super( proposalView );
         this.proposalOfCategoryView = proposalOfCategoryView;
-        this.proposalView = proposalView;
+        this.proposalOfUserView = proposalOfUserView;
+        this.retireProposalView = retireProposalView;
+        this.proposeProposalView = proposeProposalView;
         this.categoryController = categoryController;
         this.conversionFactorsController = conversionFactorsController;
-        this.controllerGRASP = controllerGRASP;
+        this.proposalService = proposalService;
+
+        this.retireProposalView.getRetireProposalButton().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) 
+            {
+                try {
+                    if (proposalService.getAllOpenProposalByUser(userController.getUser()).size() > 0 && retireProposalView.getSelectedRadioButton() != null) 
+                    {
+                        userController.retireProposal(radioButtonObjectMapForRetireProposal.get(retireProposalView.getSelectedRadioButton()) );
+                        closeRetireProposalView();
+                    }
+                } catch (SQLException e1) {
+                    e1.printStackTrace();
+                }
+            }
+
+        });
+
+        this.proposeProposalView.getRequestCategoryButton().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) 
+            {
+                try {
+                    if ( radioButtonObjectMapRequestedCategory.get( proposeProposalView.getSelectedRadioButton( true ) ) != null )
+                    {
+                        requestCategory = radioButtonObjectMapRequestedCategory.get( proposeProposalView.getSelectedRadioButton( true ) );
+                        offeredCategory();
+                    }
+                } catch (SQLException e1) {
+                    e1.printStackTrace();
+                }
+            }
+
+        });
+
+        this.proposeProposalView.getOfferCategoryButton().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) 
+            {
+                if ( radioButtonObjectMapOfferedCategory.get( proposeProposalView.getSelectedRadioButton( false ) ) != null )
+                {
+                    try 
+                    {
+                        offerCategory = radioButtonObjectMapOfferedCategory.get( proposeProposalView.getSelectedRadioButton( false ) );
+                        requestedHours = Integer.parseInt ( proposeProposalView.getTextValue() ) ;
+                        confirmOfferCategory();
+                    } 
+                    catch (SQLException e1) 
+                    {
+                        e1.printStackTrace();
+                    }
+                    catch (NumberFormatException e1) 
+                    {
+                        proposeProposalView.setLblErrorValue("Invalid Value");
+                    }
+                }
+            }
+
+        });
+
+        this.proposeProposalView.getConfirmButton().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) 
+            {
+                try 
+                {
+                    Proposal newProposal = new Proposal( null, requestCategory, offerCategory, requestedHours, offeredHours, userController.getUser(), "open" );
+                    userController.insertProposal( newProposal );
+                    startProposalOfUserView(userController.getUser());
+                    closeProposeProposalView();
+                } 
+                catch (SQLException e1) {
+                    e1.printStackTrace();
+                }
+
+            }
+
+        });
+
+        this.proposeProposalView.getCancelButton().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) 
+            {
+                closeProposeProposalView();
+            }
+
+        });
 
         this.proposalOfCategoryView.getCloseLabel().addMouseListener(new MouseAdapter() {
 			@Override
@@ -47,175 +142,48 @@ public class ProposalController extends Controller {
                 closeProposalOfCategoryView();
 			}
 		});
-    }
 
-    public ProposalRepository getProposalRepository () 
-    {
-        return this.controllerGRASP.getProposalRepository();
-    }
+        this.proposalOfUserView.getCloseLabel().addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) 
+            {
+                closeProposalOfUserView();
+			}
+		});
 
-    public void listProposals ( List<Proposal> proposals )
-    {
-        for( Proposal proposal : proposals )
-        {
-            String COLOR = proposal.getState().equals( "open" ) ? Constants.GREEN : proposal.getState().equals( "close" ) ? Constants.RED : Constants.YELLOW;
-            //this.printProposal( proposal );
-            proposalView.printState( proposal, COLOR );
-        }
-    }
+        this.retireProposalView.getCloseLabel().addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) 
+            {
+                closeRetireProposalView();
+			}
+		});
 
-    public void listProposalsWithID ( List<Proposal> proposals )
-    {
-        for( Proposal proposal : proposals )
-        {
-            String COLOR = proposal.getState().equals( "open" ) ? Constants.GREEN : proposal.getState().equals( "close" ) ? Constants.RED : Constants.YELLOW;
-            proposalView.println( proposal.getID() + "." + super.padRight( proposal.getID() + ".", 5) + "requested:" + super.padRight( "requested:" ,15 ) + "[ " + proposal.getRequestedCategory().getName() + super.padRight( proposal.getRequestedCategory().getName(), 50 ) + ", " + proposal.getRequestedHours() + " hours ]" );
-            proposalView.print( super.padRight( "", 5 ) + "offered:" + super.padRight( "offered:" ,15 ) + "[ " + proposal.getOfferedCategory().getName() + super.padRight( proposal.getOfferedCategory().getName(), 50 ) + ", " + proposal.getOfferedHours() + " hours ] " );
-            proposalView.printState( proposal, COLOR );
-        }
+        this.proposeProposalView.getCloseLabel().addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) 
+            {
+                System.exit(0);
+			}
+		});
     }
 
     public void verifyProposal ( Proposal inserted, Proposal toVerify, List<Proposal> toCloses ) throws SQLException
     {
-        this.controllerGRASP.verifyProposal(inserted, toVerify, toCloses);
+        this.proposalService.verifyProposal(inserted, toVerify, toCloses);
     }
-
-    private int enterProposalID ( List<Proposal> openProposalsByUser, List<Integer> IDs )
-    {
-        return super.readInt( Constants.ENTER_PROPOSAL_ID, Constants.NOT_EXIST_MESSAGE, ( input ) -> !IDs.contains( (Integer) input ) );
-    }
-
-    public void retireProposal ( UserController userController ) throws SQLException
-    {
-        super.clearConsole( Constants.TIME_SWITCH_MENU );
-        proposalView.print( Constants.PROPOSAL_LIST );
-
-        List<Proposal> openProposalsByUser = this.getProposalRepository().getAllOpenProposalByUser( userController.getUser() );
-
-        if ( openProposalsByUser.isEmpty() )
-        {
-            proposalView.println( Constants.NOT_EXIST_MESSAGE + "\n" );
-            super.clearConsole( Constants.TIME_ERROR_MESSAGE );
-            return;
-        }
-
-        List<Integer> IDs = new ArrayList<Integer>();
-        for( Proposal toAdd : openProposalsByUser ) IDs.add( toAdd.getID() );
-
-        this.listProposalsWithID( openProposalsByUser );
-        int proposalID = this.enterProposalID( openProposalsByUser, IDs );
-
-        userController.retireProposal( openProposalsByUser.get( IDs.lastIndexOf( proposalID ) ) );
-        proposalView.println( Constants.OPERATION_COMPLETED );
-        super.clearConsole( Constants.TIME_MESSAGE );
-    }
-
-    public void listProposalsByUser ( User user ) throws SQLException
-    {
-        super.clearConsole( Constants.TIME_SWITCH_MENU );
-        proposalView.print( Constants.PROPOSAL_LIST );
-
-        List<Proposal> proposalsByUser = getProposalRepository().getAllProposalsByUser( user );
-
-        this.listProposals( proposalsByUser );
-
-        proposalView.enterString( Constants.ENTER_TO_EXIT );
-        super.clearConsole( Constants.TIME_SWITCH_MENU );
-    }
-
-    /*public void listProposalsOfLeaf () throws SQLException
-    {
-        super.clearConsole( Constants.TIME_SWITCH_MENU );
-        proposalView.print( Constants.LEAF_CATEGORY_LIST );
-
-        if ( categoryController.getCategoryRepository().getAllLeaf().isEmpty() )
-        {
-            proposalView.println( Constants.NOT_EXIST_MESSAGE + "\n" );
-            super.clearConsole( Constants.TIME_ERROR_MESSAGE );
-            return;
-        }
-
-        categoryController.listAllLeafs();
-        int leafID = categoryController.enterLeafID();
-        if ( leafID == 0 ) return;
-
-        super.clearConsole( Constants.TIME_SWITCH_MENU );
-        proposalView.print( Constants.PROPOSAL_LIST );
-        this.listProposals( getProposalRepository().getAllProposalsByLeaf( categoryController.getCategoryRepository().getCategoryByID( leafID ) ) );
-
-        proposalView.enterString( Constants.ENTER_TO_EXIT );
-        super.clearConsole( Constants.TIME_SWITCH_MENU );
-    }
-
-    public void proposeProposal ( UserController userController ) throws SQLException
-    {
-        if ( categoryController.getCategoryRepository().getAllLeaf().isEmpty() || categoryController.getCategoryRepository().getAllLeaf().size() == 1 )
-        {
-            super.clearConsole( Constants.TIME_SWITCH_MENU );
-            proposalView.println( Constants.PROPOSE_PROPOSAL_SCREEN + Constants.NOT_EXIST_MESSAGE + "\n" );
-            super.clearConsole( Constants.TIME_ERROR_MESSAGE );
-            return;
-        }
-
-        super.clearConsole( Constants.TIME_SWITCH_MENU );
-
-        Category requestedCategory = categoryController.enterRequestedCategory();
-
-        super.clearConsole( Constants.TIME_SWITCH_MENU );
-
-        Category offeredCategory = categoryController.enterOfferedCategory( requestedCategory );
-
-        super.clearConsole( Constants.TIME_SWITCH_MENU );
-
-        int requestedHours = categoryController.enterRequestedHours( requestedCategory );
-        
-        super.clearConsole( Constants.TIME_SWITCH_MENU );
-        proposalView.print( Constants.PROPOSE_PROPOSAL_SCREEN );
-
-        int offeredHours = (int) Math.round( conversionFactorsController.getConversionFactorValue(requestedCategory, offeredCategory) * requestedHours );
-        Proposal newProposal = new Proposal( null, requestedCategory, offeredCategory, requestedHours, offeredHours, userController.getUser(), "open" );
-        this.printProposalWithCyanHours( newProposal );
-
-        String saveOrNot = super.readString( Constants.CONFIRM_PROPOSAL, Constants.NOT_EXIST_MESSAGE, ( input ) -> !input.equals( Constants.NO_MESSAGE ) && !input.equals( Constants.YES_MESSAGE ) );
-
-        if ( saveOrNot.equals( Constants.YES_MESSAGE ) )
-        {
-            proposalView.print( Constants.PROPOSAL_SAVED );
-            super.clearConsole( Constants.TIME_MESSAGE );
-            userController.insertProposal( newProposal );
-        }
-        else
-        {
-            proposalView.print( Constants.PROPOSAL_NOT_SAVED );
-            super.clearConsole( Constants.TIME_ERROR_MESSAGE );
-        }
-
-        this.verifyProposal( newProposal, null, new ArrayList<Proposal>() );
-    }
-
-    public void printProposal ( Proposal proposal )
-    {
-        proposalView.println( "requested:" + super.padRight( "requested:" ,15 ) + "[ " + proposal.getRequestedCategory().getName() + super.padRight( proposal.getRequestedCategory().getName(), 50 ) + ", " + proposal.getRequestedHours() + " hours ]" );
-        proposalView.print( "offered:" + super.padRight( "offered:" ,15 ) + "[ " + proposal.getOfferedCategory().getName() + super.padRight( proposal.getOfferedCategory().getName(), 50 ) + ", " + proposal.getOfferedHours() + " hours ] " );
-    }
-
-    public void printProposalWithCyanHours ( Proposal proposal )
-    {
-        proposalView.println( "requested:" + super.padRight( "requested:" ,15 ) + "[ " + proposal.getRequestedCategory().getName() + super.padRight( proposal.getRequestedCategory().getName(), 50 ) + ", " + proposal.getRequestedHours() + " hours ]" );
-        proposalView.print( "offered:" + super.padRight( "offered:" ,15 ) + "[ " + proposal.getOfferedCategory().getName() + super.padRight( proposal.getOfferedCategory().getName(), 50 ) + ", " + Constants.CYAN + proposal.getOfferedHours() + " hours " + Constants.RESET + "] " );
-    }*/
 
     public void startProposalOfCategoryView() throws SQLException
     {
         proposalOfCategoryView.init();
 
-        for ( Category toPrint : categoryController.getCategoryRepository().getAllSavedLeaf() ) 
+        for ( Category toPrint : categoryController.getAllSavedLeaf() ) 
         {
-            addMenuItemForProposalCategoryView( toPrint, " " + toPrint.getID() + ". " + ControlPatternService.padRight( Integer.toString( toPrint.getID() ) , 3 ) + toPrint.getName() + ControlPatternService.padRight( toPrint.getName() , 50 ) + "  [ " + categoryController.getCategoryRepository().getRootByLeaf( toPrint ).getName() + " ]  " );
+            addMenuItemForProposalCategoryView( toPrint, " " + toPrint.getID() + ". " + ControlPatternService.padRight( Integer.toString( toPrint.getID() ) , 3 ) + toPrint.getName() + ControlPatternService.padRight( toPrint.getName() , 50 ) + "  [ " + categoryController.getRootByLeaf( toPrint ).getName() + " ]  " );
         }
-        for ( Category toPrint : categoryController.getCategoryRepository().getAllNotSavedLeaf() )
+        for ( Category toPrint : categoryController.getAllNotSavedLeaf() )
         {
-            addMenuItemForProposalCategoryView( toPrint, " " + toPrint.getID() + ". " + ControlPatternService.padRight( Integer.toString( toPrint.getID() ) , 3 ) + toPrint.getName() + ControlPatternService.padRight( toPrint.getName() , 50 ) + "  [ " + categoryController.getCategoryRepository().getRootByLeaf( toPrint ).getName() + " ]  " + Constants.NOT_SAVED );
+            addMenuItemForProposalCategoryView( toPrint, " " + toPrint.getID() + ". " + ControlPatternService.padRight( Integer.toString( toPrint.getID() ) , 3 ) + toPrint.getName() + ControlPatternService.padRight( toPrint.getName() , 50 ) + "  [ " + categoryController.getRootByLeaf( toPrint ).getName() + " ]  " + Constants.NOT_SAVED );
         } 
     }
 
@@ -225,6 +193,90 @@ public class ProposalController extends Controller {
         proposalOfCategoryView.dispose();
     }
 
+    public void startProposalOfUserView (User user) throws SQLException
+    {
+        proposalOfUserView.init();
+        for ( Proposal proposal : proposalService.getAllProposalsByUser( user ) )
+        {
+            proposalOfUserView.addlblProposal( proposal.getID() + "." + ControlPatternService.padRight( proposal.getID() + ".", 5) + "requested:" + ControlPatternService.padRight( "requested:" ,10 ) + "[ " + proposal.getRequestedCategory().getName() + ControlPatternService.padRight( proposal.getRequestedCategory().getName(), 40 ) + ", " + proposal.getRequestedHours() + ControlPatternService.padRight(Integer.toString(proposal.getRequestedHours()), 3) + " hours ]\n" + ControlPatternService.padRight( "", 5 ) + "offered:" + ControlPatternService.padRight( "offered:" ,10 ) + "[ " + proposal.getOfferedCategory().getName() + ControlPatternService.padRight( proposal.getOfferedCategory().getName(), 40 ) + ", " + proposal.getOfferedHours() + " hours ] " + " : " +  proposal.getState() + "\n");     
+        }
+
+    }
+
+    public void closeProposalOfUserView ()
+    {
+        proposalOfUserView.resetFields();
+        proposalOfUserView.dispose();
+    }
+
+    public void startRetireProposalView ( UserController userController) throws SQLException
+    {
+        retireProposalView.init();
+        this.userController = userController;
+        for ( Proposal proposal : proposalService.getAllOpenProposalByUser( userController.getUser() ) )
+        {
+           addRadioButtonRetireProposal( proposal );     
+        }
+    }
+
+    public void closeRetireProposalView ()
+    {
+        retireProposalView.resetFields();
+        retireProposalView.dispose();
+    }
+
+    public void startProposeProposalView ( UserController userController ) throws SQLException
+    {
+        this.proposeProposalView.init();
+        this.userController = userController;
+        for ( Category toPrint : categoryController.getAllSavedLeaf() ) addRadioButton( toPrint, true );
+    }
+
+    public void closeProposeProposalView ()
+    {
+        this.proposeProposalView.resetFields();
+        this.proposeProposalView.dispose();
+    }
+
+    public void offeredCategory () throws SQLException
+    {
+        this.proposalOfCategoryView.resetFields();
+        this.proposeProposalView.removeAllRadioButtons(true);
+        this.proposeProposalView.getRequestCategoryButton().setVisible(false);
+        this.proposeProposalView.getOfferCategoryButton().setVisible(true);
+        this.proposeProposalView.getTextFieldValue().setVisible(true);
+        this.proposeProposalView.getLblValue().setVisible(true);
+        for ( Category toPrint : categoryController.getAllSavedLeaf() ) 
+            if ( !toPrint.equals( requestCategory ) && !toPrint.getName().equals( requestCategory.getName() ) )
+                addRadioButton( toPrint , false );
+
+    }
+
+    public void confirmOfferCategory () throws SQLException
+    {
+        this.proposeProposalView.resetFields();
+        this.proposeProposalView.removeAllRadioButtons(false);
+        this.proposeProposalView.getLblValue().setVisible(false);
+        this.proposeProposalView.getOfferCategoryButton().setVisible(false);
+        this.proposeProposalView.getConfirmButton().setVisible(true);
+        this.proposeProposalView.getCancelButton().setVisible(true);
+        this.proposeProposalView.getTextFieldValue().setVisible(false);
+
+        proposeProposalView.setLblErrorValue("");
+        Category requestedCategory = requestCategory;
+        Category offeredCategory = offerCategory;
+        offeredHours = (int) Math.round( conversionFactorsController.getConversionFactorValue(requestedCategory, offeredCategory) * requestedHours );
+        proposeProposalView.addLblCategory("requested:" + ControlPatternService.padRight( "requested:" ,15 ) + "[ " + requestedCategory.getName() + ControlPatternService.padRight( requestedCategory.getName(), 50 ) + ", " + requestedHours+ " hours ]" );
+        proposeProposalView.addLblCategory("offered:" + ControlPatternService.padRight( "offered:" ,15 ) + "[ " + offeredCategory.getName() + ControlPatternService.padRight( offeredCategory.getName(), 50 ) + ", " + offeredHours + " hours ] ");
+    }
+
+    private void addRadioButton( Category category, boolean requestedCategory ) throws SQLException 
+    {
+        
+        JRadioButton radioButton = proposeProposalView.addRadioButton(  " " + category.getID() + ". " + ControlPatternService.padRight( Integer.toString( category.getID() ) , 3 ) + category.getName() + ControlPatternService.padRight( category.getName() , 50 ) + "  [ " + categoryController.getRootByLeaf( category ).getName() + " ]  ", requestedCategory );
+        if(requestedCategory) radioButtonObjectMapRequestedCategory.put( radioButton, category );
+        else radioButtonObjectMapOfferedCategory.put( radioButton, category );
+    }
 
     public void addMenuItemForProposalCategoryView( Category category, String info)
     {
@@ -234,7 +286,7 @@ public class ProposalController extends Controller {
                 proposalOfCategoryView.getPanel().removeAll();
                 proposalOfCategoryView.setLblProposal(category.getName());
                 try {
-                    for ( Proposal proposal : getProposalRepository().getAllProposalsByLeaf( categoryController.getCategoryRepository().getCategoryByID( category.getID() ) ) )
+                    for ( Proposal proposal : proposalService.getAllProposalsByLeaf( categoryController.getCategoryByID( category.getID() ) ) )
                     {
                         proposalOfCategoryView.addlblProposal( proposal.getID() + "." + ControlPatternService.padRight( proposal.getID() + ".", 5) + "requested:" + ControlPatternService.padRight( "requested:" ,15 ) + "[ " + proposal.getRequestedCategory().getName() + ControlPatternService.padRight( proposal.getRequestedCategory().getName(), 50 ) + ", " + proposal.getRequestedHours() + ControlPatternService.padRight(Integer.toString(proposal.getRequestedHours()), 3) + " hours ]\n" + ControlPatternService.padRight( "", 5 ) + "offered:" + ControlPatternService.padRight( "offered:" ,15 ) + "[ " + proposal.getOfferedCategory().getName() + ControlPatternService.padRight( proposal.getOfferedCategory().getName(), 50 ) + ", " + proposal.getOfferedHours() + " hours ] ");     
                     }
@@ -245,6 +297,12 @@ public class ProposalController extends Controller {
             }
         });
         
+    }
+
+    private void addRadioButtonRetireProposal( Proposal proposal ) throws SQLException 
+    { 
+        JRadioButton radioButton = retireProposalView.addRadioButton( proposal.getID() + "." + ControlPatternService.padRight( proposal.getID() + ".", 5) + "requested:" + ControlPatternService.padRight( "requested:" ,10 ) + "[ " + proposal.getRequestedCategory().getName() + ControlPatternService.padRight( proposal.getRequestedCategory().getName(), 40 ) + ", " + proposal.getRequestedHours() + ControlPatternService.padRight(Integer.toString(proposal.getRequestedHours()), 3) + " hours ]\n" + ControlPatternService.padRight( "", 5 ) + "offered:" + ControlPatternService.padRight( "offered:" ,10 ) + "[ " + proposal.getOfferedCategory().getName() + ControlPatternService.padRight( proposal.getOfferedCategory().getName(), 40 ) + ", " + proposal.getOfferedHours() + " hours ] " + " : " +  proposal.getState() + "\n" );
+        radioButtonObjectMapForRetireProposal.put( radioButton, proposal );
     }
 
 }

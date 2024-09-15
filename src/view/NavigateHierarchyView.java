@@ -21,8 +21,9 @@ import java.util.Enumeration;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JMenu;
+import javax.swing.JButton;
 
-public class HierarchyView extends JFrame {
+public class NavigateHierarchyView extends JFrame {
 
 	private JPanel contentPane;
 	private JTextArea textArea;
@@ -36,9 +37,10 @@ public class HierarchyView extends JFrame {
 	private JScrollPane scrollPane_1;
 	private JTextArea textAreaInfo;
 	private JLabel lblInformations;
-	private JLabel lblHierarchy;
+	private JLabel lblFields;
+	private JButton btnBack;
 
-	public HierarchyView() {
+	public NavigateHierarchyView() {
 		
 		addMouseListener(new MouseAdapter() 
 		{
@@ -57,7 +59,7 @@ public class HierarchyView extends JFrame {
 		    {
 		        int x = e.getXOnScreen();
 		        int y = e.getYOnScreen(); 
-		        HierarchyView.this.setLocation(x - xx, y - xy);
+		        NavigateHierarchyView.this.setLocation(x - xx, y - xy);
 		    }
 		});
 		
@@ -96,15 +98,15 @@ public class HierarchyView extends JFrame {
 		textArea.setEnabled(false);
 		textArea.setEditable(false);
 		
-		lblHierarchy = new JLabel("HIERARCHY");
-		lblHierarchy.setForeground(new Color(0, 0, 255));
-		lblHierarchy.setHorizontalAlignment(SwingConstants.CENTER);
-		lblHierarchy.setFont(new Font("Tahoma", Font.BOLD, 13));
-		lblHierarchy.setBounds(10, 26, 593, 13);
-		contentPane.add(lblHierarchy);
+		lblFields = new JLabel("FIELDS");
+		lblFields.setForeground(new Color(0, 0, 255));
+		lblFields.setHorizontalAlignment(SwingConstants.CENTER);
+		lblFields.setFont(new Font("Tahoma", Font.BOLD, 13));
+		lblFields.setBounds(0, 379, 593, 13);
+		contentPane.add(lblFields);
 		
 		scrollPaneCategory = new JScrollPane();
-		scrollPaneCategory.setBounds(30, 51, 538, 321);
+		scrollPaneCategory.setBounds(30, 402, 538, 242);
 		contentPane.add(scrollPaneCategory);
 		
 		panelCategory = new JPanel();
@@ -112,7 +114,7 @@ public class HierarchyView extends JFrame {
 		panelCategory.setLayout(new BoxLayout(panelCategory, BoxLayout.Y_AXIS));
 		
 		scrollPane_1 = new JScrollPane();
-		scrollPane_1.setBounds(30, 417, 538, 230);
+		scrollPane_1.setBounds(30, 65, 538, 230);
 		contentPane.add(scrollPane_1);
 		
 		textAreaInfo = new JTextArea();
@@ -126,8 +128,13 @@ public class HierarchyView extends JFrame {
 		lblInformations.setHorizontalAlignment(SwingConstants.CENTER);
 		lblInformations.setForeground(Color.BLUE);
 		lblInformations.setFont(new Font("Tahoma", Font.BOLD, 13));
-		lblInformations.setBounds(10, 394, 593, 13);
+		lblInformations.setBounds(0, 32, 593, 13);
 		contentPane.add(lblInformations);
+		
+		btnBack = new JButton("<");
+		btnBack.setFont(new Font("Tahoma", Font.BOLD, 10));
+		btnBack.setBounds(29, 648, 47, 21);
+		contentPane.add(btnBack);
 		
 		group = new ButtonGroup();
 	}
@@ -189,9 +196,9 @@ public class HierarchyView extends JFrame {
         return lblClose;
     }
 	
-	public void setLblHierarchy (String message )
+	public void setLblFields (String message )
 	{
-		lblHierarchy.setText(message);
+		lblFields.setText(message);
 	}
 	
 	public void setLblInformations (String message)
@@ -199,9 +206,14 @@ public class HierarchyView extends JFrame {
 		lblInformations.setText(message);
 	}
 	
+	public JButton getBackButton()
+	{
+		return btnBack;
+	}
+	
 	public void init()
 	{
-		setLblHierarchy ("HIERARCHY");
+		setLblFields ("FIELDS");
 		getPanelCategory().removeAll();
 		getPanelCategory().revalidate();
 		getPanelCategory().repaint();
@@ -209,9 +221,16 @@ public class HierarchyView extends JFrame {
 		setTextArea("");
 		setTextAreaInfo("");
 		setLblInformations ( "INFORMATIONS" );
+		getBackButton().setVisible(false);
         setUndecorated(true);
         setVisible(true);
-
+	}
+	
+	public void reset()
+	{
+		getPanelCategory().removeAll();
+		getPanelCategory().revalidate();
+		getPanelCategory().repaint();
 	}
 	
 	public void addMenuCategory(JMenuItem categoryItem) 

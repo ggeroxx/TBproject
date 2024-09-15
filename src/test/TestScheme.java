@@ -1,17 +1,10 @@
 package test;
 
 import java.sql.SQLException;
+
 import org.junit.After;
 import org.junit.Before;
-import controller.GRASPController.CategoryGRASPController;
-import controller.GRASPController.ConfiguratorGRASPController;
-import controller.GRASPController.ConversionFactorsGRASPController;
-import controller.GRASPController.DistrictGRASPController;
-import controller.GRASPController.MunicipalityGRASPController;
-import controller.GRASPController.ProposalGRASPController;
-import controller.GRASPController.SessionGRASPController;
-import controller.GRASPController.SubjectGRASPController;
-import controller.GRASPController.UserGRASPController;
+
 import controller.MVCController.CategoryController;
 import controller.MVCController.ChangeCredentialsConfiguratorController;
 import controller.MVCController.ConfiguratorController;
@@ -24,7 +17,6 @@ import controller.MVCController.ProposalController;
 import controller.MVCController.RegistrationUserController;
 import controller.MVCController.SubjectController;
 import controller.MVCController.UserController;
-import model.util.Conn;
 import repository.AccessRepository;
 import repository.CategoryRepository;
 import repository.ConfiguratorRepository;
@@ -47,6 +39,7 @@ import repository.JDBCRepository.JDBCRelationshipsBetweenCategoriesRepository;
 import repository.JDBCRepository.JDBCUserRepository;
 import service.CategoryService;
 import service.ConfiguratorService;
+import service.ConnectionService;
 import service.ConversionFactorsService;
 import service.DistrictService;
 import service.MunicipalityService;
@@ -57,33 +50,29 @@ import service.SubjectService;
 import service.UserService;
 import service.pure_fabrication.AuthenticationService;
 import service.pure_fabrication.TemporaryOperationsManager;
+import service.pure_fabrication.Authentication;
+import service.pure_fabrication.TemporaryOperations;
 import view.AllConversionFactorsView;
-import view.CategoryView;
 import view.ConfiguratorMenuView;
-import view.ConfiguratorView;
-import view.ConversionFactorView;
 import view.ConversionFactorsOfCategoryView;
-import view.ConversionFactorsView;
 import view.DistrictInfoView;
-import view.DistrictView;
 import view.HierarchyView;
 import view.InsertConversionFactorsView;
 import view.InsertDistrictView;
 import view.InsertNewHierarchyView;
 import view.LoginView;
-import view.MainView;
-import view.MunicipalityView;
+import view.NavigateHierarchyView;
 import view.ProposalOfCategoryView;
-import view.ProposalView;
+import view.ProposalOfUserView;
+import view.ProposeProposalView;
 import view.ChangeCredentialsConfiguratorView;
 import view.RegistrationUserView;
-import view.SubjectView;
-import view.UserView;
+import view.RetireProposalView;
+import view.UserMenuView;
 
 public class TestScheme {
 
-    MainView mainView = new MainView();
-    DistrictView districtView = new DistrictView();
+    /*DistrictView districtView = new DistrictView();
     MunicipalityView municipalityView = new MunicipalityView();
     ConfiguratorView configuratorView = new ConfiguratorView();
     CategoryView categoryView = new CategoryView();
@@ -91,7 +80,7 @@ public class TestScheme {
     ConversionFactorsView conversionFactorsView = new ConversionFactorsView();
     ProposalView proposalView = new ProposalView();
     UserView userView = new UserView();
-    SubjectView subjectView = new SubjectView();
+    SubjectView subjectView = new SubjectView();*/
 
     AccessRepository accessRepository = new JDBCAccessRepositoryl();
     ConfiguratorRepository configuratorRepository = new JDBCConfiguratorRepository();
@@ -104,8 +93,8 @@ public class TestScheme {
     ProposalRepository proposalRepository = new JDBCProposalRepository();
     ConversionFactorsRepository conversionFactorsRepository = new JDBCConversionFactorsRepository();
 
-    AuthenticationService authenticationService = new AuthenticationService( configuratorRepository, userRepository, accessRepository );
-    TemporaryOperationsManager tempOpsManager = new TemporaryOperationsManager( districtRepository, categoryRepository, districtToMunicipalitiesRepository, relationshipsBetweenCategoriesRepository );
+    Authentication authenticationService = new AuthenticationService( configuratorRepository, userRepository, accessRepository );
+    TemporaryOperations tempOpsManager = new TemporaryOperationsManager( districtRepository, categoryRepository, districtToMunicipalitiesRepository, relationshipsBetweenCategoriesRepository );
     Session session = new Session(authenticationService, tempOpsManager);
 
     SessionService sessionService = new SessionService(session);
@@ -117,16 +106,6 @@ public class TestScheme {
     UserService userService = new UserService(userRepository, proposalService);
     ConfiguratorService configuratorService = new ConfiguratorService(configuratorRepository, districtService, categoryService, conversionFactorsService);
     SubjectService subjectService = new SubjectService(configuratorService, userService);
-
-    SessionGRASPController sessionGRASPController = new SessionGRASPController(session); 
-    UserGRASPController userGRASPController = new UserGRASPController(userService);
-    ConfiguratorGRASPController configuratorGRASPController =new ConfiguratorGRASPController(configuratorService);
-    ProposalGRASPController proposalGRASPController = new ProposalGRASPController(proposalService);
-    MunicipalityGRASPController municipalityGRASPController = new MunicipalityGRASPController(municipalityService);
-    DistrictGRASPController districtGRASPController = new DistrictGRASPController(districtService);
-    ConversionFactorsGRASPController conversionFactorsGRASPController = new ConversionFactorsGRASPController(conversionFactorsService);
-    CategoryGRASPController categoryGRASPController = new CategoryGRASPController(categoryService);
-    SubjectGRASPController subjectGRASPController = new SubjectGRASPController(subjectService);
 
     LoginView loginView = new LoginView ();
     ChangeCredentialsConfiguratorView changeCredentialsConfiguratorView = new ChangeCredentialsConfiguratorView();
@@ -140,31 +119,36 @@ public class TestScheme {
     InsertNewHierarchyView insertNewHierarchyView = new InsertNewHierarchyView();
     HierarchyView hierarchyView = new HierarchyView();
     ProposalOfCategoryView proposalOfCategoryView = new ProposalOfCategoryView();
+    UserMenuView userMenuView = new UserMenuView();
+    ProposalOfUserView proposalOfUserView = new ProposalOfUserView();
+    RetireProposalView retireProposalView = new RetireProposalView();
+    ProposeProposalView proposeProposalView = new ProposeProposalView();
+    NavigateHierarchyView navigateHierarchyView = new NavigateHierarchyView();
 
-    SubjectController subjectController = new SubjectController( subjectView, subjectGRASPController );
-    MunicipalityController municipalityController = new MunicipalityController(municipalityView, municipalityGRASPController);
+    SubjectController subjectController = new SubjectController( subjectService );
+    MunicipalityController municipalityController = new MunicipalityController( municipalityService );
     DistrictController districtController = new DistrictController(insertDistrictView, districtInfoView, municipalityController, districtService);
-    CategoryController categoryController = new CategoryController(insertNewHierarchyView, hierarchyView, categoryService);
-    ConversionFactorController conversionFactorController = new ConversionFactorController( conversionFactorView, categoryController );
+    CategoryController categoryController = new CategoryController(insertNewHierarchyView, hierarchyView, navigateHierarchyView, categoryService);
+    ConversionFactorController conversionFactorController = new ConversionFactorController( categoryController );
     ConversionFactorsController conversionFactorsController = new ConversionFactorsController(allConversionFactorsView, insertConversionFactorsView, conversionFactorsOfCategoryView, conversionFactorController, categoryController, conversionFactorsService);
-    ProposalController proposalController = new ProposalController(proposalOfCategoryView, proposalView, categoryController, conversionFactorsController, proposalGRASPController);
-    ConfiguratorController configuratorController = new ConfiguratorController(configuratorMenuView, sessionService, districtController, categoryController, conversionFactorsController, proposalController, configuratorService);    
-    UserController userController = new UserController(userView, subjectGRASPController, sessionGRASPController, categoryController, proposalController, userGRASPController, userService);
+    ProposalController proposalController = new ProposalController(proposalOfCategoryView, proposalOfUserView, retireProposalView, proposeProposalView, categoryController, conversionFactorsController, proposalService);
+    ConfiguratorController configuratorController = new ConfiguratorController(configuratorMenuView, sessionService, districtController, categoryController, conversionFactorsController, proposalController, configuratorService);
+    
+    UserController userController = new UserController(userMenuView, sessionService, categoryController, proposalController, userService);
     ChangeCredentialsConfiguratorController changeCredentialsConfiguratorController = new ChangeCredentialsConfiguratorController(changeCredentialsConfiguratorView, configuratorController, subjectController);
     RegistrationUserController registrationUserController = new RegistrationUserController(registrationUserView, districtController, subjectController, userController);
     LoginController loginController = new LoginController(loginView, changeCredentialsConfiguratorController, registrationUserController, sessionService, accessRepository, districtController, configuratorController, userController);
-
 
     @Before
     public void setUp() throws SQLException 
     { 
         
-        Conn.openConnection();
+        ConnectionService.openConnection();
     }
 
     @After
-    public void tearDown() throws SQLException 
+    public void tearDown() throws SQLException
     {
-        Conn.closeConnection();
+        ConnectionService.closeConnection();
     }
 }

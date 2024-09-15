@@ -1,7 +1,5 @@
 package view;
 
-import java.awt.EventQueue;
-
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
@@ -12,7 +10,6 @@ import java.awt.Font;
 import java.awt.Color;
 import javax.swing.SwingConstants;
 import javax.swing.JScrollPane;
-import javax.swing.JTree;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.AbstractButton;
@@ -26,7 +23,6 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 import java.util.Enumeration;
 import java.awt.event.ActionEvent;
-import java.awt.BorderLayout;
 
 public class InsertNewHierarchyView extends JFrame {
 
@@ -53,25 +49,6 @@ public class InsertNewHierarchyView extends JFrame {
 	private JButton btnInsertParentId;
 	private JLabel lblClose;
 
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					InsertNewHierarchyView frame = new InsertNewHierarchyView();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-
-	/**
-	 * Create the frame.
-	 */
 	public InsertNewHierarchyView() {
 		
 		addMouseListener(new MouseAdapter() 

@@ -16,7 +16,7 @@ public interface ProposalRepository {
 
     List<Proposal> getAllProposalsByUser ( User user ) throws SQLException;
 
-    List<Proposal> getAllProposalsByLeaf ( Category leaf ) throws SQLException;
+    List<Proposal> getAllProposalsByLeaf ( Category category ) throws SQLException;
 
     List<Proposal> getAllCompatibleProposals ( Proposal proposal ) throws SQLException;
 

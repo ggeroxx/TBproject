@@ -18,7 +18,6 @@ public class RegistrationUserController  {
     private SubjectController subjectController;
     private UserController userController;
 
-
     public RegistrationUserController ( RegistrationUserView registrationUserView, DistrictController districtController, SubjectController subjectController, UserController userController )
     {
         this.registrationUserView = registrationUserView;

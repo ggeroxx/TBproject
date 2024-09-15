@@ -4,32 +4,35 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import java.awt.Color;
+import javax.swing.JButton;
 import java.awt.SystemColor;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 import java.awt.Font;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import javax.swing.AbstractButton;
 import javax.swing.BoxLayout;
+import javax.swing.ButtonGroup;
 import java.awt.event.MouseMotionAdapter;
+import java.util.Enumeration;
 import javax.swing.JScrollPane;
-import javax.swing.JMenuBar;
-import javax.swing.JMenu;
-import javax.swing.JMenuItem;
+import javax.swing.JRadioButton;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
-public class ProposalOfCategoryView extends JFrame{
+public class RetireProposalView extends JFrame{
 
 	private JPanel contentPane;
 	private int xx, xy;
 	private JScrollPane scrollPane;
 	private JPanel panel;
-
+	private ButtonGroup group;
 	private JLabel lblProposal;
 	private JLabel lblClose;
-	private JMenuBar menuBar;
-	private JMenu mnMenuCategories;
+	private JButton btnRetireProposal;
 
-	public ProposalOfCategoryView() 
+	public RetireProposalView() 
 	{
 
 		addMouseListener(new MouseAdapter() 
@@ -49,13 +52,13 @@ public class ProposalOfCategoryView extends JFrame{
 		    {
 		        int x = e.getXOnScreen();
 		        int y = e.getYOnScreen(); 
-		        ProposalOfCategoryView.this.setLocation(x - xx, y - xy);
+		        RetireProposalView.this.setLocation(x - xx, y - xy);
 		    }
 		});
 		
 		setBackground(new Color(255, 255, 255));
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 1288, 736);
+		setBounds(100, 100, 1288, 580);
 		contentPane = new JPanel();
 		contentPane.setForeground(Color.BLACK);
 		contentPane.setBackground(new Color(255, 255, 255));
@@ -65,7 +68,7 @@ public class ProposalOfCategoryView extends JFrame{
 		contentPane.setLayout(null);
 		
 		scrollPane = new JScrollPane();
-		scrollPane.setBounds(26, 70, 1241, 619);
+		scrollPane.setBounds(26, 70, 1241, 395);
 		contentPane.add(scrollPane);
 		
 		panel = new JPanel();
@@ -87,32 +90,48 @@ public class ProposalOfCategoryView extends JFrame{
 		lblClose.setBounds(1253, 0, 35, 27);
 		contentPane.add(lblClose);
 		
-		menuBar = new JMenuBar();
-		menuBar.setBounds(0, 0, 1251, 22);
-		contentPane.add(menuBar);
+		btnRetireProposal = new JButton("RETIRE PROPOSAL");
+		btnRetireProposal.setBackground(Color.BLUE);
+		btnRetireProposal.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
+		btnRetireProposal.setBounds(466, 487, 304, 21);
+		contentPane.add(btnRetireProposal);
 		
-		mnMenuCategories = new JMenu("Categories");
-		menuBar.add(mnMenuCategories);
-		
+		group = new ButtonGroup();
 
 	}
 	
-	public void addlblProposal( String info ) 
-	 {
-		JLabel label = new JLabel( info );
-		label.setFont(new Font("Monospaced", Font.PLAIN, 12));
-		panel.add(label);
+	public JRadioButton addRadioButton( String info ) 
+	{
+		JRadioButton radioButton = new JRadioButton( info );
+		radioButton.setFont(new Font("Monospaced", Font.PLAIN, 12));
+		group.add(radioButton);
+		panel.add(radioButton);
 		contentPane.revalidate(); 
-		contentPane.repaint();     
-	 }
+		contentPane.repaint(); 
+		return radioButton;
+	}
 	
-	public void addMenuCategory(JMenuItem categoryItem) 
-	 {
-		categoryItem.setFont(new Font("Monospaced", Font.PLAIN, 12));
-		mnMenuCategories.add(categoryItem);
-		contentPane.revalidate(); 
-		contentPane.repaint();     
-	 }
+	public JRadioButton getSelectedRadioButton () 
+	{
+	    Enumeration<AbstractButton> buttons = getGroup().getElements();
+	    while (buttons.hasMoreElements()) 
+        {
+	        JRadioButton button = (JRadioButton) buttons.nextElement();
+	        if (button.isSelected()) 
+            {
+	            return button;
+	        }
+	    }
+	    return null;
+	}
+	
+	public ButtonGroup getGroup()
+	{
+		return group;
+	}
 	
 	public JScrollPane getScrollPane()
 	{
@@ -141,18 +160,11 @@ public class ProposalOfCategoryView extends JFrame{
 		getPanel().removeAll();
 		getPanel().revalidate();
 		getPanel().repaint();
-		mnMenuCategories.removeAll();
 		setLblProposal("PROPOSALS");
         setUndecorated(true);
         setVisible(true);
 	}
 	
-	public JMenuItem addMenuItem (String info)
-	{
-		JMenuItem categoryItem = new JMenuItem( info );
-        addMenuCategory(categoryItem);
-        return categoryItem;
-	}
 	
 	public void resetFields()
 	{
@@ -161,5 +173,11 @@ public class ProposalOfCategoryView extends JFrame{
 		getPanel().repaint();
 	}
 	
+	public JButton getRetireProposalButton()
+	{
+		return btnRetireProposal;
+	}
+	
 
 }
+

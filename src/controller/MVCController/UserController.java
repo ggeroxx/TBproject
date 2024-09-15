@@ -1,53 +1,137 @@
 package controller.MVCController;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.sql.SQLException;
-import java.util.InputMismatchException;
-import controller.GRASPController.SessionGRASPController;
-import controller.GRASPController.SubjectGRASPController;
-import controller.GRASPController.UserGRASPController;
 import model.Proposal;
 import model.User;
-import model.util.Constants;
 import repository.UserRepository;
+import service.SessionService;
 import service.UserService;
-import view.UserView;
+import view.UserMenuView;
 
-public class UserController extends SubjectController {
+public class UserController {
     
-    private UserView userView;
+    private UserMenuView userMenuView;
     private CategoryController categoryController;
     private ProposalController proposalController;
-    private UserGRASPController controllerGRASP;
-    private SessionGRASPController sessionGRASPController;
+    private SessionService sessionService;
     private UserService userService;
 
-    public UserController ( UserView userView, SubjectGRASPController subjectGRASPController, SessionGRASPController sessionGRASPController, CategoryController categoryController, ProposalController proposalController, UserGRASPController controllerGRASP, UserService userService )
+    public UserController ( UserMenuView userMenuView,  SessionService sessionService, CategoryController categoryController, ProposalController proposalController, UserService userService )
     {
-        super( userView, subjectGRASPController);
-        this.userView = userView;
-        this.sessionGRASPController = sessionGRASPController;
+        this.userMenuView = userMenuView;
+        this.sessionService = sessionService;
         this.categoryController = categoryController;
         this.proposalController = proposalController;
-        this.controllerGRASP = controllerGRASP;
         this.userService = userService;
+
+        this.userMenuView.getNavigateHierarchiesButton().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) 
+            {
+                try {
+                    categoryController.startNavigateHierarchyView();
+                } catch (SQLException e1) {
+                    e1.printStackTrace();
+                }
+			}
+		});
+
+        this.userMenuView.getProposProposalButton().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) 
+            {
+                try {
+                    proposalController.startProposeProposalView( UserController.this );
+                } catch (SQLException e1) {
+                    e1.printStackTrace();
+                }
+			}
+		});
+
+        this.userMenuView.getRetireProposalButton().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) 
+            {
+                try 
+                {
+                    proposalController.startRetireProposalView( UserController.this );
+                } catch (SQLException e1) {
+                    e1.printStackTrace();
+                }
+			}
+		});
+
+        this.userMenuView.getViewAllProposalButton().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) 
+            {
+                try 
+                {
+                    proposalController.startProposalOfUserView( getUser() );
+                } catch (SQLException e1) {
+                    e1.printStackTrace();
+                }
+			}
+		});
+
+        this.userMenuView.getCloseLabel().addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+                try 
+                {
+                    close();
+                } catch (SQLException e1) {
+                    e1.printStackTrace();
+                }
+			}
+		});
+
+        this.userMenuView.getLogoutButton().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) 
+            {
+                try 
+                {
+                    close();
+                } catch (SQLException e1) {
+                    e1.printStackTrace();
+                }
+			}
+		});
+    }
+
+    public void start () throws SQLException
+    {
+        userMenuView.setUndecorated(true);
+        userMenuView.setVisible(true);
+    }
+
+    public void close() throws SQLException
+    {
+        sessionService.logout();
+        userMenuView.dispose();
     }
 
     public User getUser ()
     {
-        return this.controllerGRASP.getUser();
+        return this.userService.getUser();
     }
 
     public void setUser ( User user )
     {
-        this.controllerGRASP.setUser(user);
+        this.userService.setUser(user);
     }
 
     public UserRepository getuserRepository ()
     {
-        return this.controllerGRASP.getuserRepository();
+        return this.userService.getuserRepository();
     }
 
-    public void start ()
+    /*public void start ()
     {
         int choice = 0;
 
@@ -71,11 +155,11 @@ public class UserController extends SubjectController {
                         break;
 
                     case 3:
-                            proposalController.retireProposal( this );
+                            //proposalController.retireProposal( this );
                         break;
 
                     case 4:
-                            proposalController.listProposalsByUser( getUser() );
+                            //proposalController.listProposalsByUser( getUser() );
                         break;
 
                     case 5:
@@ -103,16 +187,16 @@ public class UserController extends SubjectController {
                 continue;
             }
         } while ( choice != 5 );
-    }
+    }*/
 
     public void insertProposal ( Proposal toInsert ) throws SQLException
     {
-        this.controllerGRASP.insertProposal(toInsert);
+        this.userService.insertProposal(toInsert);
     }
 
     public void retireProposal ( Proposal toRetire ) throws SQLException
     {
-        this.controllerGRASP.retireProposal(toRetire);
+        this.userService.retireProposal(toRetire);
     }
 
     public void insertUser (User newUser ) throws SQLException

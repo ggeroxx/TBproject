@@ -115,8 +115,6 @@ public class CategoryService{
         return execute(params);
     }
 
-    
-
     public List<Category> getAllRoot() throws SQLException
     {
         return categoryRepository.getAllRoot();
@@ -127,5 +125,33 @@ public class CategoryService{
         return categoryRepository.getAllCategoriesFromRoot(root);
     }
 
+    public List <Category> getAllSavedLeaf () throws SQLException
+    {
+        return categoryRepository.getAllSavedLeaf();
+    }
+    
+    public List <Category> getAllNotSavedLeaf () throws SQLException
+    {
+        return categoryRepository.getAllNotSavedLeaf();
+    }
 
+    public Category getCategoryByID ( int categoryID ) throws SQLException
+    {
+        return categoryRepository.getCategoryByID ( categoryID);
+    }
+
+    public Category getRootByLeaf ( Category category ) throws SQLException
+    {
+        return categoryRepository.getRootByLeaf(category);
+    }
+
+    public List<String> getFieldValuesFromParentID ( int parentID ) throws SQLException
+    {
+        return relationshipsBetweenCategoriesRepository.getFieldValuesFromParentID(parentID);
+    }
+
+    public Category getChildCategoryByFieldAndParentID ( String field, Category parent ) throws SQLException
+    {
+        return relationshipsBetweenCategoriesRepository.getChildCategoryByFieldAndParentID(field, parent);
+    }
 }

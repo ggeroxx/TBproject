@@ -5,31 +5,19 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.EventQueue;
 import javax.swing.JButton;
-import java.awt.SystemColor;
-import javax.swing.JTextField;
 import javax.swing.JLabel;
-import javax.swing.JPasswordField;
 import javax.swing.SwingConstants;
 import java.awt.Font;
-import java.awt.MenuBar;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.ImageIcon;
 import java.awt.event.MouseMotionAdapter;
 import javax.swing.JTextArea;
 import javax.swing.JScrollPane;
-import javax.swing.ScrollPaneConstants;
-import javax.swing.JComboBox;
 import javax.swing.JMenuBar;
-import javax.swing.JMenu;
-import javax.swing.JMenuItem;
-import javax.swing.JScrollBar;
 
 public class DistrictInfoView extends JFrame{
 
@@ -41,31 +29,6 @@ public class DistrictInfoView extends JFrame{
 	private JTextArea textAreaMuniciplaities;
 	private JLabel lblDistrictName;
 
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) 
-	{
-		EventQueue.invokeLater(new Runnable() 
-		{
-			public void run() 
-			{
-				try 
-				{
-					DistrictInfoView frame = new DistrictInfoView();
-					frame.setUndecorated(true);
-					frame.setVisible(true);
-				} 
-				catch (Exception e) 
-				{
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-
-
-	
 	public DistrictInfoView() 
 	{
 

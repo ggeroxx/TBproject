@@ -131,6 +131,7 @@ public class LoginController  {
 
         User user = userController.getUserByUsername( username );
         userController.setUser( user );
+        loginView.resetFiled();
         userController.start();
         
     }

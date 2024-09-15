@@ -39,31 +39,6 @@ public class RegistrationUserView extends JFrame {
 	private JButton btnLogin;
 	private JLabel lblNewLabel;
 
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) 
-	{
-		/*EventQueue.invokeLater(new Runnable() 
-		{
-			public void run() 
-			{
-				try 
-				{
-					RegistrationUserView frame = new RegistrationUserView(null, null);
-					frame.setUndecorated(true);
-					frame.setVisible(true);
-				} 
-				catch (Exception e) 
-				{
-					e.printStackTrace();
-				}
-			}
-		});*/
-	}
-
-
-	
 	public RegistrationUserView() 
 	{
 

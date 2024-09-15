@@ -2,7 +2,10 @@ package service;
 
 import java.sql.SQLException;
 import java.util.List;
+
+import model.Category;
 import model.Proposal;
+import model.User;
 import repository.ProposalRepository;
 
 public class ProposalService {
@@ -39,6 +42,21 @@ public class ProposalService {
     {
         for ( Proposal toClose : toCloses )
             proposalRepository.closeProposal( toClose );
+    }
+
+    public List<Proposal> getAllProposalsByLeaf (Category category) throws SQLException
+    {
+        return proposalRepository.getAllProposalsByLeaf(category);
+    }
+
+    public List<Proposal> getAllProposalsByUser (User user) throws SQLException
+    {
+        return proposalRepository.getAllProposalsByUser(user);
+    }
+
+    public List<Proposal> getAllOpenProposalByUser (User user) throws SQLException
+    {
+        return proposalRepository.getAllOpenProposalByUser(user);
     }
 
 }

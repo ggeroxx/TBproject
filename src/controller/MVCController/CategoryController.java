@@ -10,41 +10,36 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
-import java.util.InputMismatchException;
-import java.util.Map.Entry;
-
-import javax.lang.model.util.ElementScanner14;
+import java.util.List;
 import javax.swing.AbstractButton;
 import javax.swing.JMenuItem;
 import javax.swing.JRadioButton;
-import javax.swing.Timer;
-
-
 import model.util.Constants;
 import model.util.Controls;
-import controller.GRASPController.CategoryGRASPController;
 import model.Category;
-import model.ConversionFactor;
-import model.Municipality;
 import repository.CategoryRepository;
 import service.CategoryService;
 import service.ControlPatternService;
-import view.CategoryView;
 import view.HierarchyView;
 import view.InsertNewHierarchyView;
+import view.NavigateHierarchyView;
 
 public class CategoryController {
      
     private InsertNewHierarchyView insertNewHierarchyView;
     private HierarchyView hierarchyView;
+    private NavigateHierarchyView navigateHierarchyView;
     private CategoryService categoryService;
     private HashMap<JRadioButton, Category> radioButtonObjectMapForParentiID = new HashMap<>();
     private HashMap<JRadioButton, Category> radioButtonObjectMapForCategory = new HashMap<>();
+    private HashMap<JRadioButton, String> radioButtonObjectMapForFields = new HashMap<>();
+    ArrayList<Category> history = new ArrayList<Category>();
 
-    public CategoryController ( InsertNewHierarchyView insertNewHierarchyView, HierarchyView hierarchyView, CategoryService categoryService)
+    public CategoryController ( InsertNewHierarchyView insertNewHierarchyView, HierarchyView hierarchyView, NavigateHierarchyView navigateHierarchyView, CategoryService categoryService)
     {
         this.insertNewHierarchyView = insertNewHierarchyView;
         this.categoryService = categoryService;
+        this.navigateHierarchyView = navigateHierarchyView;
         this.hierarchyView = hierarchyView;
 
         insertNewHierarchyView.getChckbxLeafCategory().addItemListener(new ItemListener() {
@@ -62,6 +57,29 @@ public class CategoryController {
                 }
             }
         });
+
+        this.navigateHierarchyView.getBackButton().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed( ActionEvent e ) {
+                    try 
+                    {
+                        if( !history.isEmpty() && !(history.size() == 1)) 
+                        {
+                            history.remove( history.size() - 1 );
+                            addRadioButtonFieladsOfCategory( history.get( history.size() - 1 ), false );
+                        }
+                    } catch (SQLException e1) {
+                        e1.printStackTrace();
+                    }
+            }
+        });
+
+        this.navigateHierarchyView.getCloseLabel().addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+                closeNavigateHierarchyView();
+			}
+		});
 
         this.insertNewHierarchyView.getCloseLabel().addMouseListener(new MouseAdapter() {
 			@Override
@@ -375,6 +393,11 @@ public class CategoryController {
     private boolean existValueOfField ( String field, Category parent ) throws SQLException
     {
         return this.categoryService.existValueOfField(field,parent);
+    }
+
+    public Category getRootByLeaf ( Category category ) throws SQLException
+    {
+        return categoryService.getRootByLeaf(category);
     }
 
     /*public void enterHierarchy ( ConfiguratorController configuratorController ) throws SQLException
@@ -721,6 +744,36 @@ public class CategoryController {
         });
     }
 
+    private void addRadioButtonFieladsOfCategory( Category category, boolean addHistory ) throws SQLException 
+    {
+        navigateHierarchyView.getBackButton().setVisible(true);
+        navigateHierarchyView.reset();
+        navigateHierarchyView.setLblInformations(category.getName());
+        navigateHierarchyView.setTextAreaInfo(categoryService.info( category ) );
+        if ( addHistory) history.add(category);
+
+        for (String field :  categoryService.getFieldValuesFromParentID(category.getID()) )
+        {
+            JRadioButton radioButton = navigateHierarchyView.addRadioButton( field );
+            radioButtonObjectMapForFields.put( radioButton, field );
+
+            radioButton.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed( ActionEvent e ) {
+                    if (radioButton.isSelected()) 
+                    {
+                        try 
+                        {
+                            addRadioButtonFieladsOfCategory( categoryService.getChildCategoryByFieldAndParentID(field, category), true);
+                        } catch (SQLException e1) {
+                            e1.printStackTrace();
+                        }
+                    } 
+                }
+            });
+        }
+    }
+
     public void startHierarchyView() throws SQLException
     {
         hierarchyView.init();
@@ -734,6 +787,21 @@ public class CategoryController {
     public void closeHierarchyView()
     {
         hierarchyView.dispose();
+    }
+
+    public void startNavigateHierarchyView () throws SQLException
+    {
+        navigateHierarchyView.init();
+
+        for ( Category toPrint : categoryService.getAllRoot() ) 
+        {
+            addMenuItemForNavigateHierarchyView( toPrint, " " + toPrint.getID() + ". " + ControlPatternService.padRight( Integer.toString( toPrint.getID() ) , 3 ) + toPrint.getName() + ControlPatternService.padRight( toPrint.getName() , 50 )  );
+        } 
+    }
+
+    public void closeNavigateHierarchyView ()
+    {
+        navigateHierarchyView.dispose();
     }
 
     public void addMenuItemForHierarchyView( Category root, String info)
@@ -761,6 +829,31 @@ public class CategoryController {
         
     }
 
+    public void addMenuItemForNavigateHierarchyView( Category root, String info)
+    {
+        JMenuItem categoryItem = navigateHierarchyView.addMenuItem(info);
+        categoryItem.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                try
+                {
+                    history.clear();
+                    navigateHierarchyView.getBackButton().setVisible(false);
+                    navigateHierarchyView.getPanelCategory().removeAll();
+                    navigateHierarchyView.setTextArea( categoryService.buildHierarchy( root.getHierarchyID(), new StringBuffer(), new StringBuffer() ) );
+                    navigateHierarchyView.setTextAreaInfo("");
+                    navigateHierarchyView.setLblInformations("INFORMATIONS");
+                    navigateHierarchyView.setLblFields("FIELDS");
+                    addRadioButtonFieladsOfCategory(root, true);
+                    
+                }
+                catch (SQLException e1) {
+                    e1.printStackTrace();
+                }
+            }
+        });
+        
+    }
+
     private JRadioButton getSelectedRadioButton() 
 	{
 	    Enumeration<AbstractButton> buttons = hierarchyView.getGroup().getElements();
@@ -775,4 +868,18 @@ public class CategoryController {
 	    return null;
 	}
 
+    public List <Category> getAllSavedLeaf () throws SQLException
+    {
+        return categoryService.getAllSavedLeaf();
+    }
+    
+    public List <Category> getAllNotSavedLeaf () throws SQLException
+    {
+        return categoryService.getAllNotSavedLeaf();
+    }
+
+    public Category getCategoryByID ( int categoryID ) throws SQLException
+    {
+        return categoryService.getCategoryByID ( categoryID);
+    }
 }

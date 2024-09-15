@@ -35,4 +35,9 @@ public class MunicipalityService{
         return municipalities.toString();
     }
 
+    public Municipality getMunicipalityByName ( String municipalityName) throws SQLException
+    {
+        return municipalityRepository.getMunicipalityByName(municipalityName);
+    }
+
 }

@@ -4,12 +4,9 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import java.awt.Color;
-import java.awt.EventQueue;
-
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 import javax.swing.Timer;
-
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -17,8 +14,6 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.ImageIcon;
 import java.awt.event.MouseMotionAdapter;
-import javax.swing.JMenuItem;
-import javax.swing.JMenu;
 import javax.swing.JButton;
 import java.awt.SystemColor;
 
@@ -39,31 +34,6 @@ public class ConfiguratorMenuView extends JFrame {
 	private JLabel lblErrorSave;
 	private JButton btnViewProposalOfCategory;
 
-	/**
-	 * Launch the application.
-	 */
-	/*public static void main(String[] args) 
-	{
-		EventQueue.invokeLater(new Runnable() 
-		{
-			public void run() 
-			{
-				try 
-				{
-					ConfiguratorMenuView frame = new ConfiguratorMenuView();
-					frame.setUndecorated(true);
-					frame.setVisible(true);
-				} 
-				catch (Exception e) 
-				{
-					e.printStackTrace();
-				}
-			}
-		});
-	}*/
-
-
-	
 	public ConfiguratorMenuView() 
 	{
 

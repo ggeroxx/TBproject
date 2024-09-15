@@ -1,58 +1,39 @@
 package controller.MVCController;
 
 import java.sql.SQLException;
-import controller.GRASPController.MunicipalityGRASPController;
 import model.District;
-import model.util.Constants;
+import model.Municipality;
 import repository.DistrictToMunicipalitiesRepository;
-import repository.MunicipalityRepository;
-import view.MunicipalityView;
+import service.MunicipalityService;
 
-public class MunicipalityController extends Controller {
+public class MunicipalityController  {
     
-    private MunicipalityView municipalityView;
-    private MunicipalityGRASPController controllerGRASP;
+    private MunicipalityService municipalityService;
 
-    public MunicipalityController ( MunicipalityView municipalityView, MunicipalityGRASPController controllerGRASP)
+    public MunicipalityController ( MunicipalityService municipalityService)
     {
-        super( municipalityView );
-        this.municipalityView = municipalityView;
-        this.controllerGRASP = controllerGRASP;    
-    }
-
-    public MunicipalityRepository getMunicipalityRepository ()
-    {
-        return this.controllerGRASP.getMunicipalityRepository();
+        this.municipalityService = municipalityService;    
     }
 
     public DistrictToMunicipalitiesRepository getDistrictToMunicipalitiesRepository ()
     {
-        return this.controllerGRASP.getDistrictToMunicipalitiesRepository();
+        return this.municipalityService.getDistrictToMunicipalitiesRepository();
     }
 
     public String getAllMunicipalityFromDistrict ( District district ) throws SQLException
     {
-        return this.controllerGRASP.getAllMunicipalityFromDistrict(district);
-    }
-
-    public String enterName () throws SQLException
-    {
-        return super.readString( Constants.ENTER_MUNICIPALITY, Constants.NOT_EXIST_MESSAGE, ( str ) -> {
-            try 
-            {
-                return getMunicipalityRepository().getMunicipalityByName( str ) == null;
-            } 
-            catch ( SQLException e ) 
-            {
-                return false;
-            }
-        } );
+        return this.municipalityService.getAllMunicipalityFromDistrict(district);
     }
 
     public boolean existaMunicipalityName (String name) throws SQLException
     {
-        if(getMunicipalityRepository().getMunicipalityByName( name ) == null) return false;
+        if( getMunicipalityByName( name ) == null) return false;
         return true;
+    }
+
+    public Municipality getMunicipalityByName ( String municipalityName ) throws SQLException
+    {
+        return municipalityService.getMunicipalityByName( municipalityName );
     }
 
 }

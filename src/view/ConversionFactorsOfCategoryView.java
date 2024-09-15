@@ -4,50 +4,18 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import java.awt.Color;
-import java.awt.EventQueue;
-import javax.swing.JButton;
 import java.awt.SystemColor;
-import javax.swing.JTextField;
 import javax.swing.JLabel;
-import javax.swing.JPasswordField;
 import javax.swing.SwingConstants;
 import java.awt.Font;
-import java.awt.MenuBar;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-
-import javax.swing.AbstractButton;
 import javax.swing.BoxLayout;
-import javax.swing.ButtonGroup;
-import javax.swing.ImageIcon;
 import java.awt.event.MouseMotionAdapter;
-import java.util.Enumeration;
-
-import javax.swing.JTextArea;
 import javax.swing.JScrollPane;
-import javax.swing.ScrollPaneConstants;
-import javax.swing.JComboBox;
 import javax.swing.JMenuBar;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
-import javax.swing.JScrollBar;
-import javax.swing.JRadioButton;
-import java.awt.BorderLayout;
-import java.awt.FlowLayout;
-import java.awt.GridLayout;
-import java.awt.CardLayout;
-import java.awt.GridBagLayout;
-import java.awt.GridBagConstraints;
-import javax.swing.SpringLayout;
-import javax.swing.GroupLayout;
-import javax.swing.GroupLayout.Alignment;
-import java.awt.Insets;
-import com.jgoodies.forms.layout.FormLayout;
-import com.jgoodies.forms.layout.ColumnSpec;
-import com.jgoodies.forms.layout.FormSpecs;
-import com.jgoodies.forms.layout.RowSpec;
 
 public class ConversionFactorsOfCategoryView extends JFrame{
 
@@ -60,31 +28,6 @@ public class ConversionFactorsOfCategoryView extends JFrame{
 	private JLabel lblClose;
 	private JMenuBar menuBar;
 	private JMenu mnMenuCategories;
-
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) 
-	{
-		EventQueue.invokeLater(new Runnable() 
-		{
-			public void run() 
-			{
-				try 
-				{
-					ConversionFactorsOfCategoryView frame = new ConversionFactorsOfCategoryView();
-					frame.setUndecorated(true);
-					frame.setVisible(true);
-				} 
-				catch (Exception e) 
-				{
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-
-
 	
 	public ConversionFactorsOfCategoryView() 
 	{

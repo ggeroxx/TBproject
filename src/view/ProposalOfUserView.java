@@ -4,6 +4,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import java.awt.Color;
+import java.awt.EventQueue;
 import java.awt.SystemColor;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
@@ -14,18 +15,42 @@ import javax.swing.BoxLayout;
 import java.awt.event.MouseMotionAdapter;
 import javax.swing.JScrollPane;
 
-
-public class AllConversionFactorsView extends JFrame{
+public class ProposalOfUserView extends JFrame{
 
 	private JPanel contentPane;
 	private int xx, xy;
 	private JScrollPane scrollPane;
 	private JPanel panel;
 
-	private JLabel lblNewLabel;
+	private JLabel lblProposal;
 	private JLabel lblClose;
+
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) 
+	{
+		EventQueue.invokeLater(new Runnable() 
+		{
+			public void run() 
+			{
+				try 
+				{
+					ProposalOfCategoryView frame = new ProposalOfCategoryView();
+					frame.setUndecorated(true);
+					frame.setVisible(true);
+				} 
+				catch (Exception e) 
+				{
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+
+
 	
-	public AllConversionFactorsView() 
+	public ProposalOfUserView() 
 	{
 
 		addMouseListener(new MouseAdapter() 
@@ -45,13 +70,13 @@ public class AllConversionFactorsView extends JFrame{
 		    {
 		        int x = e.getXOnScreen();
 		        int y = e.getYOnScreen(); 
-		        AllConversionFactorsView.this.setLocation(x - xx, y - xy);
+		        ProposalOfUserView.this.setLocation(x - xx, y - xy);
 		    }
 		});
 		
 		setBackground(new Color(255, 255, 255));
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 1206, 705);
+		setBounds(100, 100, 1288, 580);
 		contentPane = new JPanel();
 		contentPane.setForeground(Color.BLACK);
 		contentPane.setBackground(new Color(255, 255, 255));
@@ -61,33 +86,34 @@ public class AllConversionFactorsView extends JFrame{
 		contentPane.setLayout(null);
 		
 		scrollPane = new JScrollPane();
-		scrollPane.setBounds(26, 43, 1156, 615);
+		scrollPane.setBounds(26, 70, 1241, 395);
 		contentPane.add(scrollPane);
 		
 		panel = new JPanel();
 		scrollPane.setViewportView(panel);	
 		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 		
-		lblNewLabel = new JLabel("CONVERSION FACTORS");
-		lblNewLabel.setFont(new Font("Tahoma", Font.BOLD, 12));
-		lblNewLabel.setForeground(new Color(0, 0, 255));
-		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNewLabel.setBounds(555, 10, 156, 23);
-		contentPane.add(lblNewLabel);
+		lblProposal = new JLabel("PROPOSALS");
+		lblProposal.setFont(new Font("Tahoma", Font.BOLD, 12));
+		lblProposal.setForeground(new Color(0, 0, 255));
+		lblProposal.setHorizontalAlignment(SwingConstants.CENTER);
+		lblProposal.setBounds(85, 37, 1021, 23);
+		contentPane.add(lblProposal);
 		
 		lblClose = new JLabel("X");
 		lblClose.setHorizontalAlignment(SwingConstants.CENTER);
 		lblClose.setForeground(Color.RED);
 		lblClose.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		lblClose.setBackground(SystemColor.menu);
-		lblClose.setBounds(1147, 7, 35, 27);
+		lblClose.setBounds(1253, 0, 35, 27);
 		contentPane.add(lblClose);
+		
 
 	}
 	
-	public void addlblConversionFactor( String info ) 
+	public void addlblProposal( String info ) 
 	 {
-		JLabel label = new JLabel( info);
+		JLabel label = new JLabel( info );
 		label.setFont(new Font("Monospaced", Font.PLAIN, 12));
 		panel.add(label);
 		contentPane.revalidate(); 
@@ -105,10 +131,27 @@ public class AllConversionFactorsView extends JFrame{
 		return panel;
 	}
 	
+
+	public void setLblProposal( String message )
+	{
+		lblProposal.setText(message);
+	}
+	
 	public JLabel getCloseLabel() 
 	{
         return lblClose;
     }
+	
+	public void init ()
+	{
+		getPanel().removeAll();
+		getPanel().revalidate();
+		getPanel().repaint();
+		setLblProposal("PROPOSALS");
+        setUndecorated(true);
+        setVisible(true);
+	}
+	
 	
 	public void resetFields()
 	{
@@ -117,5 +160,6 @@ public class AllConversionFactorsView extends JFrame{
 		getPanel().repaint();
 	}
 	
-	
+
 }
+

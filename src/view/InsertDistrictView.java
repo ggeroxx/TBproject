@@ -4,12 +4,10 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import java.awt.Color;
-import java.awt.EventQueue;
 import javax.swing.JButton;
 import java.awt.SystemColor;
 import javax.swing.JTextField;
 import javax.swing.JLabel;
-import javax.swing.JPasswordField;
 import javax.swing.SwingConstants;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
@@ -24,7 +22,6 @@ import javax.swing.Timer;
 import javax.swing.JTextArea;
 import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneConstants;
-import javax.swing.JComboBox;
 
 public class InsertDistrictView extends JFrame{
 
@@ -41,31 +38,6 @@ public class InsertDistrictView extends JFrame{
 	private JButton btnAddmunicipality;
 	private JLabel lblErrorNameDistrict;
 
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) 
-	{
-		EventQueue.invokeLater(new Runnable() 
-		{
-			public void run() 
-			{
-				try 
-				{
-					InsertDistrictView frame = new InsertDistrictView();
-					frame.setUndecorated(true);
-					frame.setVisible(true);
-				} 
-				catch (Exception e) 
-				{
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-
-
-	
 	public InsertDistrictView() 
 	{
 

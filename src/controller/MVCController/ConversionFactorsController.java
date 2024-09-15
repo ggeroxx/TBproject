@@ -158,11 +158,11 @@ public class ConversionFactorsController  {
     {
         conversionFactorsOfCategoryView.init();
 
-        for ( Category toPrint : categoryController.getCategoryRepository().getAllSavedLeaf() ) 
+        for ( Category toPrint : categoryController.getAllSavedLeaf() ) 
         {
             addMenuItem( toPrint, " " + toPrint.getID() + ". " + ControlPatternService.padRight( Integer.toString( toPrint.getID() ) , 3 ) + toPrint.getName() + ControlPatternService.padRight( toPrint.getName() , 50 ) + "  [ " + categoryController.getCategoryRepository().getRootByLeaf( toPrint ).getName() + " ]  " );
         }
-        for ( Category toPrint : categoryController.getCategoryRepository().getAllNotSavedLeaf() )
+        for ( Category toPrint : categoryController.getAllNotSavedLeaf() )
         {
             addMenuItem( toPrint, " " + toPrint.getID() + ". " + ControlPatternService.padRight( Integer.toString( toPrint.getID() ) , 3 ) + toPrint.getName() + ControlPatternService.padRight( toPrint.getName() , 50 ) + "  [ " + categoryController.getCategoryRepository().getRootByLeaf( toPrint ).getName() + " ]  " + Constants.NOT_SAVED );
         } 

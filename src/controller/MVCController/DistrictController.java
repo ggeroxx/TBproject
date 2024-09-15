@@ -12,7 +12,6 @@ import model.util.Constants;
 import service.ControlPatternService;
 import service.DistrictService;
 import view.DistrictInfoView;
-
 import view.InsertDistrictView;
 
 public class DistrictController {
@@ -25,11 +24,10 @@ public class DistrictController {
 
     public DistrictController ( InsertDistrictView insertDistrictView, DistrictInfoView districtInfoView, MunicipalityController municipalityController, DistrictService districtService)
     {
-        this.municipalityController = municipalityController;
-        this.districtService = districtService;
-
         this.insertDistrictView = insertDistrictView;
         this.districtInfoView = districtInfoView;
+        this.municipalityController = municipalityController;
+        this.districtService = districtService;
 
         this.insertDistrictView.getAddDistrictAddButton().addActionListener(new ActionListener() {
             @Override
@@ -72,7 +70,7 @@ public class DistrictController {
                 {
                     if(municipalityController.existaMunicipalityName(insertDistrictView.getTextMunicipality()))
                     {
-                        Municipality municipalityToAdd = municipalityController.getMunicipalityRepository().getMunicipalityByName( insertDistrictView.getTextMunicipality() );
+                        Municipality municipalityToAdd = municipalityController.getMunicipalityByName( insertDistrictView.getTextMunicipality() );
                         if ( isPresentMunicipalityInDistrict( municipalityToAdd ) )
                         {
                             insertDistrictView.setLblErrorMunicipality( Constants.MUNICIPALITY_NAME_ALREADY_PRESENT );

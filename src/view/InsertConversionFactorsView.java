@@ -4,27 +4,19 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import java.awt.Color;
-import java.awt.EventQueue;
 import javax.swing.JButton;
 import java.awt.SystemColor;
 import javax.swing.JTextField;
 import javax.swing.JLabel;
-import javax.swing.JPasswordField;
 import javax.swing.SwingConstants;
 import java.awt.Font;
-import java.awt.MenuBar;
-import java.awt.event.ActionEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-
-import javax.swing.AbstractButton;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import java.awt.event.MouseMotionAdapter;
-import java.util.Enumeration;
-
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 
@@ -42,31 +34,6 @@ public class InsertConversionFactorsView extends JFrame{
 	private JLabel lblError;
 	private JLabel lblNewLabel;
 	private JLabel lblClose;
-
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) 
-	{
-		EventQueue.invokeLater(new Runnable() 
-		{
-			public void run() 
-			{
-				try 
-				{
-					InsertConversionFactorsView frame = new InsertConversionFactorsView();
-					frame.setUndecorated(true);
-					frame.setVisible(true);
-				} 
-				catch (Exception e) 
-				{
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-
-
 	
 	public InsertConversionFactorsView() 
 	{

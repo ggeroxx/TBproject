@@ -7,6 +7,7 @@ import repository.UserRepository;
 
 public class UserService{
     
+    private User user;
     private UserRepository userRepository;
     private ProposalService proposalService;
 
@@ -14,6 +15,16 @@ public class UserService{
     {
         this.userRepository = userRepository;
         this.proposalService = proposalService;
+    }
+
+    public User getUser ()
+    {
+        return this.user;
+    }
+
+    public void setUser ( User user )
+    {
+        this.user = user;
     }
 
     public UserRepository getuserRepository ()
