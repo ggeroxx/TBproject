@@ -14,6 +14,7 @@ import java.awt.event.MouseEvent;
 import javax.swing.BoxLayout;
 import java.awt.event.MouseMotionAdapter;
 import javax.swing.JScrollPane;
+import javax.swing.JButton;
 
 public class ProposalOfUserView extends JFrame{
 
@@ -24,6 +25,7 @@ public class ProposalOfUserView extends JFrame{
 
 	private JLabel lblProposal;
 	private JLabel lblClose;
+	private JButton btnOk;
 
 	/**
 	 * Launch the application.
@@ -97,7 +99,7 @@ public class ProposalOfUserView extends JFrame{
 		lblProposal.setFont(new Font("Tahoma", Font.BOLD, 12));
 		lblProposal.setForeground(new Color(0, 0, 255));
 		lblProposal.setHorizontalAlignment(SwingConstants.CENTER);
-		lblProposal.setBounds(85, 37, 1021, 23);
+		lblProposal.setBounds(138, 38, 1021, 23);
 		contentPane.add(lblProposal);
 		
 		lblClose = new JLabel("X");
@@ -107,6 +109,12 @@ public class ProposalOfUserView extends JFrame{
 		lblClose.setBackground(SystemColor.menu);
 		lblClose.setBounds(1253, 0, 35, 27);
 		contentPane.add(lblClose);
+		
+		btnOk = new JButton("OK");
+		btnOk.setFont(new Font("Tahoma", Font.BOLD, 10));
+		btnOk.setBackground(Color.BLUE);
+		btnOk.setBounds(579, 485, 138, 21);
+		contentPane.add(btnOk);
 		
 
 	}
@@ -141,6 +149,11 @@ public class ProposalOfUserView extends JFrame{
 	{
         return lblClose;
     }
+	
+	public JButton getOkButton()
+	{
+		return btnOk;
+	}
 	
 	public void init ()
 	{

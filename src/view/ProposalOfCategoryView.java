@@ -16,6 +16,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JMenuBar;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
+import javax.swing.JButton;
 
 public class ProposalOfCategoryView extends JFrame{
 
@@ -28,6 +29,7 @@ public class ProposalOfCategoryView extends JFrame{
 	private JLabel lblClose;
 	private JMenuBar menuBar;
 	private JMenu mnMenuCategories;
+	private JButton btnOk;
 
 	public ProposalOfCategoryView() 
 	{
@@ -65,7 +67,7 @@ public class ProposalOfCategoryView extends JFrame{
 		contentPane.setLayout(null);
 		
 		scrollPane = new JScrollPane();
-		scrollPane.setBounds(26, 70, 1241, 619);
+		scrollPane.setBounds(26, 70, 1241, 598);
 		contentPane.add(scrollPane);
 		
 		panel = new JPanel();
@@ -76,7 +78,7 @@ public class ProposalOfCategoryView extends JFrame{
 		lblProposal.setFont(new Font("Tahoma", Font.BOLD, 12));
 		lblProposal.setForeground(new Color(0, 0, 255));
 		lblProposal.setHorizontalAlignment(SwingConstants.CENTER);
-		lblProposal.setBounds(85, 37, 1021, 23);
+		lblProposal.setBounds(133, 44, 1021, 23);
 		contentPane.add(lblProposal);
 		
 		lblClose = new JLabel("X");
@@ -93,6 +95,12 @@ public class ProposalOfCategoryView extends JFrame{
 		
 		mnMenuCategories = new JMenu("Categories");
 		menuBar.add(mnMenuCategories);
+		
+		btnOk = new JButton("OK");
+		btnOk.setFont(new Font("Tahoma", Font.BOLD, 10));
+		btnOk.setBackground(Color.BLUE);
+		btnOk.setBounds(572, 678, 138, 21);
+		contentPane.add(btnOk);
 		
 
 	}
@@ -135,6 +143,11 @@ public class ProposalOfCategoryView extends JFrame{
 	{
         return lblClose;
     }
+	
+	public JButton getOkButton()
+	{
+		return btnOk;
+	}
 	
 	public void init ()
 	{

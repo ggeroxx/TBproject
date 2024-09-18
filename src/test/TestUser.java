@@ -2,6 +2,8 @@ package test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+
+import java.io.IOException;
 import java.sql.SQLException;
 import org.junit.Test;
 import org.mindrot.jbcrypt.BCrypt;
@@ -26,21 +28,21 @@ public class TestUser extends TestScheme {
     }
 
     @Test
-    public void testProposeProposal () throws SQLException
+    public void testProposeProposal () throws SQLException, IOException
     {
         User user = new User( 0 , "TestUsername", BCrypt.hashpw("TestPassword", BCrypt.gensalt()), districtRepository.getOneDistrictForTest().getID(), "test@test.test");
         userRepository.insertUser( user );
 
         User userCreated = userRepository.getUserByUsername( "TestUsername" );
 
-        userController.setUser( userCreated );
+        userController.setUser( userCreated.getUsername() );
 
         Category leaf1 = categoryRepository.getAllLeaf().get( 1 );
         Category leaf2 = categoryRepository.getAllLeaf().get( 2 );
 
         Proposal prop = new Proposal( null, leaf1, leaf2, 2, 3, userCreated, "open" );
 
-        userController.insertProposal( prop );
+        userService.insertProposal( prop );
 
         assertTrue(proposalRepository.getAllOpenProposalByUser( userCreated ).size() == 1 );
 
@@ -49,27 +51,27 @@ public class TestUser extends TestScheme {
     }
 
     @Test
-    public void testRetireProposal () throws SQLException
+    public void testRetireProposal () throws SQLException, IOException
     {
         User user = new User( 0 , "TestUsername", BCrypt.hashpw( "TestPassword", BCrypt.gensalt() ), districtRepository.getOneDistrictForTest().getID(), "test@test.test" );
         userRepository.insertUser( user );
 
         User userCreated = userRepository.getUserByUsername( "TestUsername" );
 
-        userController.setUser( userCreated );
+        userController.setUser( userCreated.getUsername() );
 
         Category leaf1 = categoryRepository.getAllLeaf().get( 1 );
         Category leaf2 = categoryRepository.getAllLeaf().get( 2 );
 
         Proposal prop = new Proposal( null, leaf1, leaf2, 2, 3, userCreated, "open" );
 
-        userController.insertProposal( prop );
+        userService.insertProposal( prop );
 
         Proposal propCreated = proposalRepository.getAllOpenProposalByUser( userCreated ).get( 0 );
 
         assertEquals( propCreated.getState(), "open" );
         
-        userController.retireProposal( propCreated );
+        userService.retireProposal( propCreated );
 
         propCreated = proposalRepository.getAllProposalsByUser( userCreated ).get( 0 );
 

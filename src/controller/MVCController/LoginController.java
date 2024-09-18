@@ -3,14 +3,9 @@ package controller.MVCController;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
-import java.sql.SQLException;
 import java.awt.event.MouseEvent;
-import model.Configurator;
-import model.User;
+import java.io.IOException;
 import model.util.Constants;
-import repository.AccessRepository;
-import service.ConnectionService;
-import service.SessionService;
 import view.LoginView;
 
 public class LoginController  {
@@ -18,30 +13,34 @@ public class LoginController  {
 	private LoginView loginView;
     private ChangeCredentialsConfiguratorController registrationConfiguratorController;
     private RegistrationUserController registrationUserController;
-
-    private SessionService sessionService;
-    private AccessRepository accessRepository;
     private ConfiguratorController configuratorController;
+    private SessionController sessionController;
     private UserController userController;
 
-    public LoginController (LoginView loginView, ChangeCredentialsConfiguratorController registrationConfiguratorController, RegistrationUserController registrationUserController, SessionService sessionService, AccessRepository accessRepository, DistrictController districtController, ConfiguratorController configuratorController, UserController userController )
+    public LoginController (LoginView loginView, ChangeCredentialsConfiguratorController registrationConfiguratorController, RegistrationUserController registrationUserController, DistrictController districtController, ConfiguratorController configuratorController, UserController userController, SessionController sessionController )
     {
-        this.sessionService = sessionService;
-        this.accessRepository = accessRepository;
         this.configuratorController = configuratorController;
         this.userController = userController;
-
         this.loginView = loginView;
         this.registrationConfiguratorController = registrationConfiguratorController;
         this.registrationUserController = registrationUserController;
+        this.sessionController = sessionController;
+
+
 
         this.loginView.getLoginButton().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                try {
+                try 
+                {
                     login();
-                } catch (SQLException ex) {
-                    ex.printStackTrace();
+                } 
+                catch (ClassNotFoundException e1) 
+                {
+                    e1.printStackTrace();
+                } catch (IOException e1) 
+                {
+                    e1.printStackTrace();
                 }
             }
         });
@@ -49,24 +48,23 @@ public class LoginController  {
         this.loginView.getSignUpButton().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                try {
-                    loginView.resetFiled();
+                loginView.resetFiled();
+                try 
+                {
                     registrationUserController.start();
-                } catch (SQLException ex) {
-                    ex.printStackTrace();
+                } 
+                catch (ClassNotFoundException | IOException e1) {
+                    e1.printStackTrace();
                 }
             }
         });
 
         this.loginView.getCloseLabel().addMouseListener(new MouseAdapter() {
 			@Override
-			public void mouseClicked(MouseEvent e) {
-                try {
-                    close();
-                    System.exit(0);
-                } catch (SQLException ex) {
-                    ex.printStackTrace();
-                }	
+			public void mouseClicked(MouseEvent e) 
+            {
+                close();
+                System.exit(0);
 			}
 		});
 
@@ -74,49 +72,41 @@ public class LoginController  {
 
     public void start () 
     {
-        try 
-        {
-            ConnectionService.openConnection();
-            loginView.setUndecorated(true);
-            loginView.setVisible(true);
-        } 
-        catch (SQLException e) 
-        {
-            e.printStackTrace();
-        }
-
+        loginView.setUndecorated(true);
+        loginView.setVisible(true);
     }
 
-    public void close() throws SQLException
+    public void close()
     {
         loginView.resetFiled();
         loginView.dispose();
-        ConnectionService.closeConnection();
     }
 
-    public void login () throws SQLException 
+    public void login () throws ClassNotFoundException, IOException 
     {
         String username = loginView.getUsername();
         String password = loginView.getPassword();
+        sessionController.login( username, password );
+        boolean status = (boolean) sessionController.getStatus();
+        Character subject = sessionController.getSubject();
 
-        sessionService.login( username, password );
-        if ( !sessionService.getStatus() && sessionService.getSubject() == null )
+        if ( !status && subject == null )
         {   
             loginView.setMessage( Constants.LOGIN_ERROR );
             return;
         }
-        if ( !sessionService.getStatus() && sessionService.getSubject() == 'c' )
+        if ( !status && subject == 'c' )
         {
-        	loginView.setMessage( String.format( Constants.DENIED_ACCESS, accessRepository.getPermission().getUsername() ) );
+        	loginView.setMessage( String.format( Constants.DENIED_ACCESS, sessionController.getUsernamePermission() ) );
             return;
         }
 
-        if ( sessionService.getSubject() == 'c' ) 
+        if ( subject == 'c' ) 
         {
-            Configurator conf = configuratorController.getConfiguratorByUsername( username );
-            configuratorController.setConfigurator( conf );
+            //Configurator conf = configuratorController.getConfiguratorByUsername( username );
+            configuratorController.setConfigurator( username );
 
-            if ( conf.getFirstAccess() )
+            if ( configuratorController.getFirstAccess() )
             {
                 loginView.resetFiled();
                 registrationConfiguratorController.start();   
@@ -129,8 +119,8 @@ public class LoginController  {
             return;
         }
 
-        User user = userController.getUserByUsername( username );
-        userController.setUser( user );
+        //User user = userController.getUserByUsername( username );
+        userController.setUser( username );
         loginView.resetFiled();
         userController.start();
         

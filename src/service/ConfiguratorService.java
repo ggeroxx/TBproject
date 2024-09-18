@@ -26,6 +26,11 @@ public class ConfiguratorService{
         this.configurator = configurator;
     }
 
+    public Configurator getConfigurator()
+    {
+        return this.configurator;
+    }
+
     public ConfiguratorRepository getconfiguratorRepository () 
     {
         return this.configuratorRepository;
@@ -65,4 +70,5 @@ public class ConfiguratorService{
     {
         return configuratorRepository.getConfiguratorByUsername(username);
     }
+
 }

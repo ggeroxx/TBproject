@@ -37,6 +37,7 @@ public class InsertDistrictView extends JFrame{
 	private JScrollPane scrollPane;
 	private JButton btnAddmunicipality;
 	private JLabel lblErrorNameDistrict;
+	private JButton btnEnd;
 
 	public InsertDistrictView() 
 	{
@@ -64,7 +65,7 @@ public class InsertDistrictView extends JFrame{
 		
 		setBackground(new Color(255, 255, 255));
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 819, 593);
+		setBounds(100, 100, 819, 605);
 		contentPane = new JPanel();
 		contentPane.setForeground(Color.BLACK);
 		contentPane.setBackground(new Color(255, 255, 255));
@@ -80,7 +81,7 @@ public class InsertDistrictView extends JFrame{
 		panel.setLayout(null);
 		
 		JLabel lblImg = new JLabel("");
-		lblImg.setBounds(38, 23, 351, 512);
+		lblImg.setBounds(36, 40, 351, 512);
 		panel.add(lblImg);
 		lblImg.setBackground(new Color(255, 255, 255));
 		lblImg.setIcon(new ImageIcon(ChangeCredentialsConfiguratorView.class.getResource("/img/login.jpg")));
@@ -179,6 +180,15 @@ public class InsertDistrictView extends JFrame{
 		btnAddmunicipality.setBackground(SystemColor.textHighlight);
 		btnAddmunicipality.setBounds(446, 477, 326, 41);
 		contentPane.add(btnAddmunicipality);
+		
+		btnEnd = new JButton("END");
+		btnEnd.setFont(new Font("Tahoma", Font.BOLD, 10));
+		btnEnd.setForeground(Color.WHITE);
+		btnEnd.setBackground(SystemColor.textHighlight);
+		btnEnd.setBounds(573, 528, 85, 21);
+		contentPane.add(btnEnd);
+		
+		btnEnd.setVisible(false);
 		btnAddmunicipality.setVisible(false);
 		
 		
@@ -265,6 +275,11 @@ public class InsertDistrictView extends JFrame{
     	lblErrorNameDistrict.setText(message);
     }
     
+    public JButton getEndButton()
+    {
+    	return btnEnd;
+    }
+    
     public void blockAddDistrictAnEnableAddMunicipality( String nameDistrict )
     {
     	setLblErrorNameDistrict("");
@@ -275,6 +290,7 @@ public class InsertDistrictView extends JFrame{
         getTextFiledMunicipality().setVisible(true);
         getlblErrorMunicipality().setVisible(true);
         getAddmunicipalityButton().setVisible(true);
+        getEndButton().setVisible(true);
         revalidate();
         repaint();
     }
@@ -312,6 +328,7 @@ public class InsertDistrictView extends JFrame{
         getTextFiledMunicipality().setVisible(false);
         getlblErrorMunicipality().setVisible(false);
         getAddmunicipalityButton().setVisible(false);
+        getEndButton().setVisible(false);
         setTextMunicipalities("");
         setTxtMunicipality("");
         setLblErrorMunicipality("");

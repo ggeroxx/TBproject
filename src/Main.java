@@ -1,6 +1,11 @@
+
+import java.io.IOException;
+
+import controller.ClientServer.Client;
 import controller.MVCController.CategoryController;
 import controller.MVCController.ChangeCredentialsConfiguratorController;
 import controller.MVCController.ConfiguratorController;
+import controller.MVCController.ControlPatternController;
 import controller.MVCController.ConversionFactorController;
 import controller.MVCController.ConversionFactorsController;
 import controller.MVCController.DistrictController;
@@ -8,6 +13,7 @@ import controller.MVCController.LoginController;
 import controller.MVCController.MunicipalityController;
 import controller.MVCController.ProposalController;
 import controller.MVCController.RegistrationUserController;
+import controller.MVCController.SessionController;
 import controller.MVCController.SubjectController;
 import controller.MVCController.UserController;
 import repository.AccessRepository;
@@ -76,7 +82,7 @@ public class Main {
         UserView userView = new UserView();
         SubjectView subjectView = new SubjectView();*/
 
-        AccessRepository accessRepository = new JDBCAccessRepositoryl();
+        /*AccessRepository accessRepository = new JDBCAccessRepositoryl();
         ConfiguratorRepository configuratorRepository = new JDBCConfiguratorRepository();
         UserRepository userRepository = new JDBCUserRepository();
         DistrictRepository districtRepository = new JDBCDistrictRepository();
@@ -99,7 +105,7 @@ public class Main {
         ConversionFactorsService conversionFactorsService = new ConversionFactorsService(conversionFactorsRepository, categoryService);
         UserService userService = new UserService(userRepository, proposalService);
         ConfiguratorService configuratorService = new ConfiguratorService(configuratorRepository, districtService, categoryService, conversionFactorsService);
-        SubjectService subjectService = new SubjectService(configuratorService, userService);
+        SubjectService subjectService = new SubjectService(configuratorService, userService);*/
 
         LoginView loginView = new LoginView ();
         ChangeCredentialsConfiguratorView changeCredentialsConfiguratorView = new ChangeCredentialsConfiguratorView();
@@ -119,22 +125,33 @@ public class Main {
         ProposeProposalView proposeProposalView = new ProposeProposalView();
         NavigateHierarchyView navigateHierarchyView = new NavigateHierarchyView();
 
-        SubjectController subjectController = new SubjectController( subjectService );
-        MunicipalityController municipalityController = new MunicipalityController( municipalityService );
-        DistrictController districtController = new DistrictController(insertDistrictView, districtInfoView, municipalityController, districtService);
-        CategoryController categoryController = new CategoryController(insertNewHierarchyView, hierarchyView, navigateHierarchyView, categoryService);
-        ConversionFactorController conversionFactorController = new ConversionFactorController( categoryController );
-        ConversionFactorsController conversionFactorsController = new ConversionFactorsController(allConversionFactorsView, insertConversionFactorsView, conversionFactorsOfCategoryView, conversionFactorController, categoryController, conversionFactorsService);
-        ProposalController proposalController = new ProposalController(proposalOfCategoryView, proposalOfUserView, retireProposalView, proposeProposalView, categoryController, conversionFactorsController, proposalService);
-        ConfiguratorController configuratorController = new ConfiguratorController(configuratorMenuView, sessionService, districtController, categoryController, conversionFactorsController, proposalController, configuratorService);
+        Client client;
+        try 
+        {
+            client = new Client("localhost", 12345);
+
+            SessionController sessionController = new SessionController(client);
+            ControlPatternController controlPatternController = new ControlPatternController(client);
+            SubjectController subjectController = new SubjectController(client);
+            MunicipalityController municipalityController = new MunicipalityController(client);
+            DistrictController districtController = new DistrictController(insertDistrictView, districtInfoView, municipalityController, controlPatternController, sessionController, client);
+            CategoryController categoryController = new CategoryController(insertNewHierarchyView, hierarchyView, navigateHierarchyView, sessionController, controlPatternController, client);
+            ConversionFactorController conversionFactorController = new ConversionFactorController(categoryController, controlPatternController);
+            ConversionFactorsController conversionFactorsController = new ConversionFactorsController(allConversionFactorsView, insertConversionFactorsView, conversionFactorsOfCategoryView, conversionFactorController, categoryController, controlPatternController, sessionController, client);
+            ProposalController proposalController = new ProposalController(proposalOfCategoryView, proposalOfUserView, retireProposalView, proposeProposalView, categoryController, conversionFactorsController, sessionController, controlPatternController, client);
+            ConfiguratorController configuratorController = new ConfiguratorController(configuratorMenuView, sessionController, districtController, categoryController, conversionFactorsController, proposalController, client);
+            
+            UserController userController = new UserController(userMenuView, sessionController, categoryController, proposalController, client);
+            ChangeCredentialsConfiguratorController changeCredentialsConfiguratorController = new ChangeCredentialsConfiguratorController(changeCredentialsConfiguratorView, configuratorController, subjectController, sessionController, client);
+            RegistrationUserController registrationUserController = new RegistrationUserController(registrationUserView, districtController, municipalityController, subjectController, userController, controlPatternController);
+            LoginController loginController = new LoginController(loginView, changeCredentialsConfiguratorController, registrationUserController, districtController, configuratorController, userController, sessionController);
         
-        UserController userController = new UserController(userMenuView, sessionService, categoryController, proposalController, userService);
-        ChangeCredentialsConfiguratorController changeCredentialsConfiguratorController = new ChangeCredentialsConfiguratorController(changeCredentialsConfiguratorView, configuratorController, subjectController);
-        RegistrationUserController registrationUserController = new RegistrationUserController(registrationUserView, districtController, subjectController, userController);
-        LoginController loginController = new LoginController(loginView, changeCredentialsConfiguratorController, registrationUserController, sessionService, accessRepository, districtController, configuratorController, userController);
-
-        loginController.start();
-
+            loginController.start();
+        } 
+        catch (IOException e) 
+        {
+            e.printStackTrace();
+        }
     }
 
 }

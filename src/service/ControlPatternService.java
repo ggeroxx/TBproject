@@ -1,7 +1,6 @@
 package service;
 import java.sql.SQLException;
 
-import controller.MVCController.SubjectController;
 import model.util.Constants;
 import model.util.Controls;
 
@@ -32,11 +31,11 @@ public class ControlPatternService {
         return Controls.padRight(str, maxLenght);
     }
 
-    public static String messageErrorNewUsername( String newUsername, SubjectController subjectController ) throws SQLException
+    public static String messageErrorNewUsername( String newUsername, boolean isPresentUsername ) throws SQLException
     {
         boolean checkUsername = false;
         
-        checkUsername = subjectController.isPresentUsername( newUsername );
+        checkUsername = isPresentUsername;
         if ( checkUsername ) 
         {
         	return ( Constants.USERNAME_NOT_AVAILABLE );

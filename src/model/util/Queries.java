@@ -394,5 +394,9 @@ public class Queries {
                                                       
     public static final String DELETE_PROPOSAL_BY_USER = "DELETE FROM proposals "+
                                                          "WHERE userID = ?";
+
+    public static final String GET_PROPOSAL_BY_ID = "SELECT * " +
+                                                    "FROM proposals " +
+                                                    "WHERE ID = ?";
                                                                     
 }

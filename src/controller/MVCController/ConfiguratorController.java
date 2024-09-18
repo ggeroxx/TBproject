@@ -1,42 +1,44 @@
 package controller.MVCController;
 
-import java.sql.SQLException;
+import controller.ClientServer.Client;
+import controller.ClientServer.SomeRequestConfigurator;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import model.Configurator;
+import java.io.IOException;
 import model.util.Constants;
-import service.ConfiguratorService;
-import service.SessionService;
 import view.ConfiguratorMenuView;
 
 public class ConfiguratorController {
 
     private ConfiguratorMenuView configuratorMenuView;
-    private SessionService sessionService;
+    private SessionController sessionController;
     private DistrictController districtController;
     private CategoryController categoryController;
     private ConversionFactorsController conversionFactorsController;
     private ProposalController proposalController;
-    private ConfiguratorService configuratorService;
 
-    public ConfiguratorController ( ConfiguratorMenuView configuratorMenuView, SessionService sessionService, DistrictController districtController, CategoryController categoryController, ConversionFactorsController conversionFactorsController, ProposalController proposalController, ConfiguratorService configuratorService )
+    private Client client;
+    private SomeRequestConfigurator requestConfigurator;
+
+
+    public ConfiguratorController ( ConfiguratorMenuView configuratorMenuView, SessionController sessionController, DistrictController districtController, CategoryController categoryController, ConversionFactorsController conversionFactorsController, ProposalController proposalController, Client client )
     {
         this.configuratorMenuView = configuratorMenuView;
-        this.sessionService = sessionService;
+        this.sessionController = sessionController;
         this.districtController = districtController;
         this.categoryController = categoryController;
         this.conversionFactorsController = conversionFactorsController;
         this.proposalController = proposalController;
-        this.configuratorService = configuratorService;
+        this.client = client;
 
         this.configuratorMenuView.getInsertNewDistrictButton().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) 
             {
-                districtController.startInsertNewDistrictView(ConfiguratorController.this);
+                districtController.startInsertNewDistrictView();
 			}
 		});
 
@@ -46,7 +48,13 @@ public class ConfiguratorController {
             {
                 try {
                     conversionFactorsController.startInsertConversionFactorsView();
-                } catch (SQLException e1) {
+                } 
+                catch (ClassNotFoundException e1) 
+                {
+                    e1.printStackTrace();
+                } 
+                catch (IOException e1)
+                {
                     e1.printStackTrace();
                 }
 			}
@@ -58,7 +66,12 @@ public class ConfiguratorController {
             {
                 try {
                     districtController.startDistrictInfoView();
-                } catch (SQLException e1) 
+                } 
+                catch (ClassNotFoundException e1) 
+                {
+                    e1.printStackTrace();
+                } 
+                catch (IOException e1) 
                 {
                     e1.printStackTrace();
                 }
@@ -71,7 +84,13 @@ public class ConfiguratorController {
             {
                 try {
                     conversionFactorsController.startAllConversionFactorsView();
-                } catch (SQLException e1) {
+                } 
+                catch (ClassNotFoundException e1) 
+                {
+                    e1.printStackTrace();
+                } 
+                catch (IOException e1) 
+                {
                     e1.printStackTrace();
                 }
 			}
@@ -81,9 +100,16 @@ public class ConfiguratorController {
             @Override
             public void actionPerformed(ActionEvent e)
             {
-                try {
+                try 
+                {
                     conversionFactorsController.startConversionFactorsOfCategoryView();
-                } catch (SQLException e1) {
+                }  
+                catch (ClassNotFoundException e1) 
+                {
+                    e1.printStackTrace();
+                } 
+                catch (IOException e1) 
+                {
                     e1.printStackTrace();
                 }
             }
@@ -94,11 +120,7 @@ public class ConfiguratorController {
             @Override
             public void actionPerformed(ActionEvent e) 
             {
-                try {
-                    categoryController.startInsertNewHierarchyView(ConfiguratorController.this);
-                } catch (SQLException e1) {
-                    e1.printStackTrace();
-                }
+                categoryController.startInsertNewHierarchyView(ConfiguratorController.this);
             }
 
 		});
@@ -107,9 +129,16 @@ public class ConfiguratorController {
             @Override
             public void actionPerformed(ActionEvent e) 
             {
-                try {
+                try 
+                {
                     categoryController.startHierarchyView();
-                } catch (SQLException e1) {
+                }
+                catch (ClassNotFoundException e1) 
+                {
+                    e1.printStackTrace();
+                } 
+                catch (IOException e1) 
+                {
                     e1.printStackTrace();
                 }
             }
@@ -125,11 +154,18 @@ public class ConfiguratorController {
                     configuratorMenuView.getLblErrorSave().setForeground(Color.GREEN);
                     configuratorMenuView.setLblErrorSave(Constants.SAVE_COMPLETED);
                     configuratorMenuView.viewMessageSave();
-                } catch (IllegalStateException e1) {
+                } 
+                catch (IllegalStateException e1) {
                     configuratorMenuView.getLblErrorSave().setForeground(Color.RED);
                     configuratorMenuView.setLblErrorSave(Constants.IMPOSSIBLE_SAVE_CF);
                     configuratorMenuView.viewMessageSave();
-                }catch (SQLException e1) {
+                } 
+                catch (ClassNotFoundException e1) 
+                {
+                    e1.printStackTrace();
+                }
+                catch (IOException e1) 
+                {
                     e1.printStackTrace();
                 }
             }
@@ -140,9 +176,16 @@ public class ConfiguratorController {
             @Override
             public void actionPerformed(ActionEvent e) 
             {
-                try {
+                try 
+                {
                     proposalController.startProposalOfCategoryView();
-                } catch (SQLException e1) {
+                }  
+                catch (ClassNotFoundException e1) 
+                {
+                    e1.printStackTrace();
+                } 
+                catch (IOException e1) 
+                {
                     e1.printStackTrace();
                 }
             }
@@ -155,7 +198,14 @@ public class ConfiguratorController {
                 try 
                 {
                     close();
-                } catch (SQLException e1) {
+                    System.exit(0);
+                }
+                catch (ClassNotFoundException e1) 
+                {
+                    e1.printStackTrace();
+                } 
+                catch (IOException e1) 
+                {
                     e1.printStackTrace();
                 }
 			}
@@ -168,42 +218,69 @@ public class ConfiguratorController {
                 try 
                 {
                     close();
-                } catch (SQLException e1) {
+                } 
+                catch (ClassNotFoundException e1) 
+                {
+                    e1.printStackTrace();
+                } 
+                catch (IOException e1) 
+                {
                     e1.printStackTrace();
                 }
 			}
 		});
     }
 
-    public void start () throws SQLException
+    public void start () 
     {
         configuratorMenuView.setUndecorated(true);
         configuratorMenuView.setVisible(true);
     }
 
-    public void close() throws SQLException
+    public void close() throws IOException, ClassNotFoundException
     {
-        sessionService.logout();
+        sessionController.logout();
         conversionFactorsController.resetConversionFactors();
         configuratorMenuView.dispose();
     }
 
-    public void setConfigurator ( Configurator configurator ) 
+    /*public Configurator getConfigurator()
     {
-        this.configuratorService.setConfigurator(configurator);
+        return this.configuratorService.getConfigurator();
+    }*/
+
+    public void setConfigurator ( String username ) throws IOException, ClassNotFoundException 
+    {
+        requestConfigurator = new SomeRequestConfigurator("SET_CONFIGURATOR", username, null);
+        client.sendRequest(requestConfigurator);
+        client.receiveResponse();
+        //this.configuratorService.setConfigurator(configurator);
     }
 
-    public void saveAll ( ) throws SQLException
+    public void saveAll ( ) throws IOException, ClassNotFoundException
     {
-        this.configuratorService.saveAll();
+        requestConfigurator = new SomeRequestConfigurator("SAVE_ALL", null, null);
+        client.sendRequest(requestConfigurator);
+        client.receiveResponse();
+        //this.configuratorService.saveAll();
     }
 
-    public void changeCredentials ( String approvedUsername, String newPassword ) throws SQLException
+    public void changeCredentials ( String approvedUsername, String newPassword ) throws IOException, ClassNotFoundException
     {
-        this.configuratorService.changeCredentials(approvedUsername, newPassword);
+        requestConfigurator = new SomeRequestConfigurator("CHANGE_CREDENTIALS", approvedUsername, newPassword);
+        client.sendRequest(requestConfigurator);
+        client.receiveResponse();
+        //this.configuratorService.changeCredentials(approvedUsername, newPassword);
     }
 
-    public void createDistrict ( String districtName ) throws SQLException
+    public boolean getFirstAccess () throws IOException, ClassNotFoundException
+    {
+        requestConfigurator = new SomeRequestConfigurator("GET_FIRST_ACCESS", null, null);
+        client.sendRequest(requestConfigurator);
+        return (boolean) client.receiveResponse();
+    }
+
+    /*public void createDistrict ( String districtName ) throws SQLException
     {
        this.configuratorService.createDistrict(districtName);
     }
@@ -211,11 +288,14 @@ public class ConfiguratorController {
     public void createCategory ( String name, String field, String description, boolean isRoot, Integer hierarchyID ) throws SQLException
     {
         this.configuratorService.createCategory(name, field, description, isRoot, hierarchyID);
-    }
+    }*/
 
-    public Configurator getConfiguratorByUsername ( String username ) throws SQLException
+    /*public Configurator getConfiguratorByUsername ( String username ) throws IOException, ClassNotFoundException
     {
-        return configuratorService.getConfiguratorByUsername( username );
-    }
+        requestConfigurator = new SomeRequestConfigurator("GET_CONFIGURATOR_BY_USERNAME", username, null);
+        client.sendRequest(requestConfigurator);
+        return (Configurator) client.receiveResponse();
+        
+    }*/
 
 }

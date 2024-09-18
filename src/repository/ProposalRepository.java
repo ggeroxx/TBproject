@@ -23,4 +23,6 @@ public interface ProposalRepository {
     void closeProposal ( Proposal proposal ) throws SQLException;
 
     void deleteProposalByUser ( int userID ) throws SQLException;
+
+    Proposal getProposalById (int id) throws SQLException;
 }

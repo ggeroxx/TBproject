@@ -3,11 +3,9 @@ package controller.MVCController;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
-import java.sql.SQLException;
 import org.mindrot.jbcrypt.BCrypt;
 import java.awt.event.MouseEvent;
-import model.User;
-import service.ControlPatternService;
+import java.io.IOException;
 import view.RegistrationUserView;
 
 
@@ -17,19 +15,24 @@ public class RegistrationUserController  {
     private DistrictController districtController;
     private SubjectController subjectController;
     private UserController userController;
+    private MunicipalityController municipalityController;
+    private ControlPatternController controlPatternController;
 
-    public RegistrationUserController ( RegistrationUserView registrationUserView, DistrictController districtController, SubjectController subjectController, UserController userController )
+    public RegistrationUserController ( RegistrationUserView registrationUserView, DistrictController districtController, MunicipalityController municipalityController, SubjectController subjectController, UserController userController, ControlPatternController controlPatternController )
     {
         this.registrationUserView = registrationUserView;
         this.districtController = districtController;
+        this.municipalityController = municipalityController;
         this.subjectController = subjectController;
         this.userController = userController;
+        this.controlPatternController = controlPatternController;
 
         this.registrationUserView.getCloseLabel().addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) 
             {
                 close();
+                System.exit(0);
 			}
 		});
 
@@ -41,9 +44,13 @@ public class RegistrationUserController  {
                     String selectedItem = (String) registrationUserView.getComboBoxDistrict().getSelectedItem();
                     try 
                     {
-                        registrationUserView.setTextMunicipalities(districtController.getAllMunicipalityFromDistrict(districtController.getDistrictByName(selectedItem)));
+                        registrationUserView.setTextMunicipalities(municipalityController.getAllMunicipalityFromDistrict(selectedItem));
                     } 
-                    catch (SQLException e1) 
+                     catch (ClassNotFoundException e1) 
+                     {
+                        e1.printStackTrace();
+                    } 
+                    catch (IOException e1) 
                     {
                         e1.printStackTrace();
                     }
@@ -60,15 +67,19 @@ public class RegistrationUserController  {
 					if(  validateFields() )
 					{
                         String districtName = (String)registrationUserView.getComboBoxDistrict().getSelectedItem();
-                        int districtID = districtController.getDistrictByName(districtName).getID();
-                        userController.insertUser( new User( null, registrationUserView.getUsername(), BCrypt.hashpw( registrationUserView.getPassword(), BCrypt.gensalt() ), districtID, registrationUserView.getEmail() ) );
+                        int districtID = districtController.getDistrictIDByName(districtName);
+                        userController.insertUser( registrationUserView.getUsername(), BCrypt.hashpw( registrationUserView.getPassword(), BCrypt.gensalt() ), districtID, registrationUserView.getEmail() );
                         close();
 					}
 				} 
-				catch (SQLException e1) 
-				{
-					e1.printStackTrace();
-				}
+                catch (ClassNotFoundException e1) 
+                {
+                    e1.printStackTrace();
+                } 
+                catch (IOException e1) 
+                {
+                    e1.printStackTrace();
+                }
 			}
 		});
 
@@ -81,7 +92,7 @@ public class RegistrationUserController  {
 		});
     }
 
-    public void start () throws SQLException 
+    public void start () throws ClassNotFoundException, IOException
     {
         registrationUserView.activeComboBox();
         populateComboBoxWithDistrictName();
@@ -97,7 +108,7 @@ public class RegistrationUserController  {
         registrationUserView.dispose();       
     }
 
-    public void populateComboBoxWithDistrictName() throws SQLException 
+    public void populateComboBoxWithDistrictName() throws ClassNotFoundException, IOException 
     {
         for (String name : districtController.allDistrictName()) 
         {
@@ -106,11 +117,11 @@ public class RegistrationUserController  {
 
     }
 
-    private boolean validateFields() throws SQLException 
+    private boolean validateFields() throws ClassNotFoundException, IOException 
     {
-        String msgErrorUsername = ControlPatternService.messageErrorNewUsername( registrationUserView.getUsername(), subjectController );
-        String msgErrorPassword = ControlPatternService.messageErrorNewPassword( registrationUserView.getPassword() );
-        String msgErrorEmail = ControlPatternService.messaggeErrorNewEmail( registrationUserView.getEmail() );
+        String msgErrorUsername = controlPatternController.messageErrorNewUsername( registrationUserView.getUsername(), subjectController.isPresentUsername(registrationUserView.getUsername()) );
+        String msgErrorPassword = controlPatternController.messageErrorNewPassword( registrationUserView.getPassword() );
+        String msgErrorEmail = controlPatternController.messaggeErrorNewEmail( registrationUserView.getEmail() );
     
         registrationUserView.setMessageErrorUsername( msgErrorUsername == null ? "" : msgErrorUsername );
         registrationUserView.setMessageErrorPassword( msgErrorPassword == null ? "" : msgErrorPassword );

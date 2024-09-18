@@ -25,6 +25,11 @@ public class DistrictService {
         return this.districtRepository;
     }
 
+    public District getDistrict()
+    {
+        return this.district;
+    }
+
     public void setDistrict ( District district )
     {
         this.district = district;

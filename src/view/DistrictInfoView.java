@@ -28,6 +28,7 @@ public class DistrictInfoView extends JFrame{
 	private JPanel panel;
 	private JTextArea textAreaMuniciplaities;
 	private JLabel lblDistrictName;
+	private JButton btnOk;
 
 	public DistrictInfoView() 
 	{
@@ -105,6 +106,12 @@ public class DistrictInfoView extends JFrame{
 		lblDistrictName.setBounds(520, 106, 205, 13);
 		contentPane.add(lblDistrictName);
 		
+		btnOk = new JButton("OK");
+		btnOk.setBackground(Color.BLUE);
+		btnOk.setFont(new Font("Tahoma", Font.BOLD, 10));
+		btnOk.setBounds(578, 496, 85, 21);
+		contentPane.add(btnOk);
+		
 	}
 	
 	 public void addButton(JButton button) 
@@ -132,6 +139,11 @@ public class DistrictInfoView extends JFrame{
 	public void setTextAreaMuniciplaities(String Message)
 	{
 		textAreaMuniciplaities.setText(Message);
+	}
+	
+	public JButton getOkButton()
+	{
+		return btnOk;
 	}
 	
 	public void createDistrictButton( String districtName, String municipalities ) 

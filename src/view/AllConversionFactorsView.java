@@ -13,6 +13,7 @@ import java.awt.event.MouseEvent;
 import javax.swing.BoxLayout;
 import java.awt.event.MouseMotionAdapter;
 import javax.swing.JScrollPane;
+import javax.swing.JButton;
 
 
 public class AllConversionFactorsView extends JFrame{
@@ -24,6 +25,7 @@ public class AllConversionFactorsView extends JFrame{
 
 	private JLabel lblNewLabel;
 	private JLabel lblClose;
+	private JButton btnOk;
 	
 	public AllConversionFactorsView() 
 	{
@@ -61,7 +63,7 @@ public class AllConversionFactorsView extends JFrame{
 		contentPane.setLayout(null);
 		
 		scrollPane = new JScrollPane();
-		scrollPane.setBounds(26, 43, 1156, 615);
+		scrollPane.setBounds(26, 43, 1156, 584);
 		contentPane.add(scrollPane);
 		
 		panel = new JPanel();
@@ -72,7 +74,7 @@ public class AllConversionFactorsView extends JFrame{
 		lblNewLabel.setFont(new Font("Tahoma", Font.BOLD, 12));
 		lblNewLabel.setForeground(new Color(0, 0, 255));
 		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNewLabel.setBounds(555, 10, 156, 23);
+		lblNewLabel.setBounds(521, 10, 156, 23);
 		contentPane.add(lblNewLabel);
 		
 		lblClose = new JLabel("X");
@@ -82,6 +84,12 @@ public class AllConversionFactorsView extends JFrame{
 		lblClose.setBackground(SystemColor.menu);
 		lblClose.setBounds(1147, 7, 35, 27);
 		contentPane.add(lblClose);
+		
+		btnOk = new JButton("OK");
+		btnOk.setFont(new Font("Tahoma", Font.BOLD, 10));
+		btnOk.setBackground(Color.BLUE);
+		btnOk.setBounds(539, 637, 138, 21);
+		contentPane.add(btnOk);
 
 	}
 	
@@ -115,6 +123,11 @@ public class AllConversionFactorsView extends JFrame{
 		getPanel().removeAll();
 		getPanel().revalidate();
 		getPanel().repaint();
+	}
+	
+	public JButton getOkButton()
+	{
+		return btnOk;
 	}
 	
 	

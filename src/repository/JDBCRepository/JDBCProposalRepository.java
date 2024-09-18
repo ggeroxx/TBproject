@@ -81,4 +81,11 @@ public class JDBCProposalRepository implements ProposalRepository {
         Conn.queryUpdate( Queries.DELETE_PROPOSAL_BY_USER, new ArrayList<>( Arrays.asList( userID ) ) );  
     }
 
+    @Override
+    public Proposal getProposalById (int id) throws SQLException
+    {
+        ResultSet rs = Conn.exQuery( Queries.GET_PROPOSAL_BY_ID, new ArrayList<>( Arrays.asList( id ) ) );
+        return new Proposal( rs.getInt( 1 ), categoryRepository.getCategoryByID( rs.getInt( 2 ) ), categoryRepository.getCategoryByID( rs.getInt( 3 ) ), rs.getInt( 4 ), rs.getInt( 5 ), userRepository.getUserByID( rs.getInt( 6 ) ), rs.getString( 7 ) ) ;
+    }
+
 }

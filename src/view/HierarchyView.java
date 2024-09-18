@@ -21,6 +21,7 @@ import java.util.Enumeration;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JMenu;
+import javax.swing.JButton;
 
 public class HierarchyView extends JFrame {
 
@@ -37,6 +38,7 @@ public class HierarchyView extends JFrame {
 	private JTextArea textAreaInfo;
 	private JLabel lblInformations;
 	private JLabel lblHierarchy;
+	private JButton btnOk;
 
 	public HierarchyView() {
 		
@@ -62,7 +64,7 @@ public class HierarchyView extends JFrame {
 		});
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 1098, 716);
+		setBounds(100, 100, 1098, 725);
 		contentPane = new JPanel();
 		contentPane.setBackground(new Color(255, 255, 255));
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -129,6 +131,12 @@ public class HierarchyView extends JFrame {
 		lblInformations.setBounds(10, 394, 593, 13);
 		contentPane.add(lblInformations);
 		
+		btnOk = new JButton("OK");
+		btnOk.setFont(new Font("Tahoma", Font.BOLD, 10));
+		btnOk.setBackground(Color.BLUE);
+		btnOk.setBounds(533, 657, 85, 21);
+		contentPane.add(btnOk);
+		
 		group = new ButtonGroup();
 	}
 	
@@ -182,6 +190,11 @@ public class HierarchyView extends JFrame {
 	        }
 	    }
 	    return null;
+	}
+	
+	public JButton getOkButton()
+	{
+		return btnOk;
 	}
 	
 	public JLabel getCloseLabel() 

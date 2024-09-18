@@ -3,9 +3,10 @@ package controller.MVCController;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
-import java.sql.SQLException;
+import controller.ClientServer.Client;
+import controller.ClientServer.SomeRequestPattern;
 import java.awt.event.MouseEvent;
-import service.ControlPatternService;
+import java.io.IOException;
 import view.ChangeCredentialsConfiguratorView;;
 
 public class ChangeCredentialsConfiguratorController  {
@@ -13,17 +14,37 @@ public class ChangeCredentialsConfiguratorController  {
     private ChangeCredentialsConfiguratorView changeCredentialsConfiguratorView;
     private ConfiguratorController configuratorController;
     private SubjectController subjectController;
+    private SessionController sessionController;
 
-    public ChangeCredentialsConfiguratorController (ChangeCredentialsConfiguratorView changeCredentialsConfiguratorView, ConfiguratorController configuratorController,  SubjectController subjectController )
+    private Client client;
+    private SomeRequestPattern requestPattern;
+
+    public ChangeCredentialsConfiguratorController (ChangeCredentialsConfiguratorView changeCredentialsConfiguratorView, ConfiguratorController configuratorController,  SubjectController subjectController, SessionController sessionController, Client client )
     {
         this.changeCredentialsConfiguratorView = changeCredentialsConfiguratorView;
         this.configuratorController = configuratorController;
         this.subjectController = subjectController;
+        this.sessionController = sessionController;
+
+        this.client = client;
 
         this.changeCredentialsConfiguratorView.getCloseLabel().addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
                 close();
+                try 
+                {
+                    sessionController.logout();
+                }
+                catch (IOException e1) 
+                {
+                    e1.printStackTrace();
+                } 
+                catch (ClassNotFoundException e1) 
+                {
+                    e1.printStackTrace();
+                }
+                System.exit(0);
 			}
 		});
 
@@ -38,11 +59,15 @@ public class ChangeCredentialsConfiguratorController  {
 						close();
 						configuratorController.start();
 					}
-				} 
-				catch (SQLException e1) 
-				{
-					e1.printStackTrace();
 				}
+                catch (ClassNotFoundException e1) 
+                {
+                    e1.printStackTrace();
+                } 
+                catch (IOException e1) 
+                {
+                    e1.printStackTrace();
+                }
 				
 			}
 		});
@@ -61,10 +86,15 @@ public class ChangeCredentialsConfiguratorController  {
         changeCredentialsConfiguratorView.dispose();
     }
 
-    private boolean validateFields() throws SQLException 
+    private boolean validateFields() throws IOException, ClassNotFoundException 
     {
-        String msgErrorUsername = ControlPatternService.messageErrorNewUsername( changeCredentialsConfiguratorView.getUsername(), subjectController );
-        String msgErrorPassword = ControlPatternService.messageErrorNewPassword( changeCredentialsConfiguratorView.getPassword() );
+        requestPattern = new SomeRequestPattern("GET_MSG_ERROR_NEW_USERNAME", changeCredentialsConfiguratorView.getUsername(), 0, 0, subjectController.isPresentUsername(changeCredentialsConfiguratorView.getUsername()));
+        client.sendRequest(requestPattern);
+        String msgErrorUsername = (String) client.receiveResponse();
+        
+        requestPattern = new SomeRequestPattern("GET_MSG_ERROR_NEW_PASSWORD", changeCredentialsConfiguratorView.getPassword() , 0, 0, false);
+        client.sendRequest(requestPattern);
+        String msgErrorPassword = (String) client.receiveResponse();
     
         changeCredentialsConfiguratorView.setMessageErrorUsername( msgErrorUsername == null ? "" : msgErrorUsername );
         changeCredentialsConfiguratorView.setMessageErrorPassword( msgErrorPassword == null ? "" : msgErrorPassword );

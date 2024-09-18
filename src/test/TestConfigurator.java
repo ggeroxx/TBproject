@@ -2,6 +2,8 @@ package test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Random;
 import org.junit.Test;
@@ -16,13 +18,13 @@ public class TestConfigurator extends TestScheme
 {
 
     @Test
-    public void testCreateDistrict() throws SQLException
+    public void testCreateDistrict() throws SQLException, ClassNotFoundException, IOException
     {
         Configurator conf = configuratorRepository.getOneConfiguratorForTest();
-        configuratorController.setConfigurator( conf );
+        configuratorController.setConfigurator( conf.getUsername() );
 
         String districtName = "TestDistrict";
-        configuratorController.createDistrict( districtName );
+        districtController.createDistrict( districtName );
 
         District dist = districtRepository.getDistrictByName( districtName );
         assertEquals( districtName, dist.getName() );
@@ -31,10 +33,10 @@ public class TestConfigurator extends TestScheme
     }
 
     @Test
-    public void testCreateCategory() throws SQLException
+    public void testCreateCategory() throws SQLException, ClassNotFoundException, IOException
     {
         Configurator conf = configuratorRepository.getOneConfiguratorForTest();
-        configuratorController.setConfigurator( conf );
+        configuratorController.setConfigurator( conf.getUsername() );
 
         String name = "TestCategory";
         String field = "TestField";
@@ -42,7 +44,7 @@ public class TestConfigurator extends TestScheme
         Boolean isRoot = false;
         int hierarchyID = categoryRepository.getAllRoot().get( 0 ).getID();
 
-        configuratorController.createCategory( name, field, description, isRoot, hierarchyID );
+        categoryController.createCategory( name, field, description, isRoot, hierarchyID );
 
         Category cat = categoryRepository.getCategoryByNameAndHierarchyID( name, hierarchyID );
         assertEquals( name, cat.getName() );
@@ -52,17 +54,17 @@ public class TestConfigurator extends TestScheme
     }
 
     @Test
-    public void testCreateHierarchy() throws SQLException
+    public void testCreateHierarchy() throws SQLException, ClassNotFoundException, IOException
     {
         Configurator conf = configuratorRepository.getOneConfiguratorForTest();
-        configuratorController.setConfigurator( conf );
+        configuratorController.setConfigurator( conf.getUsername() );
 
         String nameRoot = "TestCategoryRoot";
         String field = "TestField";
         String description = null;
         Boolean isRoot = true;
 
-        configuratorController.createCategory( nameRoot, field, description, isRoot, null );
+        categoryController.createCategory( nameRoot, field, description, isRoot, null );
         Category root = categoryRepository.getRootCategoryByName( nameRoot );
 
         String name = "TestCategoryChild";
@@ -71,7 +73,7 @@ public class TestConfigurator extends TestScheme
         isRoot = false;
         int hierarchyID = root.getID();
 
-        configuratorController.createCategory( name, field, description, isRoot, hierarchyID );
+        categoryController.createCategory( name, field, description, isRoot, hierarchyID );
         Category leaf = categoryRepository.getCategoryByNameAndHierarchyID( name, hierarchyID );
 
         relationshipsBetweenCategoriesRepository.createRelationship( root.getID(), leaf.getID(), "test" );
@@ -85,17 +87,17 @@ public class TestConfigurator extends TestScheme
     }
 
     @Test
-    public void testChangeCredentials() throws SQLException
+    public void testChangeCredentials() throws SQLException, ClassNotFoundException, IOException
     {
         Configurator conf = configuratorRepository.getNewConfiguratorForTest();
-        configuratorController.setConfigurator( conf );
+        configuratorController.setConfigurator( conf.getUsername() );
 
         String newUsername = "TestUsername";
         String newPassword = "TestPassword";
         
         configuratorController.changeCredentials( newUsername, newPassword );
         conf = configuratorRepository.getConfiguratorByID( conf.getID() );
-        configuratorController.setConfigurator( conf );
+        configuratorController.setConfigurator( conf.getUsername() );
 
         assertEquals( newUsername, conf.getUsername() );
         assertTrue( BCrypt.checkpw( newPassword, conf.getPassword() ) );
@@ -104,17 +106,17 @@ public class TestConfigurator extends TestScheme
     }
 
     @Test
-    public void testConversionFactors() throws SQLException
+    public void testConversionFactors() throws SQLException, ClassNotFoundException, IOException
     {
         Configurator conf = configuratorRepository.getOneConfiguratorForTest();
-        configuratorController.setConfigurator( conf );
+        configuratorController.setConfigurator( conf.getUsername() );
 
         String nameRoot = "TestCategoryRoot";
         String field = "TestField";
         String description = null;
         Boolean isRoot = true;
 
-        configuratorController.createCategory( nameRoot, field, description, isRoot, null );
+        categoryController.createCategory( nameRoot, field, description, isRoot, null );
         Category root = categoryRepository.getRootCategoryByName( nameRoot );
 
         String name = "TestCategoryChild";
@@ -123,19 +125,19 @@ public class TestConfigurator extends TestScheme
         isRoot = false;
         int hierarchyID = root.getID();
 
-        configuratorController.createCategory( name, field, description, isRoot, hierarchyID );
+        categoryController.createCategory( name, field, description, isRoot, hierarchyID );
         Category leaf = categoryRepository.getCategoryByNameAndHierarchyID( name, hierarchyID );
 
         relationshipsBetweenCategoriesRepository.createRelationship( root.getID(), leaf.getID(), "test" );
 
         Category leafFromAnotherRoot = categoryRepository.getAllLeaf().get( 0 );
 
-        conversionFactorsController.populate();
-        ConversionFactors cfs = conversionFactorsController.getConversionFactors();
+        conversionFactorsService.populate();
+        ConversionFactors cfs = conversionFactorsService.getConversionFactors();
 
         int index = cfs.getIndex( leaf, leafFromAnotherRoot );
 
-        double[] range = conversionFactorsController.calculateRange( index );
+        double[] range = conversionFactorsService.calculateRange( index );
 
         double min = range[0];
         double max = range[1];
@@ -145,28 +147,28 @@ public class TestConfigurator extends TestScheme
         Random random = new Random();
         double randomValue = min + (max - min) * random.nextDouble();
 
-        conversionFactorsController.calculate(index, randomValue);
+        conversionFactorsService.calculate(index, randomValue);
 
-        assertTrue(conversionFactorsController.getConversionFactors().getList().entrySet().stream().allMatch( entry -> ( ( entry.getValue().getValue() >= 0.5 ) && ( entry.getValue().getValue() <= 2.00 ) ) ) );
-        assertTrue( conversionFactorsController.isComplete() );
+        assertTrue(conversionFactorsService.getConversionFactors().getList().entrySet().stream().allMatch( entry -> ( ( entry.getValue().getValue() >= 0.5 ) && ( entry.getValue().getValue() <= 2.00 ) ) ) );
+        assertTrue( conversionFactorsService.isComplete() );
 
         relationshipsBetweenCategoriesRepository.deleteTmpRelationshipsBetweenCategories();
         categoryRepository.deleteTmpCategories();
     }
 
-    @Test public void testAddMunicipality() throws SQLException
+    @Test public void testAddMunicipality() throws SQLException, ClassNotFoundException, IOException
     {
         Configurator conf = configuratorRepository.getOneConfiguratorForTest();
-        configuratorController.setConfigurator( conf );
+        configuratorController.setConfigurator( conf.getUsername() );
 
         String districtName = "TestDistrict";
-        configuratorController.createDistrict( districtName );
+        districtController.createDistrict( districtName );
 
         District dist = districtRepository.getDistrictByName( districtName );
 
         Municipality mun = municipalityRepository.getMunicipalityByName( "Orzinuovi" );
 
-        districtController.addMunicipality( mun );
+        municipalityController.addMunicipality( mun.getName() );
 
         assertTrue( districtToMunicipalitiesRepository.isPresentMunicipalityInDistrict( dist.getID(), mun.getID() ) );
 

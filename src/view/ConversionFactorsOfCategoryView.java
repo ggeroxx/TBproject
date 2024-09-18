@@ -16,6 +16,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JMenuBar;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
+import javax.swing.JButton;
 
 public class ConversionFactorsOfCategoryView extends JFrame{
 
@@ -28,6 +29,7 @@ public class ConversionFactorsOfCategoryView extends JFrame{
 	private JLabel lblClose;
 	private JMenuBar menuBar;
 	private JMenu mnMenuCategories;
+	private JButton btnOk;
 	
 	public ConversionFactorsOfCategoryView() 
 	{
@@ -65,7 +67,7 @@ public class ConversionFactorsOfCategoryView extends JFrame{
 		contentPane.setLayout(null);
 		
 		scrollPane = new JScrollPane();
-		scrollPane.setBounds(26, 70, 1156, 615);
+		scrollPane.setBounds(26, 70, 1156, 593);
 		contentPane.add(scrollPane);
 		
 		panel = new JPanel();
@@ -93,6 +95,12 @@ public class ConversionFactorsOfCategoryView extends JFrame{
 		
 		mnMenuCategories = new JMenu("Categories");
 		menuBar.add(mnMenuCategories);
+		
+		btnOk = new JButton("OK");
+		btnOk.setFont(new Font("Tahoma", Font.BOLD, 10));
+		btnOk.setBackground(Color.BLUE);
+		btnOk.setBounds(534, 673, 138, 21);
+		contentPane.add(btnOk);
 		
 
 	}
@@ -135,6 +143,11 @@ public class ConversionFactorsOfCategoryView extends JFrame{
 	{
         return lblClose;
     }
+	
+	public JButton getOkButton()
+	{
+		return btnOk;
+	}
 	
 	public void init ()
 	{

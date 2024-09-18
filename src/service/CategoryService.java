@@ -154,4 +154,15 @@ public class CategoryService{
     {
         return relationshipsBetweenCategoriesRepository.getChildCategoryByFieldAndParentID(field, parent);
     }
+
+    public Category getRootCategoryByName (String name) throws SQLException
+    {
+        return categoryRepository.getRootCategoryByName(name);
+    }
+
+    public int getNumberOfEqualsCategories( Category category) throws SQLException
+    {
+        return categoryRepository.getNumberOfEqualsCategories(category);
+    }
+
 }

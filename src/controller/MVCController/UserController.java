@@ -4,37 +4,42 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.sql.SQLException;
-import model.Proposal;
-import model.User;
-import repository.UserRepository;
-import service.SessionService;
-import service.UserService;
+import java.io.IOException;
+import controller.ClientServer.Client;
+import controller.ClientServer.SomeRequestUser;
 import view.UserMenuView;
 
 public class UserController {
     
     private UserMenuView userMenuView;
+    private SessionController sessionController;
     private CategoryController categoryController;
     private ProposalController proposalController;
-    private SessionService sessionService;
-    private UserService userService;
 
-    public UserController ( UserMenuView userMenuView,  SessionService sessionService, CategoryController categoryController, ProposalController proposalController, UserService userService )
+    private Client client;
+    private SomeRequestUser requestUser;
+
+    public UserController ( UserMenuView userMenuView, SessionController sessionController, CategoryController categoryController, ProposalController proposalController, Client client )
     {
         this.userMenuView = userMenuView;
-        this.sessionService = sessionService;
+        this.sessionController = sessionController;
         this.categoryController = categoryController;
         this.proposalController = proposalController;
-        this.userService = userService;
+        this.client = client;
 
         this.userMenuView.getNavigateHierarchiesButton().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) 
             {
-                try {
+                try 
+                {
                     categoryController.startNavigateHierarchyView();
-                } catch (SQLException e1) {
+                }
+                catch (ClassNotFoundException e1) 
+                {
+                    e1.printStackTrace();
+                } 
+                catch (IOException e1) {
                     e1.printStackTrace();
                 }
 			}
@@ -44,9 +49,15 @@ public class UserController {
             @Override
             public void actionPerformed(ActionEvent e) 
             {
-                try {
+                try 
+                {
                     proposalController.startProposeProposalView( UserController.this );
-                } catch (SQLException e1) {
+                } 
+                catch (ClassNotFoundException e1) 
+                {
+                    e1.printStackTrace();
+                } 
+                catch (IOException e1) {
                     e1.printStackTrace();
                 }
 			}
@@ -58,8 +69,14 @@ public class UserController {
             {
                 try 
                 {
-                    proposalController.startRetireProposalView( UserController.this );
-                } catch (SQLException e1) {
+                    proposalController.startRetireProposalView( getUserUsername() );
+                } 
+                catch (ClassNotFoundException e1) 
+                {
+                    e1.printStackTrace();
+                } 
+                catch (IOException e1) 
+                {
                     e1.printStackTrace();
                 }
 			}
@@ -71,8 +88,14 @@ public class UserController {
             {
                 try 
                 {
-                    proposalController.startProposalOfUserView( getUser() );
-                } catch (SQLException e1) {
+                    proposalController.startProposalOfUserView( getUserUsername() );
+                }
+                catch (ClassNotFoundException e1) 
+                {
+                    e1.printStackTrace();
+                } 
+                catch (IOException e1) 
+                {
                     e1.printStackTrace();
                 }
 			}
@@ -80,11 +103,19 @@ public class UserController {
 
         this.userMenuView.getCloseLabel().addMouseListener(new MouseAdapter() {
 			@Override
-			public void mouseClicked(MouseEvent e) {
+			public void mouseClicked(MouseEvent e) 
+            {
                 try 
                 {
                     close();
-                } catch (SQLException e1) {
+                    System.exit(0);
+                } 
+                catch (ClassNotFoundException e1) 
+                {
+                    e1.printStackTrace();
+                } 
+                catch (IOException e1) 
+                {
                     e1.printStackTrace();
                 }
 			}
@@ -97,101 +128,56 @@ public class UserController {
                 try 
                 {
                     close();
-                } catch (SQLException e1) {
+                } 
+                catch (ClassNotFoundException e1) 
+                {
+                    e1.printStackTrace();
+                } 
+                catch (IOException e1) 
+                {
                     e1.printStackTrace();
                 }
 			}
 		});
     }
 
-    public void start () throws SQLException
+    public void start ()
     {
         userMenuView.setUndecorated(true);
         userMenuView.setVisible(true);
     }
 
-    public void close() throws SQLException
+    public void close() throws ClassNotFoundException, IOException
     {
-        sessionService.logout();
+        sessionController.logout();
         userMenuView.dispose();
     }
 
-    public User getUser ()
+    public String getUserUsername () throws ClassNotFoundException, IOException
     {
-        return this.userService.getUser();
+        requestUser = new SomeRequestUser("GET_USER_NAME", null, null, 0, null);
+        client.sendRequest(requestUser);
+        return (String) client.receiveResponse();
+        //return this.userService.getUser();
     }
 
-    public void setUser ( User user )
+    public void setUser ( String userName ) throws IOException
     {
-        this.userService.setUser(user);
+        requestUser = new SomeRequestUser("SET_USER",userName, null,  0, null);
+        client.sendRequest(requestUser); 
+        //this.userService.setUser(user);
     }
 
-    public UserRepository getuserRepository ()
+    public void insertUser (String userName, String password, int districtID, String email ) throws ClassNotFoundException, IOException
+    {
+        requestUser = new SomeRequestUser("INSERT_USER", userName, password, districtID, email);
+        client.sendRequest(requestUser);
+        client.receiveResponse();
+    }
+
+    /*public UserRepository getuserRepository ()
     {
         return this.userService.getuserRepository();
-    }
-
-    /*public void start ()
-    {
-        int choice = 0;
-
-        super.forcedClosure( this.sessionGRASPController.getSession() );
-
-        do
-        {
-            try
-            {
-                super.clearConsole( Constants.TIME_SWITCH_MENU );
-                choice = userView.viewUserMenu();
-
-                switch ( choice ) 
-                {
-                    case 1:
-                            //categoryController.navigateHierarchy();
-                        break;
-
-                    case 2:
-                            //proposalController.proposeProposal( this );
-                        break;
-
-                    case 3:
-                            //proposalController.retireProposal( this );
-                        break;
-
-                    case 4:
-                            //proposalController.listProposalsByUser( getUser() );
-                        break;
-
-                    case 5:
-                            this.sessionGRASPController.logout();
-                            userView.println( Constants.LOG_OUT );
-                            super.clearConsole( Constants.TIME_LOGOUT );
-                        break;
-
-                    default:
-                            userView.print( Constants.INVALID_OPTION );
-                            super.clearConsole( Constants.TIME_ERROR_MESSAGE);
-                        break;
-                }
-
-            }
-            catch ( InputMismatchException e )
-            {
-                userView.print( Constants.INVALID_OPTION );
-                continue;
-            }
-            catch ( Exception e )
-            {
-                userView.print( Constants.GENERIC_EXCEPTION_MESSAGE );
-                e.printStackTrace();
-                continue;
-            }
-        } while ( choice != 5 );
-    }*/
-
-    public void insertProposal ( Proposal toInsert ) throws SQLException
-    {
-        this.userService.insertProposal(toInsert);
     }
 
     public void retireProposal ( Proposal toRetire ) throws SQLException
@@ -199,14 +185,9 @@ public class UserController {
         this.userService.retireProposal(toRetire);
     }
 
-    public void insertUser (User newUser ) throws SQLException
-    {
-        userService.insertUser(newUser);
-    }
-
     public User getUserByUsername ( String username ) throws SQLException
     {
         return userService.getUserByUsername ( username );
-    }
+    }*/
 
 }

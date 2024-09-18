@@ -39,6 +39,7 @@ public class NavigateHierarchyView extends JFrame {
 	private JLabel lblInformations;
 	private JLabel lblFields;
 	private JButton btnBack;
+	private JButton btnOk;
 
 	public NavigateHierarchyView() {
 		
@@ -88,7 +89,7 @@ public class NavigateHierarchyView extends JFrame {
 		contentPane.add(lblClose);
 		
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(591, 32, 470, 619);
+		scrollPane.setBounds(591, 32, 470, 612);
 		contentPane.add(scrollPane);
 		
 		textArea = new JTextArea();
@@ -133,8 +134,14 @@ public class NavigateHierarchyView extends JFrame {
 		
 		btnBack = new JButton("<");
 		btnBack.setFont(new Font("Tahoma", Font.BOLD, 10));
-		btnBack.setBounds(29, 648, 47, 21);
+		btnBack.setBounds(30, 654, 46, 21);
 		contentPane.add(btnBack);
+		
+		btnOk = new JButton("OK");
+		btnOk.setFont(new Font("Tahoma", Font.BOLD, 10));
+		btnOk.setBackground(Color.BLUE);
+		btnOk.setBounds(514, 654, 138, 21);
+		contentPane.add(btnOk);
 		
 		group = new ButtonGroup();
 	}
@@ -209,6 +216,11 @@ public class NavigateHierarchyView extends JFrame {
 	public JButton getBackButton()
 	{
 		return btnBack;
+	}
+	
+	public JButton getOkButton()
+	{
+		return btnOk;
 	}
 	
 	public void init()

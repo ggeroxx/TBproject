@@ -48,6 +48,7 @@ public class InsertNewHierarchyView extends JFrame {
 	private int xx, xy;
 	private JButton btnInsertParentId;
 	private JLabel lblClose;
+	private JButton btnEnd;
 
 	public InsertNewHierarchyView() {
 		
@@ -220,6 +221,11 @@ public class InsertNewHierarchyView extends JFrame {
 		btnInsertParentId.setBackground(Color.BLUE);
 		btnInsertParentId.setBounds(140, 593, 342, 31);
 		contentPane.add(btnInsertParentId);
+		
+		btnEnd = new JButton("END");
+		btnEnd.setBackground(Color.BLUE);
+		btnEnd.setBounds(270, 634, 85, 21);
+		contentPane.add(btnEnd);
 		
 		group = new ButtonGroup();
 	}
@@ -399,6 +405,11 @@ public class InsertNewHierarchyView extends JFrame {
         repaint();
 	}
 	
+	public JButton getEndButton()
+	{
+		return btnEnd;
+	}
+	
 	public void initInsertRoot()
 	{
 		getInsertRootButton().setVisible(true);
@@ -414,6 +425,7 @@ public class InsertNewHierarchyView extends JFrame {
         getLblFiledTypeError().setVisible(false);
         getInsertCategoryButton().setVisible(false);
         getInsertParentIdButton().setVisible(false);
+        getEndButton().setVisible(false);
         setUndecorated(true);
         setVisible(true);
 	}

@@ -1,20 +1,24 @@
 package controller.MVCController;
 
-import java.sql.SQLException;
-import service.SubjectService;
+import java.io.IOException;
+import controller.ClientServer.Client;
+import controller.ClientServer.SomeRequestSubject;
 
 public class SubjectController {
     
-    private SubjectService subjectService;
+    private Client client;
+    private SomeRequestSubject requestSubject;
 
-    public SubjectController ( SubjectService subjectService ) 
+    public SubjectController (Client client ) 
     {
-        this.subjectService = subjectService;
+        this.client = client;
     }
 
-    public boolean isPresentUsername ( String usernameToCheck ) throws SQLException
+    public boolean isPresentUsername ( String usernameToCheck ) throws IOException, ClassNotFoundException
     {
-        return this.subjectService.isPresentUsername(usernameToCheck);
+        requestSubject = new SomeRequestSubject("IS_PRESENT_USERNAME", usernameToCheck);
+        client.sendRequest(requestSubject);
+        return (boolean) client.receiveResponse();
     }
 
 }
