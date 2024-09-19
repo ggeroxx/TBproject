@@ -198,6 +198,7 @@ public class ConfiguratorController {
                 try 
                 {
                     close();
+                    client.close();
                     System.exit(0);
                 }
                 catch (ClassNotFoundException e1) 

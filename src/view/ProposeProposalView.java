@@ -44,6 +44,7 @@ public class ProposeProposalView extends JFrame{
 	private JButton btnCancel;
 	private JLabel lblValue;
 	private JButton btnOfferCategory;
+	private JButton btnBack;
 	
 	public ProposeProposalView() 
 	{
@@ -101,6 +102,7 @@ public class ProposeProposalView extends JFrame{
 		textValue.setColumns(10);
 		
 		btnConfirm = new JButton("CONFIRM");
+		btnConfirm.setForeground(Color.WHITE);
 		btnConfirm.setBackground(new Color(0, 0, 255));
 		btnConfirm.setBounds(467, 637, 174, 21);
 		contentPane.add(btnConfirm);
@@ -129,6 +131,7 @@ public class ProposeProposalView extends JFrame{
 		contentPane.add(lblClose);
 		
 		btnRequestCategory = new JButton("CONFIRM REQUEST CATEGORY ");
+		btnRequestCategory.setForeground(Color.WHITE);
 		btnRequestCategory.setBackground(Color.BLUE);
 		btnRequestCategory.setBounds(467, 617, 346, 21);
 		contentPane.add(btnRequestCategory);
@@ -140,6 +143,7 @@ public class ProposeProposalView extends JFrame{
 		contentPane.add(lblErrorValue);
 		
 		btnCancel = new JButton("CANCEL");
+		btnCancel.setForeground(Color.WHITE);
 		btnCancel.setBackground(Color.RED);
 		btnCancel.setBounds(639, 637, 174, 21);
 		contentPane.add(btnCancel);
@@ -151,9 +155,16 @@ public class ProposeProposalView extends JFrame{
 		contentPane.add(lblValue);
 		
 		btnOfferCategory = new JButton("CONFIRM OFFER CATEGORY ");
+		btnOfferCategory.setForeground(Color.WHITE);
 		btnOfferCategory.setBackground(Color.BLUE);
 		btnOfferCategory.setBounds(467, 617, 346, 21);
 		contentPane.add(btnOfferCategory);
+		
+		btnBack = new JButton("<");
+		btnBack.setForeground(Color.WHITE);
+		btnBack.setBackground(Color.BLUE);
+		btnBack.setBounds(26, 617, 52, 21);
+		contentPane.add(btnBack);
 		
 		groupRequestedCategory = new ButtonGroup();
 		groupOfferedCategory = new ButtonGroup();
@@ -239,6 +250,11 @@ public class ProposeProposalView extends JFrame{
 		lblErrorValue.setText(message);
 	}
 	
+	public JButton getBackButton()
+	{
+		return btnBack;
+	}
+	
 	public void init()
 	{
 		getTextFieldValue().setVisible(false);
@@ -250,6 +266,7 @@ public class ProposeProposalView extends JFrame{
 		lblErrorValue.setText("");
 		this.setUndecorated(true);
 		this.setVisible(true);
+		getBackButton().setVisible(true);
 	}
 	
 	public void resetFields()

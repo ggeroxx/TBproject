@@ -212,11 +212,12 @@ public class ClientHandler implements Runnable {
                 case "SET_USER":
                 {
                     userService.setUser(userService.getUserByUsername(userName));
+                    return new SomeResponse("User configured",true);
                 }
                 case "INSERT_USER":
                 {
                     userService.insertUser(new User(null, userName, password, districtID, email));
-                    new SomeResponse("User added",true);
+                    return new SomeResponse("User added",true);
                 }
                 case "GET_USER_NAME":
                 {
@@ -263,6 +264,7 @@ public class ClientHandler implements Runnable {
                 case "SET_CONFIGURATOR":
                 {
                     configuratorService.setConfigurator(configuratorService.getConfiguratorByUsername(username));
+                    return new SomeResponse("Configurator configured",true);
                 }
 
                 default:
@@ -378,6 +380,7 @@ public class ClientHandler implements Runnable {
                 case "CREATE_RELATIONSHIP":
                 {
                     categoryService.createRelationship(id, field);
+                    return new SomeResponse("Relationship created",true);
                 }
                 case "GET_ALL_SAVED_LEAF_ID":
                 {
@@ -419,15 +422,17 @@ public class ClientHandler implements Runnable {
                 }
                 case "GET_ROOT_CATEGORY_ID_BY_NAME":
                 {
+                    if(categoryService.getRootCategoryByName(categoryName) == null) return null;
                     return categoryService.getRootCategoryByName(categoryName).getID();
                 }
                 case "SET_CATEGORY":
                 {
                     categoryService.setCategory(categoryService.getCategoryByID(id));
+                    return new SomeResponse("Category configured",true);
                 }
                 case "GET_CATEGORY_ID":
                 {
-                    return categoryService.getCategory();
+                    return categoryService.getCategory().getID();
                 }
                 case "GET_NUMBER_OF_CATEGORIES_WITHOUT_CHILD":
                 {
@@ -462,7 +467,13 @@ public class ClientHandler implements Runnable {
                 }
                 case "GET_ALL_CATEGORIES_ID_FROM_ROOT_ID":
                 {
-                    return categoryService.getAllCategoriesFromRoot(categoryService.getCategoryByID(id));
+                    List<Category> categories = categoryService.getAllCategoriesFromRoot(categoryService.getCategoryByID(id));
+                    int[] categoriesID = new int[categories.size()];
+                    for(int i = 0; i < categories.size(); i++)
+                    {
+                        categoriesID[i] = categories.get(i).getID();
+                    }
+                    return categoriesID;
                 }
                 case "GET_ALL_ROOT_ID":
                 {
@@ -476,7 +487,7 @@ public class ClientHandler implements Runnable {
                 }
                 case "GET_CHILD_CATEGORY_ID_BY_FIELD_AND_PARENT_ID":
                 {
-                    return categoryService.getChildCategoryByFieldAndParentID(field, categoryService.getCategoryByID(id));
+                    return categoryService.getChildCategoryByFieldAndParentID(field, categoryService.getCategoryByID(id)).getID();
                 }
                 default:
                     return new SomeResponse("Unknown action",false);
@@ -504,6 +515,7 @@ public class ClientHandler implements Runnable {
                 case "POPULATE":
                 {
                     conversionFactorsService.populate();
+                    return new SomeResponse("Conversion Factors populated",true);
                 }
                 case "GET_CONVERSION_FACTORS":
                 {
@@ -532,6 +544,7 @@ public class ClientHandler implements Runnable {
                 case "CALCULATE":
                 {
                     conversionFactorsService.calculate(index, value);
+                    return new SomeResponse("Conversion Factors calculated",true);
                 }
                 case "CALCULATE_EQ":
                 {
@@ -548,8 +561,9 @@ public class ClientHandler implements Runnable {
                         copyConversionFactorsMap.put(id, conversionFactor);
                     }
                     conversionFactorsService.calculateEq(index, value, check, copyConversionFactorsMap, equations);
+                    return new SomeResponse("Equations calculated",true);
                 }
-                case "CALCULAT_RANGE":
+                case "CALCULATE_RANGE":
                 {
                     return conversionFactorsService.calculateRange(index);
                 }
@@ -609,9 +623,9 @@ public class ClientHandler implements Runnable {
             SomeRequestProposal someRequest = (SomeRequestProposal) request;
             String action = someRequest.getAction();
             int id = someRequest.getID();
-            int requestCategoryID = someRequest.getOfferCategoryID();
+            int requestCategoryID = someRequest.getRequestCategoryID();
             int offerCategoryID = someRequest.getOfferCategoryID();
-            int requestHours = someRequest.getOfferHours();
+            int requestHours = someRequest.getRequestHours();
             int offerHours = someRequest.getOfferHours();
             String user = someRequest.getUser();
             String state = someRequest.getState();
@@ -621,6 +635,7 @@ public class ClientHandler implements Runnable {
                 {
                     Proposal newProposal = new Proposal(null, categoryService.getCategoryByID(requestCategoryID), categoryService.getCategoryByID(offerCategoryID), requestHours, offerHours, userService.getUserByUsername(user), state) ;
                     userService.insertProposal( newProposal );
+                    return new SomeResponse("Proposal configured",true);
                 }
                 case "GET_ALL_PROPOSALS_ID_BY_USER_USERNAME":
                 {
@@ -665,6 +680,7 @@ public class ClientHandler implements Runnable {
                 case "RETIRE_PROPOSAL":
                 {
                     userService.retireProposal(proposalService.getProposalRepository().getProposalById(id));
+                    return new SomeResponse("Proposal retired",true);
                 }
                 case "GET_NUMBER_OF_ALL_OPEN_PROPOSAL_BY_USER_USERNAME":
                 {

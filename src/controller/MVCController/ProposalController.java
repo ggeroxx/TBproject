@@ -59,6 +59,7 @@ public class ProposalController {
                     {
                         requestProposal = new SomeRequestProposal("RETIRE_PROPOSAL", radioButtonObjectMapForRetireProposal.get(retireProposalView.getSelectedRadioButton()), 0, 0, 0, 0, null, null);
                         client.sendRequest(requestProposal);
+                        client.receiveResponse();
                         //userController.retireProposal(radioButtonObjectMapForRetireProposal.get(retireProposalView.getSelectedRadioButton()) );
                         closeRetireProposalView();
                     }
@@ -136,6 +137,7 @@ public class ProposalController {
                 {
                     requestProposal = new SomeRequestProposal("INSERT_PROPOSAL", offerCategoryID, requestCategoryID, offerCategoryID, requestedHours, offerCategoryID, userController.getUserUsername(), "open");
                     client.sendRequest(requestProposal);
+                    client.receiveResponse();
                     /*Proposal newProposal = new Proposal( null, requestCategory, offerCategory, requestedHours, offeredHours, userController.getUser(), "open" );
                     userController.insertProposal( newProposal );*/
                     startProposalOfUserView(userController.getUserUsername());
@@ -171,6 +173,7 @@ public class ProposalController {
                 try 
                 {
                     sessionController.logout();
+                    client.close();
                 }
                 catch (ClassNotFoundException e1) 
                 {
@@ -189,6 +192,14 @@ public class ProposalController {
 			public void mouseClicked(MouseEvent e) 
             {
                 closeProposalOfUserView();
+                try 
+                {
+                    client.close();
+                } 
+                catch (IOException e1) 
+                {
+                    e1.printStackTrace();
+                }
                 System.exit(0);
 			}
 		});
@@ -198,6 +209,14 @@ public class ProposalController {
 			public void mouseClicked(MouseEvent e) 
             {
                 closeRetireProposalView();
+                try 
+                {
+                    client.close();
+                } 
+                catch (IOException e1) 
+                {
+                    e1.printStackTrace();
+                }
                 System.exit(0);
 			}
 		});
@@ -206,6 +225,14 @@ public class ProposalController {
 			@Override
 			public void mouseClicked(MouseEvent e) 
             {
+                try
+                {
+                    client.close();
+                } 
+                catch (IOException e1) 
+                {
+                    e1.printStackTrace();
+                }
                 System.exit(0);
 			}
 		});
@@ -223,6 +250,22 @@ public class ProposalController {
             public void actionPerformed(ActionEvent e) 
             {
                 closeProposalOfUserView();
+            }
+		});
+
+        this.retireProposalView.getBackButton().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) 
+            {
+                closeRetireProposalView();
+            }
+		});
+
+        this.proposeProposalView.getBackButton().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) 
+            {
+                closeProposeProposalView();
             }
 		});
     }
@@ -264,10 +307,10 @@ public class ProposalController {
         proposalOfUserView.dispose();
     }
 
-    public void startRetireProposalView ( String userUsername) throws ClassNotFoundException, IOException
+    public void startRetireProposalView ( String userUsername, UserController userController) throws ClassNotFoundException, IOException
     {
+        this.userController = userController;
         retireProposalView.init();
-
         for ( int proposal : getAllOpenProposalIDByUserUsername( userUsername) )
         {
            addRadioButtonRetireProposal( proposal );     
@@ -310,6 +353,7 @@ public class ProposalController {
     public void confirmOfferCategory () throws ClassNotFoundException, IOException
     {
         this.proposeProposalView.resetFields();
+        this.proposeProposalView.getBackButton().setVisible(false);
         this.proposeProposalView.removeAllRadioButtons(false);
         this.proposeProposalView.getLblValue().setVisible(false);
         this.proposeProposalView.getOfferCategoryButton().setVisible(false);
@@ -369,7 +413,7 @@ public class ProposalController {
     public int getNumberOfAllOpenProposalByUserUsername (String userUsername) throws ClassNotFoundException, IOException
     {
         requestProposal = new SomeRequestProposal("GET_NUMBER_OF_ALL_OPEN_PROPOSAL_BY_USER_USERNAME", 0, 0, 0, 0, 0, userUsername, null);
-        client.sendRequest(userUsername);
+        client.sendRequest(requestProposal);
         return (int) client.receiveResponse();
     }
 
@@ -381,7 +425,7 @@ public class ProposalController {
     public int[] getAllProposalsIDByUserUsername(String userUsername) throws ClassNotFoundException, IOException
     {
         requestProposal = new SomeRequestProposal("GET_ALL_PROPOSALS_ID_BY_USER_USERNAME", 0, 0, 0, 0, 0, userUsername, null);
-        client.sendRequest(userUsername);
+        client.sendRequest(requestProposal);
         return (int[]) client.receiveResponse();
     }
 

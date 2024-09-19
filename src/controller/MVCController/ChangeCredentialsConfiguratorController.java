@@ -35,6 +35,7 @@ public class ChangeCredentialsConfiguratorController  {
                 try 
                 {
                     sessionController.logout();
+                    client.close();
                 }
                 catch (IOException e1) 
                 {

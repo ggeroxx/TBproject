@@ -130,7 +130,6 @@ public class TestScheme {
     NavigateHierarchyView navigateHierarchyView = new NavigateHierarchyView();
 
     Client client;
-
     SessionController sessionController = new SessionController(client);
     ControlPatternController controlPatternController = new ControlPatternController(client);
     SubjectController subjectController = new SubjectController(client);
@@ -150,7 +149,7 @@ public class TestScheme {
     @Before
     public void setUp() throws SQLException, IOException 
     { 
-        client = new Client(null, 0);
+        client = new Client("localhost", 12345);
         ConnectionService.openConnection();
     }
 

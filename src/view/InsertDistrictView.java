@@ -38,6 +38,7 @@ public class InsertDistrictView extends JFrame{
 	private JButton btnAddmunicipality;
 	private JLabel lblErrorNameDistrict;
 	private JButton btnEnd;
+	private JButton btnBack;
 
 	public InsertDistrictView() 
 	{
@@ -85,6 +86,12 @@ public class InsertDistrictView extends JFrame{
 		panel.add(lblImg);
 		lblImg.setBackground(new Color(255, 255, 255));
 		lblImg.setIcon(new ImageIcon(ChangeCredentialsConfiguratorView.class.getResource("/img/login.jpg")));
+		
+		btnBack = new JButton("<");
+		btnBack.setForeground(Color.WHITE);
+		btnBack.setBackground(Color.BLUE);
+		btnBack.setBounds(0, 531, 52, 21);
+		panel.add(btnBack);
 		
 		btnAddDistrict = new JButton("AddDistrict");
 		btnAddDistrict.setForeground(Color.WHITE);
@@ -280,8 +287,14 @@ public class InsertDistrictView extends JFrame{
     	return btnEnd;
     }
     
+    public JButton getBackButton()
+	{
+		return btnBack;
+	}
+    
     public void blockAddDistrictAnEnableAddMunicipality( String nameDistrict )
     {
+    	getBackButton().setVisible(false);
     	setLblErrorNameDistrict("");
         setTextNameDistrict( nameDistrict );
         getTextFiledNameDistrict().setEnabled(false);
@@ -319,6 +332,7 @@ public class InsertDistrictView extends JFrame{
     
     public void resetFields()
     {
+    	getBackButton().setVisible(true);
         setTextNameDistrict("");
         getTextFiledNameDistrict().setEnabled(true);
         getAddDistrictAddButton().setVisible(true);

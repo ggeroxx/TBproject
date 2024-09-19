@@ -69,7 +69,7 @@ public class UserController {
             {
                 try 
                 {
-                    proposalController.startRetireProposalView( getUserUsername() );
+                    proposalController.startRetireProposalView( getUserUsername(), UserController.this );
                 } 
                 catch (ClassNotFoundException e1) 
                 {
@@ -108,6 +108,7 @@ public class UserController {
                 try 
                 {
                     close();
+                    client.close();
                     System.exit(0);
                 } 
                 catch (ClassNotFoundException e1) 
@@ -161,10 +162,11 @@ public class UserController {
         //return this.userService.getUser();
     }
 
-    public void setUser ( String userName ) throws IOException
+    public void setUser ( String userName ) throws IOException, ClassNotFoundException
     {
         requestUser = new SomeRequestUser("SET_USER",userName, null,  0, null);
         client.sendRequest(requestUser); 
+        client.receiveResponse();
         //this.userService.setUser(user);
     }
 

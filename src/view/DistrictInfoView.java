@@ -107,6 +107,7 @@ public class DistrictInfoView extends JFrame{
 		contentPane.add(lblDistrictName);
 		
 		btnOk = new JButton("OK");
+		btnOk.setForeground(Color.WHITE);
 		btnOk.setBackground(Color.BLUE);
 		btnOk.setFont(new Font("Tahoma", Font.BOLD, 10));
 		btnOk.setBounds(578, 496, 85, 21);

@@ -28,14 +28,14 @@ public class TestUser extends TestScheme {
     }
 
     @Test
-    public void testProposeProposal () throws SQLException, IOException
+    public void testProposeProposal () throws SQLException
     {
         User user = new User( 0 , "TestUsername", BCrypt.hashpw("TestPassword", BCrypt.gensalt()), districtRepository.getOneDistrictForTest().getID(), "test@test.test");
         userRepository.insertUser( user );
 
         User userCreated = userRepository.getUserByUsername( "TestUsername" );
 
-        userController.setUser( userCreated.getUsername() );
+        userService.setUser( userCreated);
 
         Category leaf1 = categoryRepository.getAllLeaf().get( 1 );
         Category leaf2 = categoryRepository.getAllLeaf().get( 2 );
@@ -51,14 +51,14 @@ public class TestUser extends TestScheme {
     }
 
     @Test
-    public void testRetireProposal () throws SQLException, IOException
+    public void testRetireProposal () throws SQLException
     {
         User user = new User( 0 , "TestUsername", BCrypt.hashpw( "TestPassword", BCrypt.gensalt() ), districtRepository.getOneDistrictForTest().getID(), "test@test.test" );
         userRepository.insertUser( user );
 
         User userCreated = userRepository.getUserByUsername( "TestUsername" );
 
-        userController.setUser( userCreated.getUsername() );
+        userService.setUser( userCreated );
 
         Category leaf1 = categoryRepository.getAllLeaf().get( 1 );
         Category leaf2 = categoryRepository.getAllLeaf().get( 2 );

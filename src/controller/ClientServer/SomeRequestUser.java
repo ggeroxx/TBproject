@@ -49,7 +49,7 @@ public class SomeRequestUser implements Serializable {
 
     @Override
     public String toString() {
-        return "SomeRequestSession{" +
+        return "SomeRequestUser{" +
                 "action='" + action + '\'' +
                 ", name='" + name + '\'' +
                 ", districtID='" + districtID + '\'' +

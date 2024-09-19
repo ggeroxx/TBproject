@@ -87,6 +87,7 @@ public class ConversionFactorsController  {
                 try 
                 {
                     sessionController.logout();
+                    client.close();
                 } 
                 catch (ClassNotFoundException | IOException e1) 
                 {
@@ -113,6 +114,7 @@ public class ConversionFactorsController  {
                 try 
                 {
                     sessionController.logout();
+                    client.close();
                 }
                 catch (ClassNotFoundException e1) 
                 {
@@ -133,7 +135,8 @@ public class ConversionFactorsController  {
                 closeConversioFactorsOfCategoryView();
                 try 
                 {
-                        sessionController.logout();
+                    sessionController.logout();
+                    client.close();
                 }
                 catch (ClassNotFoundException e1) 
                 {
@@ -357,10 +360,11 @@ public class ConversionFactorsController  {
         //this.conversionFactorsService.saveConversionFactors();
     }
 
-    public void populate () throws IOException
+    public void populate () throws IOException, ClassNotFoundException
     {
         requestConversionFactors = new SomeRequestConversionFactors("POPULATE",0, null,  false, null, null, 0);
         client.sendRequest(requestConversionFactors);
+        client.receiveResponse();
         //this.conversionFactorsService.populate();
     }
 
@@ -368,6 +372,7 @@ public class ConversionFactorsController  {
     {
         requestConversionFactors = new SomeRequestConversionFactors("CALCULATE", index, value, false, null, null, 0);
         client.sendRequest(requestConversionFactors);
+        client.receiveResponse();
         //this.conversionFactorsService.calculate(index, value);
     }
 
@@ -375,6 +380,7 @@ public class ConversionFactorsController  {
     {
         requestConversionFactors = new SomeRequestConversionFactors("CALCULATE_EQ", index, value, check, copyCFs, equations, 0);
         client.sendRequest(equations);
+        client.receiveResponse();
         //this.conversionFactorsService.calculateEq(index, value, check, copyCFs, equations);
     }
 

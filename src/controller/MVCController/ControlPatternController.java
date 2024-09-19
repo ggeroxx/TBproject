@@ -46,15 +46,15 @@ public class ControlPatternController
 
     public boolean checkCorrectName( String name) throws IOException, ClassNotFoundException
     {
-        requestPattern = new SomeRequestPattern("CHECK_PATTERN_NAME", name, 0, 0,false);
-        client.sendRequest(name);
+        requestPattern = new SomeRequestPattern("CHECK_PATTERN_NAME", name, 1, 50,false);
+        client.sendRequest(requestPattern);
         return (boolean) client.receiveResponse();
     }
 
     public boolean checkPattern ( String strToCheck, int minLength, int maxLength ) throws ClassNotFoundException, IOException
     {
         requestPattern = new SomeRequestPattern("CHECK_PATTERN", strToCheck, minLength, maxLength,false);
-        client.sendRequest(strToCheck);
+        client.sendRequest(requestPattern);
         return (boolean) client.receiveResponse();
     }
     

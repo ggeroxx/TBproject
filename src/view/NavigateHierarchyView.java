@@ -133,11 +133,14 @@ public class NavigateHierarchyView extends JFrame {
 		contentPane.add(lblInformations);
 		
 		btnBack = new JButton("<");
+		btnBack.setBackground(Color.BLUE);
+		btnBack.setForeground(Color.WHITE);
 		btnBack.setFont(new Font("Tahoma", Font.BOLD, 10));
 		btnBack.setBounds(30, 654, 46, 21);
 		contentPane.add(btnBack);
 		
 		btnOk = new JButton("OK");
+		btnOk.setForeground(Color.WHITE);
 		btnOk.setFont(new Font("Tahoma", Font.BOLD, 10));
 		btnOk.setBackground(Color.BLUE);
 		btnOk.setBounds(514, 654, 138, 21);

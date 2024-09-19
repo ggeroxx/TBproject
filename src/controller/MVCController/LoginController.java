@@ -87,7 +87,7 @@ public class LoginController  {
         String username = loginView.getUsername();
         String password = loginView.getPassword();
         sessionController.login( username, password );
-        boolean status = (boolean) sessionController.getStatus();
+        Boolean status = sessionController.getStatus();
         Character subject = sessionController.getSubject();
 
         if ( !status && subject == null )

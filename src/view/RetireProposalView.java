@@ -31,6 +31,7 @@ public class RetireProposalView extends JFrame{
 	private JLabel lblProposal;
 	private JLabel lblClose;
 	private JButton btnRetireProposal;
+	private JButton btnBack;
 
 	public RetireProposalView() 
 	{
@@ -91,6 +92,7 @@ public class RetireProposalView extends JFrame{
 		contentPane.add(lblClose);
 		
 		btnRetireProposal = new JButton("RETIRE PROPOSAL");
+		btnRetireProposal.setForeground(Color.WHITE);
 		btnRetireProposal.setBackground(Color.BLUE);
 		btnRetireProposal.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -98,6 +100,12 @@ public class RetireProposalView extends JFrame{
 		});
 		btnRetireProposal.setBounds(466, 487, 304, 21);
 		contentPane.add(btnRetireProposal);
+		
+		btnBack = new JButton("<");
+		btnBack.setForeground(Color.WHITE);
+		btnBack.setBackground(Color.BLUE);
+		btnBack.setBounds(26, 487, 52, 21);
+		contentPane.add(btnBack);
 		
 		group = new ButtonGroup();
 
@@ -155,6 +163,11 @@ public class RetireProposalView extends JFrame{
         return lblClose;
     }
 	
+	public JButton getBackButton()
+	{
+		return btnBack;
+	}
+	
 	public void init ()
 	{
 		getPanel().removeAll();
@@ -177,7 +190,5 @@ public class RetireProposalView extends JFrame{
 	{
 		return btnRetireProposal;
 	}
-	
-
 }
 

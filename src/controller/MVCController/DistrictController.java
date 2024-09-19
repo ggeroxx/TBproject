@@ -148,6 +148,14 @@ public class DistrictController {
             }
 		});
 
+        this.insertDistrictView.getBackButton().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) 
+            {
+                closeInserNewDistrictView();
+            }
+		});
+
         this.insertDistrictView.getCloseLabel().addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) 

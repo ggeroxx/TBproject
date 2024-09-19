@@ -86,6 +86,7 @@ public class AllConversionFactorsView extends JFrame{
 		contentPane.add(lblClose);
 		
 		btnOk = new JButton("OK");
+		btnOk.setForeground(Color.WHITE);
 		btnOk.setFont(new Font("Tahoma", Font.BOLD, 10));
 		btnOk.setBackground(Color.BLUE);
 		btnOk.setBounds(539, 637, 138, 21);

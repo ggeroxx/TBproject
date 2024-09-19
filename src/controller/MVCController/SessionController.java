@@ -28,11 +28,11 @@ public class SessionController {
         client.receiveResponse();
     }
 
-    public boolean getStatus() throws ClassNotFoundException, IOException
+    public Boolean getStatus() throws ClassNotFoundException, IOException
     {
         requestSession = new SomeRequestSession("GET_STATUS", null, null);
         client.sendRequest(requestSession);
-        return (Boolean) client.receiveResponse();
+        return ((Boolean) client.receiveResponse());
     }
 
     public Character getSubject() throws ClassNotFoundException, IOException

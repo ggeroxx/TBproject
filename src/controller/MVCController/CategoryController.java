@@ -84,6 +84,14 @@ public class CategoryController {
 			@Override
 			public void mouseClicked(MouseEvent e) {
                 closeNavigateHierarchyView();
+                try 
+                {
+                    client.close();
+                } 
+                catch (IOException e1) 
+                {
+                    e1.printStackTrace();
+                }
                 System.exit(0);
 			}
 		});
@@ -94,6 +102,7 @@ public class CategoryController {
                 try 
                 {
                     sessionController.logout();
+                    client.close();
                 }
                 catch (ClassNotFoundException e1) 
                 {
@@ -122,6 +131,7 @@ public class CategoryController {
                 try 
                 {
                     sessionController.logout();
+                    client.close();
                 }
                 catch (ClassNotFoundException e1) 
                 {
@@ -144,6 +154,14 @@ public class CategoryController {
 		});
 
         this.insertNewHierarchyView.getEndButton().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) 
+            {
+                closeInsertNewHierarchy();
+            }
+		});
+
+        this.insertNewHierarchyView.getBackButton().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) 
             {
@@ -297,7 +315,7 @@ public class CategoryController {
 
         if (insertNewHierarchyView.getInsertParentIdButton().getActionListeners().length == 0) 
         {
-            for ( int toPrint : getParentCategoriesID( rootID) ) addRadioButton( toPrint );
+            for ( int toPrint : getParentCategoriesID( rootID ) ) addRadioButton( toPrint );
 
             this.insertNewHierarchyView.getInsertParentIdButton().addActionListener(new ActionListener() {
                 @Override
@@ -593,7 +611,7 @@ public class CategoryController {
     public int getChildCategoryIDByFieldAndParentID ( String field, int parentID) throws ClassNotFoundException, IOException
     {
         requestCategory = new SomeRequestCategory("GET_CHILD_CATEGORY_ID_BY_FIELD_AND_PARENT_ID", parentID, field, field, field, false, 0);
-        client.sendRequest(field);
+        client.sendRequest(requestCategory);
         return (int) client.receiveResponse();
     }
 
@@ -611,10 +629,11 @@ public class CategoryController {
         return (int[]) client.receiveResponse();
     }
 
-    public void setCategory ( int categoryID ) throws IOException 
+    public void setCategory ( int categoryID ) throws IOException, ClassNotFoundException 
     {
         requestCategory = new SomeRequestCategory("SET_CATEGORY", categoryID, null, null, null, false, 0);
         client.sendRequest(requestCategory);
+        client.receiveResponse();
         //this.categoryService.setCategory(category);
     }
 
@@ -724,7 +743,7 @@ public class CategoryController {
     public void createCategory ( String name, String field, String description, boolean isRoot, Integer hierarchyID ) throws ClassNotFoundException, IOException
     {
         requestCategory = new SomeRequestCategory("CREATE_CATEGORY", 0, name, field, description, isRoot, hierarchyID);
-        client.sendRequest(hierarchyID);
+        client.sendRequest(requestCategory);
         client.receiveResponse();
         //this.configuratorService.createCategory(name, field, description, isRoot, hierarchyID);
     }

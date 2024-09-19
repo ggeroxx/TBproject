@@ -49,6 +49,7 @@ public class InsertNewHierarchyView extends JFrame {
 	private JButton btnInsertParentId;
 	private JLabel lblClose;
 	private JButton btnEnd;
+	private JButton btnBack;
 
 	public InsertNewHierarchyView() {
 		
@@ -146,7 +147,7 @@ public class InsertNewHierarchyView extends JFrame {
 		
 		btnInsertRoot = new JButton("INSERT ROOT CATEGORY");
 		btnInsertRoot.setBackground(new Color(0, 0, 255));
-		btnInsertRoot.setForeground(new Color(0, 0, 0));
+		btnInsertRoot.setForeground(Color.WHITE);
 		btnInsertRoot.setBounds(140, 241, 342, 31);
 		contentPane.add(btnInsertRoot);
 		
@@ -211,21 +212,28 @@ public class InsertNewHierarchyView extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 			}
 		});
-		btnInsertCategory.setForeground(Color.BLACK);
+		btnInsertCategory.setForeground(Color.WHITE);
 		btnInsertCategory.setBackground(Color.BLUE);
 		btnInsertCategory.setBounds(140, 335, 342, 31);
 		contentPane.add(btnInsertCategory);
 		
 		btnInsertParentId = new JButton("INSERT PARENT ID & FIELD TYPE");
-		btnInsertParentId.setForeground(Color.BLACK);
+		btnInsertParentId.setForeground(Color.WHITE);
 		btnInsertParentId.setBackground(Color.BLUE);
 		btnInsertParentId.setBounds(140, 593, 342, 31);
 		contentPane.add(btnInsertParentId);
 		
 		btnEnd = new JButton("END");
+		btnEnd.setForeground(Color.WHITE);
 		btnEnd.setBackground(Color.BLUE);
 		btnEnd.setBounds(270, 634, 85, 21);
 		contentPane.add(btnEnd);
+		
+		btnBack = new JButton("<");
+		btnBack.setForeground(Color.WHITE);
+		btnBack.setBackground(Color.BLUE);
+		btnBack.setBounds(27, 634, 52, 21);
+		contentPane.add(btnBack);
 		
 		group = new ButtonGroup();
 	}
@@ -410,8 +418,14 @@ public class InsertNewHierarchyView extends JFrame {
 		return btnEnd;
 	}
 	
+	public JButton getBackButton()
+	{
+		return btnBack;
+	}
+	
 	public void initInsertRoot()
 	{
+		getBackButton().setVisible(true);
 		getInsertRootButton().setVisible(true);
 		getChckbxLeafCategory().setVisible(false);
         getLblDescription().setVisible(false);
@@ -432,6 +446,7 @@ public class InsertNewHierarchyView extends JFrame {
 	
 	public void afterInsertRoot()
 	{
+		getBackButton().setVisible(false);
         setTextCategory("");
         setTextField("");
         getChckbxLeafCategory().setVisible(true);

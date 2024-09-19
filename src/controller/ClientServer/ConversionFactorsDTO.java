@@ -1,10 +1,12 @@
 package controller.ClientServer;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ConversionFactorsDTO 
+public class ConversionFactorsDTO implements Serializable
 {
+    private static final long serialVersionUID = 1L;
     private Map<Integer, ConversionFactorDTO> conversionFactors;
 
     public ConversionFactorsDTO() 

@@ -61,6 +61,7 @@ public class SomeRequestCategory implements Serializable {
     public String toString() {
         return "SomeRequestCategory{" +
                 "action='" + action + '\'' +
+                ", id ='" + id + '\'' +
                 ", categoryName='" + categoryName + '\'' +
                 ", field='" + field + '\'' +
                 ", description='" + description + '\'' +

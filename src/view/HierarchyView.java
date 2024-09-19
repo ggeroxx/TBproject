@@ -132,6 +132,7 @@ public class HierarchyView extends JFrame {
 		contentPane.add(lblInformations);
 		
 		btnOk = new JButton("OK");
+		btnOk.setForeground(Color.WHITE);
 		btnOk.setFont(new Font("Tahoma", Font.BOLD, 10));
 		btnOk.setBackground(Color.BLUE);
 		btnOk.setBounds(533, 657, 85, 21);

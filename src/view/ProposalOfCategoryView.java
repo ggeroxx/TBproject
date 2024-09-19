@@ -97,6 +97,7 @@ public class ProposalOfCategoryView extends JFrame{
 		menuBar.add(mnMenuCategories);
 		
 		btnOk = new JButton("OK");
+		btnOk.setForeground(Color.WHITE);
 		btnOk.setFont(new Font("Tahoma", Font.BOLD, 10));
 		btnOk.setBackground(Color.BLUE);
 		btnOk.setBounds(572, 678, 138, 21);

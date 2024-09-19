@@ -1,7 +1,10 @@
 package controller.ClientServer;
 
-public class ConversionFactorDTO 
+import java.io.Serializable;
+
+public class ConversionFactorDTO implements Serializable
 {
+    private static final long serialVersionUID = 1L;
     private int id;
     private int leaf1ID;
     private String leaf1Name;

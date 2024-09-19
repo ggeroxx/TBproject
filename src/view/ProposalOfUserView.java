@@ -111,6 +111,7 @@ public class ProposalOfUserView extends JFrame{
 		contentPane.add(lblClose);
 		
 		btnOk = new JButton("OK");
+		btnOk.setForeground(Color.WHITE);
 		btnOk.setFont(new Font("Tahoma", Font.BOLD, 10));
 		btnOk.setBackground(Color.BLUE);
 		btnOk.setBounds(579, 485, 138, 21);
