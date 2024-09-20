@@ -246,7 +246,8 @@ public class ConversionFactorsController  {
 
         if(conversionFactorDTO.getValue() != null)
         {
-            radioButton.setEnabled( false );
+            //radioButton.setEnabled( false );
+            radioButton.setVisible( false );
         }
 
         radioButton.addActionListener(new ActionListener() {

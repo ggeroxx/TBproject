@@ -3,11 +3,19 @@ package view;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.border.LineBorder;
+
 import java.awt.Color;
 import java.awt.SystemColor;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
+import javax.swing.Timer;
+
 import java.awt.Font;
+import java.awt.FontMetrics;
+import java.awt.Graphics;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.BoxLayout;
@@ -90,11 +98,54 @@ public class ProposalOfCategoryView extends JFrame{
 		contentPane.add(lblClose);
 		
 		menuBar = new JMenuBar();
+		menuBar.setBackground(Color.WHITE);
 		menuBar.setBounds(0, 0, 1251, 22);
 		contentPane.add(menuBar);
 		
-		mnMenuCategories = new JMenu("Categories");
+		mnMenuCategories = new JMenu("Categories") {
+			@Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                // Impostare il colore di sfondo
+                g.setColor(new Color(240,240,240));  // Cambia il colore qui
+                // Riempire lo sfondo con il colore
+                g.fillRect(0, 0, getWidth(), getHeight());
+                
+                g.setColor(Color.BLUE); // Colore del testo
+                g.setFont(getFont());    // Usa il font del JMenu
+                FontMetrics metrics = g.getFontMetrics();
+                int x = (getWidth() - metrics.stringWidth(getText())) / 2;
+                int y = (getHeight() + metrics.getAscent()) / 2 - 2; // Centrato verticalmente
+                
+                g.drawString(getText(), x, y);
+
+            }
+        };
 		menuBar.add(mnMenuCategories);
+		mnMenuCategories.setFont(new Font("Tahoma", Font.BOLD, 14));
+		mnMenuCategories.setToolTipText("Click to see categories");
+		LineBorder normalBorder = new LineBorder(Color.BLUE, 2);
+        mnMenuCategories.setBorder(normalBorder);
+        
+      /*mnMenuCategories.setHorizontalAlignment(SwingConstants.LEFT);
+        mnMenuCategories.setForeground(Color.BLUE);
+        LineBorder blinkingBorder = new LineBorder(new Color(240,240,240), 2);
+        Timer timer = new Timer(2500, new ActionListener() {
+            private boolean isNormal = true;
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (isNormal) {
+                    mnMenuCategories.setBorder(blinkingBorder); // Cambia il bordo
+                } else {
+                    mnMenuCategories.setBorder(normalBorder); // Torna al bordo originale
+                }
+                isNormal = !isNormal; // Inverti lo stato
+                mnMenuCategories.repaint(); // Rinfresca il componente
+            }
+        });
+        
+        timer.start();*/
 		
 		btnOk = new JButton("OK");
 		btnOk.setForeground(Color.WHITE);
